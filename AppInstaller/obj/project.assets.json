@@ -100,6 +100,28 @@
           }
         }
       },
+      "SevenZip/19.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/SevenZip.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/SevenZip.dll": {}
+        }
+      },
+      "SevenZipSharp.Net45/1.0.19": {
+        "type": "package",
+        "compile": {
+          "lib/net45/SevenZipSharp.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net45/SevenZipSharp.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
       "SharpVectors.Wpf/1.8.1": {
         "type": "package",
         "compile": {
@@ -388,6 +410,34 @@
         "reactiveui.wpf.nuspec"
       ]
     },
+    "SevenZip/19.0.0": {
+      "sha512": "+Eeb/uvC0REvMlG1auBqlBMiFiPZs+WizlLroHPSKtBh/V7NR/qOocgk+/7S0lNzciYsurMCeJzUL7LYIqVnWw==",
+      "type": "package",
+      "path": "sevenzip/19.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net20/SevenZip.dll",
+        "lib/netstandard2.0/SevenZip.dll",
+        "pack-package.cmd",
+        "publish-package.cmd",
+        "sevenzip.19.0.0.nupkg.sha512",
+        "sevenzip.nuspec"
+      ]
+    },
+    "SevenZipSharp.Net45/1.0.19": {
+      "sha512": "id1Y29NDy81uMBWNoOXuYpeC99VyU0T+xxmQVW19uz0xa28f2xcQlzQT8KL3G1VEh9VhgWXaYdcQu9Fuzzf1XA==",
+      "type": "package",
+      "path": "sevenzipsharp.net45/1.0.19",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/SevenZipSharp.dll",
+        "lib/net45/SevenZipSharp.pdb",
+        "sevenzipsharp.net45.1.0.19.nupkg.sha512",
+        "sevenzipsharp.net45.nuspec"
+      ]
+    },
     "SharpVectors.Wpf/1.8.1": {
       "sha512": "2AoWUpEavXJ/W0QJdM53++U2T2HGfoKQRA+TvvJFpy8v/RLgNi7LCubIB8kgYBnYV7785G7TyCcOieBHU9YvMA==",
       "type": "package",
@@ -565,6 +615,8 @@
     "net6.0-windows7.0": [
       "MaterialDesignThemes >= 5.0.0-ci330",
       "ReactiveUI.WPF >= 19.4.1",
+      "SevenZip >= 19.0.0",
+      "SevenZipSharp.Net45 >= 1.0.19",
       "SharpVectors.Wpf >= 1.8.1"
     ]
   },
@@ -574,11 +626,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mihail\\RiderProjects\\RepackInstaller\\RepackInstaller\\RepackInstaller.csproj",
-      "projectName": "RepackInstaller",
-      "projectPath": "C:\\Users\\mihail\\RiderProjects\\RepackInstaller\\RepackInstaller\\RepackInstaller.csproj",
+      "projectUniqueName": "C:\\Users\\mihail\\RiderProjects\\AppInstaller\\AppInstaller\\AppInstaller.csproj",
+      "projectName": "AppInstaller",
+      "projectPath": "C:\\Users\\mihail\\RiderProjects\\AppInstaller\\AppInstaller\\AppInstaller.csproj",
       "packagesPath": "C:\\Users\\mihail\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mihail\\RiderProjects\\RepackInstaller\\RepackInstaller\\obj\\",
+      "outputPath": "C:\\Users\\mihail\\RiderProjects\\AppInstaller\\AppInstaller\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\mihail\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -615,6 +667,14 @@
             "target": "Package",
             "version": "[19.4.1, )"
           },
+          "SevenZip": {
+            "target": "Package",
+            "version": "[19.0.0, )"
+          },
+          "SevenZipSharp.Net45": {
+            "target": "Package",
+            "version": "[1.0.19, )"
+          },
           "SharpVectors.Wpf": {
             "target": "Package",
             "version": "[1.8.1, )"
@@ -648,8 +708,18 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Пакет \"ReactiveUI.WPF 19.4.1\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net6.0-windows7.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
+      "message": "Package 'ReactiveUI.WPF 19.4.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
       "libraryId": "ReactiveUI.WPF",
+      "targetGraphs": [
+        "net6.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'SevenZipSharp.Net45 1.0.19' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "SevenZipSharp.Net45",
       "targetGraphs": [
         "net6.0-windows7.0"
       ]
