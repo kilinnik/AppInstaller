@@ -1,0 +1,69 @@
+<UserControl x:Class="AppInstaller.Views.ReadyView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid d:DataContext="{d:DesignInstance }">
+        <!-- Основная сетка с контейнерами для размещения элементов -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <!-- Верхняя часть с контейнером для изображения игры -->
+        <Grid Margin="5">
+            <!-- Прямоугольник для изображения игры с закругленными углами -->
+            <Rectangle Height="75" Width="482" RadiusX="30" RadiusY="30">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{Binding HeadImage}" />
+                </Rectangle.Fill>
+            </Rectangle>
+        </Grid>
+        <!-- Нижняя часть с контейнером для информации о выбранной папке и создании ярлыка -->
+        <Grid Grid.Row="1">
+            <!-- Фоновый прямоугольник с градиентом -->
+            <Rectangle Width="482" Height="310" RadiusX="30" RadiusY="30">
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#A06CD5" Offset="0" />
+                        <GradientStop Color="#4F2BAE" Offset="1" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <!-- Контейнер для отображения информации -->
+            <StackPanel>
+                <!-- Контейнер с текстом о выбранной папке -->
+                <Grid Margin="20,10,5,5">
+                    <!-- Текст о выбранной папке с тенью и белым текстом -->
+                    <TextBlock Margin="5" Height="16" TextWrapping="Wrap"
+                               Text="{Binding SelectedPath}" FontSize="12" Foreground="Black"
+                               HorizontalAlignment="Left">
+                        <TextBlock.RenderTransform>
+                            <TranslateTransform X="1" Y="1" />
+                        </TextBlock.RenderTransform>
+                    </TextBlock>
+                    <TextBlock Margin="5" Height="16" TextWrapping="Wrap"
+                               Text="{Binding SelectedPath}" FontSize="12" Foreground="White"
+                               HorizontalAlignment="Left">
+                    </TextBlock>
+                </Grid>
+                <!-- Контейнер с текстом о создании ярлыка -->
+                <Grid Margin="20,5,5,5">
+                    <!-- Текст о создании ярлыка с тенью и белым текстом -->
+                    <TextBlock Margin="5" TextWrapping="Wrap" Width="360"
+                               Text="{Binding AdditionalComponents}" FontSize="12" Foreground="Black"
+                               HorizontalAlignment="Left">
+                        <TextBlock.RenderTransform>
+                            <TranslateTransform X="1" Y="1" />
+                        </TextBlock.RenderTransform>
+                    </TextBlock>
+                    <TextBlock Margin="5" TextWrapping="Wrap" Width="360"
+                               Text="{Binding AdditionalComponents}" FontSize="12" Foreground="White"
+                               HorizontalAlignment="Left">
+                    </TextBlock>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
