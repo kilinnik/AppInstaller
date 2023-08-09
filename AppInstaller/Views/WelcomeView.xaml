@@ -1,0 +1,79 @@
+<UserControl x:Class="AppInstaller.Views.WelcomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <!-- Задаем контекст данных (ViewModel) для этого UserControl -->
+    <Grid d:DataContext="{d:DesignInstance}" Margin="2">
+        <!-- Основная сетка с контейнерами для размещения элементов -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <!-- Верхняя часть с контейнерами для приветственного сообщения и описания игры -->
+        <Grid>
+            <!-- Фоновый прямоугольник с градиентом -->
+            <Rectangle Width="482" Height="80" RadiusX="30" RadiusY="30">
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                        <GradientStop Color="#A06CD5" Offset="0" />
+                        <GradientStop Color="#4F2BAE" Offset="1" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <!-- Контейнер для приветственного сообщения -->
+            <Grid Width="482" Height="80" ClipToBounds="True">
+                <!-- Определяем две строки внутри контейнера -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <!-- Текстовый блок с приветственным сообщением, тенью -->
+                <TextBlock Margin="2" FontSize="12" Foreground="Black"
+                           Text="{Binding WelcomeMessage}" HorizontalAlignment="Center">
+                    <TextBlock.RenderTransform>
+                        <TranslateTransform X="1" Y="1" />
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+                <!-- Текстовый блок с приветственным сообщением, белым текстом -->
+                <TextBlock Grid.Row="0" Margin="2" FontSize="12" Foreground="White"
+                           Text="{Binding WelcomeMessage}" HorizontalAlignment="Center">
+                </TextBlock>
+                <!-- Контейнер с прокручиваемым описанием игры -->
+                <ScrollViewer Grid.Row="1" MaxHeight="48" HorizontalAlignment="Center" VerticalAlignment="Center"
+                              HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
+                              PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                    <!-- Внутренняя сетка для размещения текстового блока с описанием игры -->
+                    <Grid>
+                        <!-- Текстовый блок с описанием игры, тенью -->
+                        <TextBlock Width="430" TextWrapping="Wrap"
+                                   Text="{Binding GameDescription}"
+                                   FontSize="12" Foreground="Black" HorizontalAlignment="Center"
+                                   VerticalAlignment="Center">
+                            <TextBlock.RenderTransform>
+                                <TranslateTransform X="1" Y="1" />
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+                        <!-- Текстовый блок с описанием игры, белым текстом -->
+                        <TextBlock Width="430" TextWrapping="Wrap"
+                                   Text="{Binding GameDescription}"
+                                   FontSize="12" Foreground="White" HorizontalAlignment="Center"
+                                   VerticalAlignment="Center">
+                        </TextBlock>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+        <!-- Нижняя часть с контейнером для изображения игры -->
+        <Grid Grid.Row="1" Margin="5">
+            <!-- Прямоугольник для изображения игры с закругленными углами -->
+            <Rectangle Width="482" Height="308" RadiusX="30" RadiusY="30">
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="{Binding BigImage}" />
+                </Rectangle.Fill>
+            </Rectangle>
+        </Grid>
+    </Grid>
+</UserControl>
