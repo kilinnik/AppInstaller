@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -111,11 +109,12 @@ public class InstallingViewModel : ViewModelBase
         MessageBox.Show(message, caption, buttons, icon);
     }
 
-    public async Task InstallApp(string archiveFolderPath, string? destinationFolderPath, string targetExePath,
-        string gameName, string gameVersion, bool iconChecked, IEnumerable<Components> components)
+    public async Task InstallApp(string archiveFolderPath, string? destinationFolderPath,
+        string appName, string appVersion, bool iconChecked, IEnumerable<Components> components, List<string> exePaths,
+        string size)
     {
-        await _model.InstallApp(archiveFolderPath, destinationFolderPath, targetExePath, gameName, gameVersion, iconChecked,
-            components);
+        await _model.InstallApp(archiveFolderPath, destinationFolderPath, appName, appVersion, iconChecked,
+            components, exePaths, size);
         MainWindowViewModel.NavigateNextView();
     }
 }

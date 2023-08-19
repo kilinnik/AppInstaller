@@ -7,7 +7,7 @@
         <UseWPF>true</UseWPF>
         <UseWindowsForms>true</UseWindowsForms>
         <ApplicationManifest>app.manifest</ApplicationManifest>
-        <ApplicationIcon>nitokin repack app icon1.ico</ApplicationIcon>
+        <ApplicationIcon>Resources\nitokin repack app icon1.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,18 +20,42 @@
 
     <ItemGroup>
         <None Remove="tglogo.svg" />
-        <Resource Include="tglogo.svg" />
         <None Remove="nitokin repack app icon1.ico" />
-        <Resource Include="nitokin repack app icon1.ico" />
         <None Remove="7z.dll" />
         <EmbeddedResource Include="7z.dll" />
         <None Remove="App.config" />
         <Resource Include="App.config" />
+        <Resource Include="Resources\nitokin repack app icon1.ico" />
+        <EmbeddedResource Include="Resources\store.steampowered.com.svg" />
+        <Resource Include="Resources\tglogo.svg" />
+        <None Remove="Resources\default.svg" />
+        <EmbeddedResource Include="Resources\default.svg" />
+        <None Remove="Resources\ea.svg" />
+        <EmbeddedResource Include="Resources\ea.com.svg" />
+        <None Remove="Resources\egs.svg" />
+        <None Remove="Resources\gog.svg" />
+        <EmbeddedResource Include="Resources\gog.com.svg" />
+        <None Remove="Resources\rockstar.svg" />
+        <EmbeddedResource Include="Resources\store.rockstargames.com.svg" />
+        <None Remove="Resources\uplay.svg" />
+        <EmbeddedResource Include="Resources\ubisoft.com.svg" />
+        <None Remove="Resources\blizzard.com.svg" />
+        <EmbeddedResource Include="Resources\blizzard.com.svg" />
+        <None Remove="Resources\xbox.com.svg" />
+        <EmbeddedResource Include="Resources\xbox.com.svg" />
+        <None Remove="Resources\playstation.com.svg" />
+        <EmbeddedResource Include="Resources\playstation.com.svg" />
+        <None Remove="Resources\nintendo.com.svg" />
+        <None Remove="Resources\store.epicgames.com.svg" />
+        <EmbeddedResource Include="Resources\store.epicgames.com.svg" />
     </ItemGroup>
     
     <ItemGroup>
         <None Remove="steam_icon_logo.svg" />
-        <Resource Include="steam_icon_logo.svg" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\nintendo.com.svg" />
     </ItemGroup>
 
 

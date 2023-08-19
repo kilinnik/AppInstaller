@@ -11,9 +11,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!-- Верхняя часть с контейнером для изображения игры -->
+        <!-- Верхняя часть с контейнером для изображения программы -->
         <Grid Margin="5">
-            <!-- Прямоугольник для изображения игры с закругленными углами -->
+            <!-- Прямоугольник для изображения программы с закругленными углами -->
             <Rectangle Height="75" Width="482" RadiusX="30" RadiusY="30">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="{Binding HeadImage}" />

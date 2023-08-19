@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AppInstaller"
+        xmlns:localViews="clr-namespace:AppInstaller.Views"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
         WindowStyle="None" BorderThickness="1" AllowsTransparency="True"
@@ -64,14 +65,14 @@
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <TextBlock  Text="{Binding GameTitleDisplay}" FontWeight="700" FontStyle="Normal" FontSize="16"
+            <TextBlock Text="{Binding AppTitleDisplay}" FontWeight="700" FontStyle="Normal" FontSize="16"
                        Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <!-- Эффект для текста (тень) -->
                 <TextBlock.RenderTransform>
                     <TranslateTransform X="1" Y="1" />
                 </TextBlock.RenderTransform>
             </TextBlock>
-            <TextBlock Text="{Binding GameTitleDisplay}" FontWeight="700" FontStyle="Normal" FontSize="16"
+            <TextBlock Text="{Binding AppTitleDisplay}" FontWeight="700" FontStyle="Normal" FontSize="16"
                        Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center">
             </TextBlock>
         </Grid>
@@ -79,11 +80,11 @@
         <Grid Grid.Row="2">
             <ContentControl Height="400" Width="497" x:Name="ContentControl" Content="{Binding CurrentView}" />
         </Grid>
-        <!-- Контейнер для кнопок FAQ, ссылки на Telegram и ссылки на игру в Steam -->
+        <!-- Контейнер для кнопок FAQ, ссылки на Telegram и ссылки на программу в магазине -->
         <WrapPanel Margin="50,2,2,2" Grid.Row="3">
             <Button Foreground="#229ED9" BorderThickness="0" Command="{Binding ShowMessageBoxCommand}"
                     Height="21" Margin="2" ToolTip="FAQ by nitokin"
-                    materialDesign:ButtonAssist.CornerRadius="10"
+                    materialDesign:ButtonAssist.CornerRadius="10" Padding="13,2,13,2"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}">
                 <Button.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
@@ -95,7 +96,7 @@
             </Button>
             <Button BorderThickness="0" Command="{Binding OpenTgLinkCommand}"
                     Height="21" Margin="2" ToolTip="Nitokin Telegram"
-                    materialDesign:ButtonAssist.CornerRadius="10"
+                    materialDesign:ButtonAssist.CornerRadius="10" Padding="13,2,13,2"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}">
                 <Button.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
@@ -106,13 +107,13 @@
                 <!-- Иконка для Telegram -->
                 <Image>
                     <Image.Source>
-                        <svg:SvgImage Source="/tglogo.svg" />
+                        <svg:SvgImage Source="/Resources/tglogo.svg" />
                     </Image.Source>
                 </Image>
             </Button>
-            <Button BorderThickness="0" Command="{Binding OpenSteamLinkCommand}"
-                    Height="21" Margin="2"
-                    materialDesign:ButtonAssist.CornerRadius="10" ToolTip="Ссылка на игру в стиме"
+            <Button BorderThickness="0" Command="{Binding OpenAppPurchaseLinkCommand}"
+                    Height="21" Margin="2" Padding="13,2,13,2"
+                    materialDesign:ButtonAssist.CornerRadius="10" ToolTip="Ссылка программу в магазине"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}">
                 <Button.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
@@ -120,12 +121,7 @@
                         <GradientStop Color="#4F2BAE" Offset="1" />
                     </LinearGradientBrush>
                 </Button.Background>
-                <!-- Иконка для Steam -->
-                <Image Width="21">
-                    <Image.Source>
-                        <svg:SvgImage Source="/steam_icon_logo.svg" />
-                    </Image.Source>
-                </Image>
+                <Image Width="21" Source="{Binding AppPurchaseLinkLogo}" />
             </Button>
         </WrapPanel>
         <!-- Контейнер для кнопок "Вперед/Установить/Завершить", "Назад" и "Отмена" -->

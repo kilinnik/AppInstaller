@@ -41,7 +41,7 @@ namespace AppInstaller
                     while (reader.ReadLine() is { } line)
                     {
                         if (!line.StartsWith("RepackIcon=")) continue;
-                        result = line["RepackIcon=".Length..];
+                        result = line["RepackIcon=".Length..].TrimEnd('\r', '\n');
                         break;
                     }
                 }
@@ -60,7 +60,7 @@ namespace AppInstaller
             }
             catch (Exception ex)
             {
-                var errorMessage = $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                var errorMessage = $"An error occurred in App.LoadIcon(): {ex.Message}\n{ex.StackTrace}";
                 if (ex.InnerException != null)
                 {
                     errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";

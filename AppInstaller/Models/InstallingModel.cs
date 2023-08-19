@@ -41,8 +41,9 @@ public class InstallingModel
         return $"{hours:D2}:{minutes:D2}:{seconds:D2}";
     }
 
-    public async Task InstallApp(string archiveFolderPath, string? destinationFolderPath, string targetExePath,
-        string appName, string gameVersion, bool iconChecked, IEnumerable<Components> components)
+    public async Task InstallApp(string archiveFolderPath, string? destinationFolderPath,
+        string appName, string appVersion, bool iconChecked, IEnumerable<Components> components, List<string> exePaths,
+        string size)
     {
         try
         {
@@ -63,21 +64,21 @@ public class InstallingModel
                 }
 
                 await Task.Run(() =>
-                    DecompressWithComponents(destinationFolderPath, archiveFolderPath, appName, components));
+                    DecompressWithComponents(destinationFolderPath, archiveFolderPath, appName, components, size));
 
                 if (iconChecked)
                 {
-                    CreateShortCut(targetExePath, appName);
+                    CreateShortCut(destinationFolderPath, exePaths);
                 }
 
-                var uninstallBatPath = CreateUninstallBat(appName, destinationFolderPath);
-                GameRegistration(appName, gameVersion, targetExePath, uninstallBatPath);
+                var uninstallBatPath = CreateUninstallBat(exePaths, destinationFolderPath, appName);
+                AppRegistration(appName, appVersion, destinationFolderPath + exePaths[0], uninstallBatPath);
             }
 
-            var configFilePath = Path.Combine(AppContext.BaseDirectory, "AppInstaller.dll.config");
-            if (File.Exists(configFilePath))
+            var configFiles = Directory.GetFiles(AppContext.BaseDirectory, "*.dll.config");
+            foreach (var configFile in configFiles)
             {
-                File.Delete(configFilePath);
+                File.Delete(configFile);
             }
 
             _timerModel.Stop();
@@ -127,17 +128,18 @@ public class InstallingModel
     }
 
     private void DecompressWithComponents(string installPath, string archiveFolderPath, string appName,
-        IEnumerable<Components> components)
+        IEnumerable<Components> components, string appSize)
     {
         try
         {
             LoadEmbeddedSevenZipLibrary();
 
             // Получаем все архивы
-            var archiveFiles = Directory.GetFiles(archiveFolderPath, "*.7z.*");
+            var archiveFiles = Directory.GetFiles(archiveFolderPath, "*.7z.001");
 
             // Вычисляем общий размер всех архивов
-            var totalSize = archiveFiles.Sum(file => new FileInfo(file).Length);
+            var gigabytes = double.Parse(appSize[..^3]);
+            var totalSize = (long)(gigabytes * 1024 * 1024 * 1024);
             var processedSize = 0L;
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -146,8 +148,12 @@ public class InstallingModel
             {
                 processedSize += (long)size;
                 var progressPercentage = (int)((double)processedSize / totalSize * 100);
-                if (progressPercentage <= 100) ProgressChanged(progressPercentage);
-
+                if (progressPercentage > 100)
+                {
+                    processedSize = 100;
+                }
+                ProgressChanged(progressPercentage);
+                
                 var now = DateTime.Now;
                 if (!((now - _lastUpdateTime).TotalSeconds >= 1)) return;
                 _lastUpdateTime = now;
@@ -171,6 +177,7 @@ public class InstallingModel
                     using var extractor = new SevenZipExtractor(file);
                     extractor.FileExtractionFinished += FileExtractionFinishedHandler;
                     extractor.ExtractArchive(installPath);
+                    extractor.FileExtractionFinished -= FileExtractionFinishedHandler;
                 }
             }
 
@@ -198,68 +205,80 @@ public class InstallingModel
         }
     }
 
-    private static void CreateShortCut(string targetExePath, string? gameName)
+    private static void CreateShortCut(string appFolder, List<string> exePaths)
     {
-        var link = (IShellLink)new ShellLink();
+        foreach (var exePath in exePaths)
+        {
+            var link = (IShellLink)new ShellLink();
 
-        // setup shortcut information
-        link.SetDescription("repack by nitokin");
-        link.SetPath(targetExePath);
+            // Настройка информации о ярлыке
+            link.SetDescription("repack by nitokin");
+            link.SetPath(appFolder + exePath);
 
-        // save it
-        var shortcut = (IPersistFile)link;
-        var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-        shortcut.Save(Path.Combine(desktopPath, gameName + ".lnk"), false);
+            // Сохранение
+            var shortcut = (IPersistFile)link;
+            var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            var exeNameWithoutExtension = Path.GetFileNameWithoutExtension(exePath);
+            shortcut.Save(Path.Combine(desktopPath, exeNameWithoutExtension + ".lnk"), false);
+        }
     }
 
-    private static void GameRegistration(string gameName, string gameVersion, string targetExePath,
+    private static void AppRegistration(string appName, string appVersion, string targetExePath,
         string uninstallBatPath)
     {
         using var uninstallKey =
             Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", true);
         if (uninstallKey == null) return;
-        using var appKey = uninstallKey.CreateSubKey(gameName);
-        appKey.SetValue("DisplayName", gameName);
+        using var appKey = uninstallKey.CreateSubKey(appName);
+        appKey.SetValue("DisplayName", appName);
         appKey.SetValue("DisplayIcon", targetExePath);
-        appKey.SetValue("DisplayVersion", gameVersion);
+        appKey.SetValue("DisplayVersion", appVersion);
         appKey.SetValue("Publisher", "Repack by Nitokin");
         appKey.SetValue("InstallLocation", Path.GetDirectoryName(targetExePath));
         appKey.SetValue("UninstallString", $"\"{uninstallBatPath}\" /uninstall");
     }
 
-    private string CreateUninstallBat(string? gameName, string pathToApp)
+    private string CreateUninstallBat(IEnumerable<string> exePaths, string pathToApp, string appName)
     {
-        var pathToBat = $@"{pathToApp}\uninstall{gameName}.bat";
-        var newFilePath = string.Empty;
+        var pathToBat = $@"{pathToApp}\uninstall{appName}.bat";
+        //var newFilePath = string.Empty;
         try
         {
             // Читаем все строки из файла
-            var lines = File.ReadAllLines(pathToBat);
+            var lines = File.ReadAllLines(pathToBat).ToList();
+
+            // Вставляем строки для удаления ярлыков на основе exePaths
+            var indexForInsertion = 2;
+            foreach (var exeNameWithoutExtension in exePaths.Select(Path.GetFileNameWithoutExtension))
+            {
+                lines.Insert(indexForInsertion, $"del \"%USERPROFILE%\\Desktop\\{exeNameWithoutExtension}.lnk\"");
+                indexForInsertion++;
+            }
 
             // Заменяем подстроки в каждой строке
-            for (var i = 0; i < lines.Length; i++)
+            for (var i = indexForInsertion; i < lines.Count; i++)
             {
-                lines[i] = lines[i].Replace("gameName", gameName);
                 lines[i] = lines[i].Replace("pathToApp", pathToApp);
+                lines[i] = lines[i].Replace("appName", appName);
             }
 
             // Записываем обратно в файл
             File.WriteAllLines(pathToBat, lines);
 
-            // Получаем путь к папке appdata\local текущего пользователя
-            var appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "uninstalls");
-
-            // Создаем директорию, если она не существует
-            Directory.CreateDirectory(appDataPath);
-            // Перемещаем файл
-            newFilePath = Path.Combine(appDataPath, Path.GetFileName(pathToBat));
-            if (File.Exists(newFilePath))
-            {
-                File.Delete(newFilePath);
-            }
-
-            File.Move(pathToBat, newFilePath);
+            // // Получаем путь к папке appdata\local текущего пользователя
+            // var appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            //     "uninstalls");
+            //
+            // // Создаем директорию, если она не существует
+            // Directory.CreateDirectory(appDataPath);
+            // // Перемещаем файл
+            // newFilePath = Path.Combine(appDataPath, Path.GetFileName(pathToBat));
+            // if (File.Exists(newFilePath))
+            // {
+            //     File.Delete(newFilePath);
+            // }
+            //
+            // File.Move(pathToBat, newFilePath);
         }
         catch (Exception ex)
         {
@@ -273,7 +292,7 @@ public class InstallingModel
             ErrorMessageOccurred(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        return newFilePath;
+        return pathToBat;
     }
 
     [ComImport]
