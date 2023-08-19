@@ -5,14 +5,14 @@ namespace AppInstaller.ViewModels;
 
 public class WelcomeViewModel : ViewModelBase
 {
-    // Описание игры.
-    private string? _gameDescription;
+    // Описание программы.
+    private string? _appDescription;
 
-    // Свойство для доступа к описанию игры.
-    public string? GameDescription
+    // Свойство для доступа к описанию программы.
+    public string? AppDescription
     {
-        get => _gameDescription;
-        set => this.RaiseAndSetIfChanged(ref _gameDescription, value);
+        get => _appDescription;
+        set => this.RaiseAndSetIfChanged(ref _appDescription, value);
     }
 
     // Приветственное сообщение, отображаемое в представлении
@@ -33,10 +33,10 @@ public class WelcomeViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _bigImage, value);
     }
     
-    public WelcomeViewModel(string? gameName, ImageSource? bigImage, string gameDescription)
+    public WelcomeViewModel(string? appName, ImageSource? bigImage, string appDescription)
     {
-        WelcomeMessage = $"Приветствуем вас в установщике \"{gameName}\"";
-        GameDescription = gameDescription;
+        WelcomeMessage = $"Приветствуем вас в установщике \"{appName}\"";
+        AppDescription = appDescription;
         BigImage = bigImage;
     }
 }

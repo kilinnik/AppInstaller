@@ -12,7 +12,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!-- Верхняя часть с контейнерами для приветственного сообщения и описания игры -->
+        <!-- Верхняя часть с контейнерами для приветственного сообщения и описания программы -->
         <Grid>
             <!-- Фоновый прямоугольник с градиентом -->
             <Rectangle Width="482" Height="80" RadiusX="30" RadiusY="30">
@@ -41,24 +41,24 @@
                 <TextBlock Grid.Row="0" Margin="2" FontSize="12" Foreground="White"
                            Text="{Binding WelcomeMessage}" HorizontalAlignment="Center">
                 </TextBlock>
-                <!-- Контейнер с прокручиваемым описанием игры -->
+                <!-- Контейнер с прокручиваемым описанием программы -->
                 <ScrollViewer Grid.Row="1" MaxHeight="48" HorizontalAlignment="Center" VerticalAlignment="Center"
                               HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
                               PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-                    <!-- Внутренняя сетка для размещения текстового блока с описанием игры -->
+                    <!-- Внутренняя сетка для размещения текстового блока с описанием программы -->
                     <Grid>
-                        <!-- Текстовый блок с описанием игры, тенью -->
+                        <!-- Текстовый блок с описанием программы, тенью -->
                         <TextBlock Width="430" TextWrapping="Wrap"
-                                   Text="{Binding GameDescription}"
+                                   Text="{Binding AppDescription}"
                                    FontSize="12" Foreground="Black" HorizontalAlignment="Center"
                                    VerticalAlignment="Center">
                             <TextBlock.RenderTransform>
                                 <TranslateTransform X="1" Y="1" />
                             </TextBlock.RenderTransform>
                         </TextBlock>
-                        <!-- Текстовый блок с описанием игры, белым текстом -->
+                        <!-- Текстовый блок с описанием программы, белым текстом -->
                         <TextBlock Width="430" TextWrapping="Wrap"
-                                   Text="{Binding GameDescription}"
+                                   Text="{Binding AppDescription}"
                                    FontSize="12" Foreground="White" HorizontalAlignment="Center"
                                    VerticalAlignment="Center">
                         </TextBlock>
@@ -66,9 +66,9 @@
                 </ScrollViewer>
             </Grid>
         </Grid>
-        <!-- Нижняя часть с контейнером для изображения игры -->
+        <!-- Нижняя часть с контейнером для изображения программы -->
         <Grid Grid.Row="1" Margin="5">
-            <!-- Прямоугольник для изображения игры с закругленными углами -->
+            <!-- Прямоугольник для изображения программы с закругленными углами -->
             <Rectangle Width="482" Height="308" RadiusX="30" RadiusY="30">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="{Binding BigImage}" />

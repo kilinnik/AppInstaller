@@ -33,9 +33,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!-- Верхняя часть с контейнерами для изображения игры и выбора папки установки -->
+        <!-- Верхняя часть с контейнерами для изображения программы и выбора папки установки -->
         <Grid Margin="5">
-            <!-- Прямоугольник для изображения игры с закругленными углами -->
+            <!-- Прямоугольник для изображения программы с закругленными углами -->
             <Rectangle Height="75" Width="482" RadiusX="30" RadiusY="30">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="{Binding HeadImage}" />
@@ -66,7 +66,7 @@
                                Foreground="White" Text="Выбор параметров установки">
                     </TextBlock>
                 </Grid>
-                <!-- Текст "Выберите папку для установки игры" и кнопка "Изменить" -->
+                <!-- Текст "Выберите папку для установки программы" и кнопка "Изменить" -->
                 <WrapPanel>
                     <Grid Width="200" Height="29" Margin="30,5,5,5">
                         <!-- Прямоугольник с градиентом и текстом выбранной папки -->
@@ -169,14 +169,14 @@
                                   VerticalAlignment="Center" Template="{StaticResource RoundCheckBoxTemplate}" />
                         <Grid>
                             <!-- Текст с тенью и белым текстом -->
-                            <TextBlock Margin="5" Width="168" Height="16" TextWrapping="Wrap"
+                            <TextBlock Margin="5" Width="360" Height="16" TextWrapping="Wrap"
                                        Text="Создать ярлык на рабочем столе" FontSize="12" Foreground="Black"
                                        HorizontalAlignment="Left">
                                 <TextBlock.RenderTransform>
                                     <TranslateTransform X="1" Y="1" />
                                 </TextBlock.RenderTransform>
                             </TextBlock>
-                            <TextBlock Margin="5" Width="168" Height="16" TextWrapping="Wrap"
+                            <TextBlock Margin="5" Width="360" Height="16" TextWrapping="Wrap"
                                        Text="Создать ярлык на рабочем столе" FontSize="12" Foreground="White"
                                        HorizontalAlignment="Left">
                             </TextBlock>

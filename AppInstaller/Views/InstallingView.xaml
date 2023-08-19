@@ -42,11 +42,11 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!-- Контейнер для изображения игры -->
+        <!-- Контейнер для изображения программы -->
         <Grid Grid.Row="0" Margin="5">
             <Rectangle Height="75" Width="482" RadiusX="30" RadiusY="30">
                 <Rectangle.Fill>
-                    <!-- Привязка к изображению игры из DataContext -->
+                    <!-- Привязка к изображению программы из DataContext -->
                     <ImageBrush ImageSource="{Binding HeadImage}" />
                 </Rectangle.Fill>
             </Rectangle>

@@ -14,7 +14,7 @@ namespace AppInstaller.ViewModels
         // Ссылка на главную ViewModel
         private MainWindowViewModel MainWindowViewModel { get; }
 
-        private readonly string? _gameName;
+        private readonly string? _appName;
         
         public ObservableCollection<Components> Components { get; } = new();
 
@@ -62,13 +62,13 @@ namespace AppInstaller.ViewModels
         // Команда для выбора директории установки
         public ReactiveCommand<Unit, Unit> ChooseDirectoryCommand { get; }
 
-        public SelectDirViewModel(MainWindowViewModel mainWindowViewModel, ImageSource? headImage, string? gameName,
+        public SelectDirViewModel(MainWindowViewModel mainWindowViewModel, ImageSource? headImage, string? appName,
             string neededMemory, IEnumerable<KeyValuePair<string, string>> components)
         {
             MainWindowViewModel = mainWindowViewModel;
             HeadImage = headImage;
-            _gameName = gameName;
-            SelectedPath = $@"C:\Program Files (x86)\{_gameName}";
+            _appName = appName;
+            SelectedPath = $@"C:\Program Files (x86)\{_appName}";
             NeededMemory = neededMemory;
             var i = 1;
             foreach (var component in components)
@@ -90,7 +90,7 @@ namespace AppInstaller.ViewModels
 
             var result = folderDialog.ShowDialog();
             if (result != DialogResult.OK) return;
-            SelectedPath = $@"{folderDialog.SelectedPath}\{_gameName}";
+            SelectedPath = $@"{folderDialog.SelectedPath}\{_appName}";
             MainWindowViewModel.SelectedPath = SelectedPath;
         }
     }
