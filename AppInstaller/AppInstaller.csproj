@@ -7,11 +7,13 @@
         <UseWPF>true</UseWPF>
         <UseWindowsForms>true</UseWindowsForms>
         <ApplicationManifest>app.manifest</ApplicationManifest>
-        <ApplicationIcon>nitokin repack app icon1.ico</ApplicationIcon>
+        <ApplicationIcon>Resources\nitokin repack app icon1.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="MaterialDesignThemes" Version="5.0.0-ci330" />
+      <PackageReference Include="Mirror.ChatGpt" Version="1.0.2" />
+      <PackageReference Include="NAudio" Version="2.1.0" />
       <PackageReference Include="ReactiveUI.WPF" Version="19.4.1" />
       <PackageReference Include="SevenZip" Version="19.0.0" />
       <PackageReference Include="SevenZipSharp.Net45" Version="1.0.19" />
@@ -20,18 +22,58 @@
 
     <ItemGroup>
         <None Remove="tglogo.svg" />
-        <Resource Include="tglogo.svg" />
         <None Remove="nitokin repack app icon1.ico" />
-        <Resource Include="nitokin repack app icon1.ico" />
         <None Remove="7z.dll" />
         <EmbeddedResource Include="7z.dll" />
         <None Remove="App.config" />
         <Resource Include="App.config" />
+        <Resource Include="Resources\nitokin repack app icon1.ico" />
+        <EmbeddedResource Include="Resources\store.steampowered.com.svg" />
+        <Resource Include="Resources\tglogo.svg" />
+        <None Remove="Resources\default.svg" />
+        <EmbeddedResource Include="Resources\default.svg" />
+        <None Remove="Resources\ea.svg" />
+        <EmbeddedResource Include="Resources\ea.com.svg" />
+        <None Remove="Resources\egs.svg" />
+        <None Remove="Resources\gog.svg" />
+        <EmbeddedResource Include="Resources\gog.com.svg" />
+        <None Remove="Resources\rockstar.svg" />
+        <EmbeddedResource Include="Resources\store.rockstargames.com.svg" />
+        <None Remove="Resources\uplay.svg" />
+        <EmbeddedResource Include="Resources\ubisoft.com.svg" />
+        <None Remove="Resources\blizzard.com.svg" />
+        <EmbeddedResource Include="Resources\blizzard.com.svg" />
+        <None Remove="Resources\xbox.com.svg" />
+        <EmbeddedResource Include="Resources\xbox.com.svg" />
+        <None Remove="Resources\playstation.com.svg" />
+        <EmbeddedResource Include="Resources\playstation.com.svg" />
+        <None Remove="Resources\nintendo.com.svg" />
+        <None Remove="Resources\store.epicgames.com.svg" />
+        <EmbeddedResource Include="Resources\store.epicgames.com.svg" />
+        <None Remove="Resources\default_track.txt" />
+        <EmbeddedResource Include="Resources\default_track.txt" />
+        <EmbeddedResource Update="Resources\Strings.en-US.resx">
+          <Generator>PublicResXFileCodeGenerator</Generator>
+          <CustomToolNamespace>AppInstaller.Resources</CustomToolNamespace>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\Strings.ru-RU.resx">
+          <Generator>PublicResXFileCodeGenerator</Generator>
+          <CustomToolNamespace>AppInstaller.Resources</CustomToolNamespace>
+        </EmbeddedResource>
+        <None Remove="Resources\chatgpt.svg" />
+        <Resource Include="Resources\chatgpt.svg" />
+        <Page Remove="Themes\DarkTheme.xaml" />
+        <Resource Include="Themes\DarkTheme.xaml" />
+        <Page Remove="Themes\LightTheme.xaml" />
+        <Resource Include="Themes\LightTheme.xaml" />
     </ItemGroup>
     
     <ItemGroup>
         <None Remove="steam_icon_logo.svg" />
-        <Resource Include="steam_icon_logo.svg" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\nintendo.com.svg" />
     </ItemGroup>
 
 

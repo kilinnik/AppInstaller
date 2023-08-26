@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -12,7 +10,14 @@ namespace AppInstaller.ViewModels;
 public class InstallingViewModel : ViewModelBase
 {
     private readonly InstallingModel _model;
-
+    
+    private string _currentTheme;
+    public string CurrentTheme
+    {
+        get => _currentTheme;
+        set => this.RaiseAndSetIfChanged(ref _currentTheme, value);
+    }
+    
     private MainWindowViewModel MainWindowViewModel { get; }
 
     private string _elapsedTime;
@@ -74,6 +79,7 @@ public class InstallingViewModel : ViewModelBase
     public InstallingViewModel(ImageSource headImage, MainWindowViewModel mainWindowViewModel, ImageSource mascotImage,
         string repackerName, InstallingModel model)
     {
+        CurrentTheme = "Light";
         _model = model;
         _model.ProgressChanged += OnProgressChanged;
         _model.ErrorMessageOccurred += OnErrorMessageOccurred;
@@ -81,8 +87,8 @@ public class InstallingViewModel : ViewModelBase
 
         HeadImage = headImage;
         MainWindowViewModel = mainWindowViewModel;
-        ElapsedTime = "Времени прошло: 00:00:00";
-        RemainingTime = "Времени осталось: 00:00:00";
+        ElapsedTime = $"{Resources.Strings.TimeElapsed} 00:00:00";
+        RemainingTime = $"{Resources.Strings.TimeRemaining} 00:00:00";
         MascotImage = mascotImage;
         RepackerName = "by " + repackerName;
     }
@@ -111,11 +117,12 @@ public class InstallingViewModel : ViewModelBase
         MessageBox.Show(message, caption, buttons, icon);
     }
 
-    public async Task InstallApp(string archiveFolderPath, string? destinationFolderPath, string targetExePath,
-        string gameName, string gameVersion, bool iconChecked, IEnumerable<Components> components)
+    public async Task InstallApp(string archiveFolderPath, string? destinationFolderPath,
+        string appName, string appVersion, bool iconChecked, IEnumerable<Components> components, List<string> exePaths,
+        string size)
     {
-        await _model.InstallApp(archiveFolderPath, destinationFolderPath, targetExePath, gameName, gameVersion, iconChecked,
-            components);
+        await _model.InstallApp(archiveFolderPath, destinationFolderPath, appName, appVersion, iconChecked,
+            components, exePaths, size);
         MainWindowViewModel.NavigateNextView();
     }
 }

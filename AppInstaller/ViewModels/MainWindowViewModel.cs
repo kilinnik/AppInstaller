@@ -1,15 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Reactive;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
+using System.Windows.Media;
 using AppInstaller.Models;
 using AppInstaller.Views;
 using ReactiveUI;
+using SharpVectors.Converters;
+using SharpVectors.Renderers.Wpf;
 
 namespace AppInstaller.ViewModels;
 
@@ -21,7 +24,7 @@ public class MainWindowViewModel : ViewModelBase
 
     private readonly UserControl?[] _views;
 
-    private readonly string _gameName;
+    private readonly string _appName;
 
     private readonly IEnumerable<KeyValuePair<string, string>> _components;
 
@@ -37,12 +40,20 @@ public class MainWindowViewModel : ViewModelBase
         set => _mainWindowModel.IconChecked = value;
     }
 
-    private string? _gameTitleDisplay;
+    private DrawingImage _appPurchaseLinkLogo;
 
-    public string? GameTitleDisplay
+    public DrawingImage AppPurchaseLinkLogo
     {
-        get => _gameTitleDisplay;
-        set => this.RaiseAndSetIfChanged(ref _gameTitleDisplay, value);
+        get => _appPurchaseLinkLogo;
+        set => this.RaiseAndSetIfChanged(ref _appPurchaseLinkLogo, value);
+    }
+
+    private string? _appTitleDisplay;
+
+    public string? AppTitleDisplay
+    {
+        get => _appTitleDisplay;
+        set => this.RaiseAndSetIfChanged(ref _appTitleDisplay, value);
     }
 
     private UserControl? _currentView;
@@ -85,9 +96,25 @@ public class MainWindowViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _buttonNextText, value);
     }
 
+    private string _currentTheme;
+
+    public string CurrentTheme
+    {
+        get => _currentTheme;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _currentTheme, value);
+            if (_views[3]?.DataContext is InstallingViewModel installingViewModel)
+            {
+                installingViewModel.CurrentTheme = value;
+            }
+        }
+    }
+
     public ReactiveCommand<Unit, Unit> ShowMessageBoxCommand { get; }
+    public ReactiveCommand<Unit, Unit> ShowChatGptWindowCommand { get; }
     public ReactiveCommand<Unit, Unit> OpenTgLinkCommand { get; }
-    public ReactiveCommand<Unit, Unit> OpenSteamLinkCommand { get; }
+    public ReactiveCommand<Unit, Unit> OpenAppPurchaseLinkCommand { get; }
     public ReactiveCommand<Unit, Unit> NavigateToNextViewCommand { get; }
     public ReactiveCommand<Unit, Unit> NavigateToPreviousViewCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelCommand { get; }
@@ -97,21 +124,23 @@ public class MainWindowViewModel : ViewModelBase
         _mainWindowModel = new MainWindowModel();
         _mainWindowModel.ErrorMessageOccurred += OnErrorMessageOccurred;
         _components = _mainWindowModel.GetComponentNames();
-        _gameName = _mainWindowModel.GetGameName();
-        GameTitleDisplay = $"R. G. NITOKIN - {_mainWindowModel.GetGameName()}";
+        _appName = _mainWindowModel.GetAppName();
+        AppTitleDisplay = $"R. G. NITOKIN - {_appName}";
         var bigImage = _mainWindowModel.GetBigImage();
         var headImage = _mainWindowModel.GetHeadImage();
+        var link = _mainWindowModel.GetAppPurchaseLink();
+        SetLogo(link);
 
         _views = new UserControl?[]
         {
             new WelcomeView
             {
-                DataContext = new WelcomeViewModel(_gameName, bigImage, _mainWindowModel.GetGameDescription())
+                DataContext = new WelcomeViewModel(_appName, bigImage, _mainWindowModel.GetAppDescription())
             },
             new SelectDirView
             {
-                DataContext = new SelectDirViewModel(this, headImage, _gameName,
-                    "Занимаемый файлами размер: " + _mainWindowModel.GetNeededMemory(), _components)
+                DataContext = new SelectDirViewModel(this, headImage, _appName,
+                    _mainWindowModel.GetNeededMemory(), _components)
             },
             new ReadyView { DataContext = new ReadyViewModel(headImage) },
             new InstallingView
@@ -122,20 +151,58 @@ public class MainWindowViewModel : ViewModelBase
             new FinishedView { DataContext = new FinishedViewModel(bigImage) }
         };
 
+        CurrentTheme = "Light";
         _currentViewIndex = 0;
         CurrentView = _views[_currentViewIndex];
         IconChecked = false;
         IsBackButtonVisible = false;
         IsNextButtonVisible = true;
         IsCancelButtonVisible = true;
-        ButtonNextText = "< Вперед";
+        ButtonNextText = Resources.Strings.Next;
 
         ShowMessageBoxCommand = ReactiveCommand.Create(ShowMessageBox);
+        ShowChatGptWindowCommand = ReactiveCommand.Create(ShowChatGptWindow);
         OpenTgLinkCommand = ReactiveCommand.Create(() => OpenLink("https://t.me/nito_kin"));
-        OpenSteamLinkCommand = ReactiveCommand.Create(() => OpenLink(_mainWindowModel.GetSteamGameLink()));
+        OpenAppPurchaseLinkCommand = ReactiveCommand.Create(() => OpenLink(link));
         NavigateToNextViewCommand = ReactiveCommand.Create(NavigateNextView);
         NavigateToPreviousViewCommand = ReactiveCommand.Create(NavigatePreviousView);
         CancelCommand = ReactiveCommand.Create(ShowCloseMessageBox);
+    }
+
+    private static DrawingImage LoadSvgFromResource(string resourceName)
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        using var stream = assembly.GetManifestResourceStream(resourceName);
+        var reader = new FileSvgReader(new WpfDrawingSettings());
+        var drawing = reader.Read(stream);
+        return new DrawingImage(drawing);
+    }
+
+    private void SetLogo(string link)
+    {
+        var host = new Uri(link).Host;
+        var resourceName = GetResourceName(host);
+
+        AppPurchaseLinkLogo = LoadSvgFromResource(resourceName);
+    }
+
+    private static string GetResourceName(string host)
+    {
+        string[] domains =
+        {
+            "ea.com", "store.epicgames.com", "gog.com", "blizzard.com", "xbox.com", "playstation.com",
+            "store.rockstargames.com", "store.steampowered.com", "ubisoft.com", "nintendo.com"
+        };
+
+        foreach (var domain in domains)
+        {
+            if (host.Contains(domain))
+            {
+                return $"AppInstaller.Resources.{domain}.svg";
+            }
+        }
+
+        return "AppInstaller.Resources.default.svg";
     }
 
     public void NavigateNextView()
@@ -149,15 +216,15 @@ public class MainWindowViewModel : ViewModelBase
                 return;
             case 2 when _views[_currentViewIndex]?.DataContext is ReadyViewModel readyViewModel:
             {
-                readyViewModel.SelectedPath = "Папка установки: " + SelectedPath;
-                var additionalComponentsBuilder = new StringBuilder("Дополнительные задачи:");
+                readyViewModel.SelectedPath = SelectedPath;
+                var additionalComponentsBuilder = new StringBuilder(Resources.Strings.AdditionalTasks);
                 var selectDirViewModel = _views[1]?.DataContext as SelectDirViewModel;
-                
+
                 if (IconChecked)
                 {
-                    additionalComponentsBuilder.AppendLine().Append(" - Создать иконку на рабочем столе");
+                    additionalComponentsBuilder.AppendLine().Append(" - " + Resources.Strings.CreateDesktopShortcut);
                 }
-                
+
                 foreach (var component in selectDirViewModel?.Components)
                 {
                     if (component.IsChecked)
@@ -180,10 +247,9 @@ public class MainWindowViewModel : ViewModelBase
             {
                 var selectDirViewModel = _views[1]?.DataContext as SelectDirViewModel;
                 installingViewModel.InstallApp(AppDomain.CurrentDomain.BaseDirectory,
-                    SelectedPath, $@"{SelectedPath}\{_mainWindowModel.GetGameExePath()}",
-                    _mainWindowModel.GetGameName(),
-                    _mainWindowModel.GetGameVersion(),
-                    IconChecked, selectDirViewModel.Components);
+                    SelectedPath, _appName, _mainWindowModel.GetAppVersion(), IconChecked,
+                    selectDirViewModel.Components, _mainWindowModel.GetExePaths(),
+                    _mainWindowModel.GetNeededMemory());
                 break;
             }
         }
@@ -209,10 +275,19 @@ public class MainWindowViewModel : ViewModelBase
 
         ButtonNextText = _currentViewIndex switch
         {
-            2 => "Установить",
-            4 => "Завершить",
-            _ => "< Вперед"
+            2 => Resources.Strings.Install,
+            4 => Resources.Strings.Finish,
+            _ => Resources.Strings.Next
         };
+    }
+
+    private static void ShowChatGptWindow()
+    {
+        new ChatGptWindow().ShowDialog();
+        // if (result == true)
+        // {
+        //     Application.Current.Shutdown();
+        // }
     }
 
     private static void ShowCloseMessageBox()
@@ -224,41 +299,24 @@ public class MainWindowViewModel : ViewModelBase
         }
     }
 
-    private static void ShowMessageBox()
+    private void ShowMessageBox()
     {
         try
         {
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
-            if (!File.Exists(filePath))
-            {
-                CustomMessageBox.Show(new TextBlock { Text = "File not found!" });
-                return;
-            }
+            var result = ParseXamlFormattedText(_mainWindowModel.GetRepackDescription());
 
-            var content = File.ReadAllText(filePath);
-            var startIndex = content.IndexOf("RepackDescription=", StringComparison.Ordinal) +
-                             "RepackDescription=".Length;
-            var endIndex = content.IndexOf("\nGameSteamLink=", startIndex, StringComparison.Ordinal);
-
-            if (startIndex >= "RepackInfo=".Length && endIndex >= 0)
-            {
-                var result = ParseXamlFormattedText(content.Substring(startIndex, endIndex - startIndex));
-
-                CustomMessageBox.Show(result);
-            }
-            else
-            {
-                CustomMessageBox.Show(new TextBlock { Text = "Substring not found!" });
-            }
+            CustomMessageBox.Show(result);
         }
         catch (Exception ex)
         {
-            var errorMessage = $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+            var errorMessage =
+                $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
             }
-            CustomMessageBox.Show(new TextBlock { Text = errorMessage});
+
+            CustomMessageBox.Show(new TextBlock { Text = errorMessage });
         }
     }
 

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <data name="CreateDesktopShortcut" xml:space="preserve">
+    <value>Создать ярлык на рабочем столе</value>
+  </data>
+  <data name="FeaturesAndAdd-ons" xml:space="preserve">
+    <value>Особенности и дополнения</value>
+  </data>
+  <data name="ChangeOutputDir" xml:space="preserve">
+    <value>Изменить</value>
+  </data>
+  <data name="InstallationOptionsSelection" xml:space="preserve">
+    <value>Выбор параметров установки</value>
+  </data>
+  <data name="OccupiedByFilesSize" xml:space="preserve">
+    <value>Занимаемый файлами размер: </value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Назад &gt;</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>&lt; Вперёд</value>
+  </data>
+  <data name="Installation" xml:space="preserve">
+    <value>Установка</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="ExitMessage" xml:space="preserve">
+    <value>Вы действительно хотите выйти?</value>
+  </data>
+  <data name="InstallationFolder" xml:space="preserve">
+    <value>Папка установки: </value>
+  </data>
+  <data name="AdditionalTasks" xml:space="preserve">
+    <value>Дополнительные задачи:</value>
+  </data>
+  <data name="AppLink" xml:space="preserve">
+    <value>Ссылка на программу в магазине</value>
+  </data>
+  <data name="PlayPause" xml:space="preserve">
+    <value>Воспроизведение/Пауза</value>
+  </data>
+  <data name="PlayFromTheBeginning" xml:space="preserve">
+    <value>Воспроизвести с начала</value>
+  </data>
+  <data name="WelcomeMessage" xml:space="preserve">
+    <value>Приветствуем вас в установщике </value>
+  </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Времени прошло:</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Времени осталось:</value>
+  </data>
+  <data name="InstallationComplete" xml:space="preserve">
+    <value>Установка завершена"</value>
+  </data>
+  <data name="Finish" xml:space="preserve">
+    <value>Завершить</value>
+  </data>
+  <data name="Install" xml:space="preserve">
+    <value>Установить</value>
+  </data>
+  <data name="NoInternetConnection" xml:space="preserve">
+    <value>Отсутствует интернет-соединение. Пожалуйста, проверьте ваше соединение и попробуйте снова.</value>
+  </data>
+  <!-- ... другие строки ... -->
+</root>

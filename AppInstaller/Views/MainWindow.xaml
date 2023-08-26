@@ -6,18 +6,12 @@
         xmlns:local="clr-namespace:AppInstaller"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
+        xmlns:res="clr-namespace:AppInstaller.Resources"
         WindowStyle="None" BorderThickness="1" AllowsTransparency="True"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Height="531" Width="531"
-        MouseLeftButtonDown="Window_MouseDown">
+        Height="540" Width="531" Background="{DynamicResource WindowBackgroundGradient}"
+        MouseLeftButtonDown="Window_MouseDown" Closing="MainWindow_Closing">
     <!-- Задаем фон окна с градиентом -->
-    <Window.Background>
-        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-            <GradientStop Color="#6247AA" Offset="0" />
-            <GradientStop Color="#9F58BE" Offset="0.5424" />
-            <GradientStop Color="#7F58BE" Offset="1" />
-        </LinearGradientBrush>
-    </Window.Background>
     <!-- Устанавливаем кастомный шаблон для окна -->
     <Window.Template>
         <ControlTemplate TargetType="{x:Type Window}">
@@ -41,16 +35,22 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!-- Заголовок окна "Установка" -->
-        <TextBlock Foreground="White" FontSize="12" Margin="30,5,5,5" Text="Установка"></TextBlock>
+        <TextBlock Foreground="{DynamicResource TextBrush}" FontSize="12" Margin="30,5,5,5"
+                   Text="{x:Static res:Strings.Installation}">
+        </TextBlock>
         <!-- Кнопки для закрытия окна и сворачивания -->
         <StackPanel Grid.Row="0" FlowDirection="RightToLeft" Orientation="Horizontal">
-            <Button Width="50" Background="Transparent" Foreground="#ff4d4d" BorderThickness="0"
+            <Button Width="50" Background="Transparent" Foreground="{DynamicResource CloseBrush}" BorderThickness="0"
                     Command="{Binding CancelCommand}">
                 <materialDesign:PackIcon Kind="Close" />
             </Button>
-            <Button Width="50" Background="Transparent" Foreground="White" BorderThickness="0"
+            <Button Width="50" Background="Transparent" Foreground="{DynamicResource TextBrush}" BorderThickness="0"
                     Click="MinimizeButton_Click">
                 <materialDesign:PackIcon Kind="Minus" />
+            </Button>
+            <Button Width="50" Background="Transparent" Foreground="{DynamicResource TextBrush}" BorderThickness="0"
+                    Click="ToggleTheme">
+                <materialDesign:PackIcon Kind="ThemeLightDark" />
             </Button>
         </StackPanel>
         <!-- Заголовок -->
@@ -58,76 +58,93 @@
             <Rectangle Width="482" Height="29" RadiusX="14.5" RadiusY="14.5">
                 <!-- Фон для заголовка -->
                 <Rectangle.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#A06CD5" Offset="0" />
-                        <GradientStop Color="#4F2BAE" Offset="1" />
-                    </LinearGradientBrush>
+                    <DynamicResource ResourceKey="LeftToRightGradient" />
                 </Rectangle.Fill>
             </Rectangle>
-            <TextBlock  Text="{Binding GameTitleDisplay}" FontWeight="700" FontStyle="Normal" FontSize="16"
-                       Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="{Binding AppTitleDisplay}" FontWeight="700" FontStyle="Normal" FontSize="16"
+                       Foreground="{DynamicResource ShadowBrush}" HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
                 <!-- Эффект для текста (тень) -->
                 <TextBlock.RenderTransform>
                     <TranslateTransform X="1" Y="1" />
                 </TextBlock.RenderTransform>
             </TextBlock>
-            <TextBlock Text="{Binding GameTitleDisplay}" FontWeight="700" FontStyle="Normal" FontSize="16"
-                       Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="{Binding AppTitleDisplay}" FontWeight="700" FontStyle="Normal" FontSize="16"
+                       Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center">
             </TextBlock>
         </Grid>
         <!-- Контейнер для отображения текущего View -->
         <Grid Grid.Row="2">
-            <ContentControl Height="400" Width="497" x:Name="ContentControl" Content="{Binding CurrentView}" />
+            <ContentControl Height="400" Width="497" Content="{Binding CurrentView}" />
         </Grid>
-        <!-- Контейнер для кнопок FAQ, ссылки на Telegram и ссылки на игру в Steam -->
-        <WrapPanel Margin="50,2,2,2" Grid.Row="3">
-            <Button Foreground="#229ED9" BorderThickness="0" Command="{Binding ShowMessageBoxCommand}"
-                    Height="21" Margin="2" ToolTip="FAQ by nitokin"
-                    materialDesign:ButtonAssist.CornerRadius="10"
-                    Style="{StaticResource MaterialDesignRaisedDarkButton}">
-                <Button.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#A06CD5" Offset="0" />
-                        <GradientStop Color="#4F2BAE" Offset="1" />
-                    </LinearGradientBrush>
-                </Button.Background>
-                <materialDesign:PackIcon Kind="FrequentlyAskedQuestions" />
-            </Button>
-            <Button BorderThickness="0" Command="{Binding OpenTgLinkCommand}"
-                    Height="21" Margin="2" ToolTip="Nitokin Telegram"
-                    materialDesign:ButtonAssist.CornerRadius="10"
-                    Style="{StaticResource MaterialDesignRaisedDarkButton}">
-                <Button.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#A06CD5" Offset="0" />
-                        <GradientStop Color="#4F2BAE" Offset="1" />
-                    </LinearGradientBrush>
-                </Button.Background>
-                <!-- Иконка для Telegram -->
-                <Image>
-                    <Image.Source>
-                        <svg:SvgImage Source="/tglogo.svg" />
-                    </Image.Source>
-                </Image>
-            </Button>
-            <Button BorderThickness="0" Command="{Binding OpenSteamLinkCommand}"
-                    Height="21" Margin="2"
-                    materialDesign:ButtonAssist.CornerRadius="10" ToolTip="Ссылка на игру в стиме"
-                    Style="{StaticResource MaterialDesignRaisedDarkButton}">
-                <Button.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#A06CD5" Offset="0" />
-                        <GradientStop Color="#4F2BAE" Offset="1" />
-                    </LinearGradientBrush>
-                </Button.Background>
-                <!-- Иконка для Steam -->
-                <Image Width="21">
-                    <Image.Source>
-                        <svg:SvgImage Source="/steam_icon_logo.svg" />
-                    </Image.Source>
-                </Image>
-            </Button>
-        </WrapPanel>
+        <!-- Контейнер для кнопок FAQ, ссылки на Telegram и ссылки на программу в магазине -->
+        <StackPanel Grid.Row="3">
+            <WrapPanel Margin="50,2,2,2">
+                <Button Foreground="{DynamicResource BlueBrush}" BorderThickness="0" Command="{Binding ShowMessageBoxCommand}"
+                        Height="21" Margin="2" ToolTip="FAQ by nitokin"
+                        materialDesign:ButtonAssist.CornerRadius="10" Padding="13,2,13,2"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}">
+                    <Button.Background>
+                        <DynamicResource ResourceKey="ButtonGradient" />
+                    </Button.Background>
+                    <materialDesign:PackIcon Kind="FrequentlyAskedQuestions" />
+                </Button>
+                <Button BorderThickness="0" Command="{Binding OpenTgLinkCommand}"
+                        Height="21" Margin="2" ToolTip="Nitokin Telegram"
+                        materialDesign:ButtonAssist.CornerRadius="10" Padding="13,2,13,2"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}">
+                    <Button.Background>
+                        <DynamicResource ResourceKey="ButtonGradient" />
+                    </Button.Background>
+                    <!-- Иконка для Telegram -->
+                    <Image>
+                        <Image.Source>
+                            <svg:SvgImage Source="/Resources/tglogo.svg" />
+                        </Image.Source>
+                    </Image>
+                </Button>
+                <Button BorderThickness="0" Command="{Binding OpenAppPurchaseLinkCommand}"
+                        Height="21" Margin="2" Padding="13,2,13,2"
+                        materialDesign:ButtonAssist.CornerRadius="10" ToolTip="{x:Static res:Strings.AppLink}"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}">
+                    <Button.Background>
+                        <DynamicResource ResourceKey="ButtonGradient" />
+                    </Button.Background>
+                    <Image Width="21" Source="{Binding AppPurchaseLinkLogo}" />
+                </Button>
+            </WrapPanel>
+            <WrapPanel Margin="50,2,2,2">
+                <Button BorderThickness="0" Click="PlayPause_Click" Height="21" Margin="2" Padding="13,2,13,2"
+                        materialDesign:ButtonAssist.CornerRadius="10" ToolTip="{x:Static res:Strings.PlayPause}"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}">
+                    <Button.Background>
+                        <DynamicResource ResourceKey="ButtonGradient" />
+                    </Button.Background>
+                    <materialDesign:PackIcon x:Name="PlayIcon" Kind="Play" />
+                </Button>
+                <Button BorderThickness="0" Click="ResetTrack_Click" Height="21" Margin="2" Padding="13,2,13,2"
+                        materialDesign:ButtonAssist.CornerRadius="10"
+                        ToolTip="{x:Static res:Strings.PlayFromTheBeginning}"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}">
+                    <Button.Background>
+                        <DynamicResource ResourceKey="ButtonGradient" />
+                    </Button.Background>
+                    <materialDesign:PackIcon Kind="Restore" />
+                </Button>
+                <Button BorderThickness="0" Height="21" Margin="2" Padding="15.5,2,15.5,2" ToolTip="ChatGPT"
+                        materialDesign:ButtonAssist.CornerRadius="10" Command="{Binding ShowChatGptWindowCommand}"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}">
+                    <Button.Background>
+                        <DynamicResource ResourceKey="ButtonGradient" />
+                    </Button.Background>
+                    <Image>
+                        <Image.Source>
+                            <svg:SvgImage Source="/Resources/chatgpt.svg" />
+                        </Image.Source>
+                    </Image>
+                </Button>
+            </WrapPanel>
+        </StackPanel>
         <!-- Контейнер для кнопок "Вперед/Установить/Завершить", "Назад" и "Отмена" -->
         <WrapPanel Margin="2,2,50,2" Grid.Row="3" FlowDirection="RightToLeft">
             <Button FontSize="10" BorderThickness="0" Command="{Binding NavigateToNextViewCommand}"
@@ -137,18 +154,17 @@
                     Visibility="{Binding IsNextButtonVisible, Converter={StaticResource BoolToHiddenVisibilityConverter}}">
                 <Grid>
                     <TextBlock Margin="2" Text="{Binding ButtonNextText}" FontStyle="Normal" FontSize="10"
-                               Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                               Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"
+                               HorizontalAlignment="Center">
                         <!-- Эффект для текста (тень) -->
                         <TextBlock.Effect>
-                            <DropShadowEffect ShadowDepth="1" Color="Black" Opacity="1" BlurRadius="0" Direction="225" />
+                            <DropShadowEffect ShadowDepth="1" Color="{DynamicResource ShadowColor}" Opacity="1"
+                                              BlurRadius="0" Direction="225" />
                         </TextBlock.Effect>
                     </TextBlock>
                 </Grid>
                 <Button.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#A06CD5" Offset="0" />
-                        <GradientStop Color="#4F2BAE" Offset="1" />
-                    </LinearGradientBrush>
+                    <DynamicResource ResourceKey="ButtonGradient" />
                 </Button.Background>
             </Button>
             <Button FontSize="10" BorderThickness="0" Command="{Binding CancelCommand}"
@@ -157,18 +173,16 @@
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Visibility="{Binding IsCancelButtonVisible, Converter={StaticResource BoolToHiddenVisibilityConverter}}">
                 <Grid>
-                    <TextBlock Text="Отмена">
+                    <TextBlock Text="{x:Static res:Strings.Cancel}">
                         <!-- Эффект для текста (тень) -->
                         <TextBlock.Effect>
-                            <DropShadowEffect ShadowDepth="1" Color="Black" Opacity="1" BlurRadius="0" Direction="225" />
+                            <DropShadowEffect ShadowDepth="1" Color="{DynamicResource ShadowColor}" Opacity="1"
+                                              BlurRadius="0" Direction="225" />
                         </TextBlock.Effect>
                     </TextBlock>
                 </Grid>
                 <Button.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#A06CD5" Offset="0" />
-                        <GradientStop Color="#4F2BAE" Offset="1" />
-                    </LinearGradientBrush>
+                    <DynamicResource ResourceKey="ButtonGradient" />
                 </Button.Background>
             </Button>
             <Button FontSize="10" BorderThickness="0" Command="{Binding NavigateToPreviousViewCommand}"
@@ -177,24 +191,22 @@
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Visibility="{Binding IsBackButtonVisible, Converter={StaticResource BoolToHiddenVisibilityConverter}}">
                 <Grid>
-                    <TextBlock Text="Назад  &gt;">
+                    <TextBlock Text="{x:Static res:Strings.Back}">
                         <!-- Эффект для текста (тень) -->
                         <TextBlock.Effect>
-                            <DropShadowEffect ShadowDepth="1" Color="Black" Opacity="1" BlurRadius="0" Direction="225" />
+                            <DropShadowEffect ShadowDepth="1" Color="{DynamicResource ShadowColor}" Opacity="1"
+                                              BlurRadius="0" Direction="225" />
                         </TextBlock.Effect>
                     </TextBlock>
                 </Grid>
                 <Button.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#A06CD5" Offset="0" />
-                        <GradientStop Color="#4F2BAE" Offset="1" />
-                    </LinearGradientBrush>
+                    <DynamicResource ResourceKey="ButtonGradient" />
                 </Button.Background>
             </Button>
         </WrapPanel>
         <!-- Контейнер для текста "designed by BOIS" -->
-        <StackPanel Margin="2,2,20,2" Grid.Row="4" FlowDirection="RightToLeft" Orientation="Horizontal">
-            <TextBlock FontSize="7" Foreground="#DBD3C9" Text="designed by BOIS"></TextBlock>
-        </StackPanel>
+        <DockPanel Margin="2,45,20,2" Grid.Row="3" FlowDirection="RightToLeft">
+            <TextBlock DockPanel.Dock="Bottom" FontSize="7" Foreground="{DynamicResource BoisBrush}" Text="designed by BOIS"></TextBlock>
+        </DockPanel>
     </Grid>
 </Window>

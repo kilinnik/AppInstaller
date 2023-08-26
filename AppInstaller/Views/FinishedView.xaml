@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:res="clr-namespace:AppInstaller.Resources"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-   <Grid d:DataContext="{d:DesignInstance}" Margin="2">
+    <Grid d:DataContext="{d:DesignInstance}" Margin="2">
         <!-- Основная сетка с контейнерами для размещения элементов -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -16,24 +17,23 @@
             <!-- Прямоугольник с градиентным фоном -->
             <Rectangle Width="482" Height="80" RadiusX="30" RadiusY="30">
                 <Rectangle.Fill>
-                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                        <GradientStop Color="#A06CD5" Offset="0" />
-                        <GradientStop Color="#4F2BAE" Offset="1" />
-                    </LinearGradientBrush>
+                    <DynamicResource ResourceKey="BottomToTopGradient" />
                 </Rectangle.Fill>
             </Rectangle>
             <!-- Контейнер с текстом "Установка завершена" -->
             <Grid Width="482" Height="80" ClipToBounds="True">
                 <!-- Текст "Установка завершена" с тенью -->
-                <TextBlock Margin="2" FontSize="10" Foreground="Black"
-                           Text="Установка завершена" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Margin="2" FontSize="12" Foreground="{DynamicResource ShadowBrush}"
+                           VerticalAlignment="Center"
+                           Text="{x:Static res:Strings.InstallationComplete}" HorizontalAlignment="Center">
                     <TextBlock.RenderTransform>
                         <TranslateTransform X="1" Y="1" />
                     </TextBlock.RenderTransform>
                 </TextBlock>
                 <!-- Текст "Установка завершена" с белым текстом -->
-                <TextBlock Grid.Row="0" Margin="2" FontSize="12" Foreground="White"
-                           Text="Установка завершена" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Grid.Row="0" Margin="2" FontSize="12" Foreground="{DynamicResource TextBrush}"
+                           VerticalAlignment="Center"
+                           Text="{x:Static res:Strings.InstallationComplete}" HorizontalAlignment="Center">
                 </TextBlock>
             </Grid>
         </Grid>

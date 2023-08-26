@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:res="clr-namespace:AppInstaller.Resources"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <!-- Задаем контекст данных (ViewModel) для этого UserControl -->
@@ -12,15 +13,12 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!-- Верхняя часть с контейнерами для приветственного сообщения и описания игры -->
+        <!-- Верхняя часть с контейнерами для приветственного сообщения и описания программы -->
         <Grid>
             <!-- Фоновый прямоугольник с градиентом -->
             <Rectangle Width="482" Height="80" RadiusX="30" RadiusY="30">
                 <Rectangle.Fill>
-                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                        <GradientStop Color="#A06CD5" Offset="0" />
-                        <GradientStop Color="#4F2BAE" Offset="1" />
-                    </LinearGradientBrush>
+                    <DynamicResource ResourceKey="BottomToTopGradient" />
                 </Rectangle.Fill>
             </Rectangle>
             <!-- Контейнер для приветственного сообщения -->
@@ -31,44 +29,46 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <!-- Текстовый блок с приветственным сообщением, тенью -->
-                <TextBlock Margin="2" FontSize="12" Foreground="Black"
-                           Text="{Binding WelcomeMessage}" HorizontalAlignment="Center">
+                <TextBlock Margin="2" FontSize="12" Foreground="{DynamicResource ShadowBrush}"
+                           HorizontalAlignment="Center">
+                    <Run Text="{x:Static res:Strings.WelcomeMessage}" />
+                    <Run Text="{Binding AppName}" />
                     <TextBlock.RenderTransform>
                         <TranslateTransform X="1" Y="1" />
                     </TextBlock.RenderTransform>
                 </TextBlock>
                 <!-- Текстовый блок с приветственным сообщением, белым текстом -->
-                <TextBlock Grid.Row="0" Margin="2" FontSize="12" Foreground="White"
-                           Text="{Binding WelcomeMessage}" HorizontalAlignment="Center">
+                <TextBlock Grid.Row="0" Margin="2" FontSize="12" Foreground="{DynamicResource TextBrush}"
+                           HorizontalAlignment="Center">
+                    <Run Text="{x:Static res:Strings.WelcomeMessage}" />
+                    <Run Text="{Binding AppName}" />
                 </TextBlock>
-                <!-- Контейнер с прокручиваемым описанием игры -->
+                <!-- Контейнер с прокручиваемым описанием программы -->
                 <ScrollViewer Grid.Row="1" MaxHeight="48" HorizontalAlignment="Center" VerticalAlignment="Center"
                               HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
                               PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-                    <!-- Внутренняя сетка для размещения текстового блока с описанием игры -->
+                    <!-- Внутренняя сетка для размещения текстового блока с описанием программы -->
                     <Grid>
-                        <!-- Текстовый блок с описанием игры, тенью -->
-                        <TextBlock Width="430" TextWrapping="Wrap"
-                                   Text="{Binding GameDescription}"
-                                   FontSize="12" Foreground="Black" HorizontalAlignment="Center"
-                                   VerticalAlignment="Center">
+                        <!-- Текстовый блок с описанием программы, тенью -->
+                        <TextBlock Width="430" TextWrapping="Wrap" HorizontalAlignment="Center"
+                                   Text="{Binding AppDescription}" VerticalAlignment="Center"
+                                   FontSize="12" Foreground="{DynamicResource ShadowBrush}">
                             <TextBlock.RenderTransform>
                                 <TranslateTransform X="1" Y="1" />
                             </TextBlock.RenderTransform>
                         </TextBlock>
-                        <!-- Текстовый блок с описанием игры, белым текстом -->
-                        <TextBlock Width="430" TextWrapping="Wrap"
-                                   Text="{Binding GameDescription}"
-                                   FontSize="12" Foreground="White" HorizontalAlignment="Center"
-                                   VerticalAlignment="Center">
+                        <!-- Текстовый блок с описанием программы, белым текстом -->
+                        <TextBlock Width="430" TextWrapping="Wrap" HorizontalAlignment="Center"
+                                   Text="{Binding AppDescription}" VerticalAlignment="Center"
+                                   FontSize="12" Foreground="{DynamicResource TextBrush}">
                         </TextBlock>
                     </Grid>
                 </ScrollViewer>
             </Grid>
         </Grid>
-        <!-- Нижняя часть с контейнером для изображения игры -->
+        <!-- Нижняя часть с контейнером для изображения программы -->
         <Grid Grid.Row="1" Margin="5">
-            <!-- Прямоугольник для изображения игры с закругленными углами -->
+            <!-- Прямоугольник для изображения программы с закругленными углами -->
             <Rectangle Width="482" Height="308" RadiusX="30" RadiusY="30">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="{Binding BigImage}" />

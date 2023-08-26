@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using AppInstaller.ViewModels;
@@ -14,23 +17,77 @@ namespace AppInstaller
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
+            try
+            {
+                base.OnStartup(e);
+                var languageSelectionWindow = new LanguageSelectionWindow();
+                if (languageSelectionWindow.ShowDialog() == true)
+                {
+                    SetTheme(new Uri("Themes/LightTheme.xaml", UriKind.Relative));
+                    
+                    var selectedCulture = languageSelectionWindow.SelectedCulture;
+                    if (selectedCulture != null)
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo(selectedCulture);
+                    var mainWindowViewModel = new MainWindowViewModel();
+                    var mainWindow = new MainWindow
+                    {
+                        DataContext = mainWindowViewModel
+                    };
 
-            var mainWindowViewModel = new MainWindowViewModel();
-            var mainWindow = new MainWindow
-            {
-                DataContext = mainWindowViewModel
-            };
-            
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
-            if (File.Exists(filePath))
-            {
-                LoadIcon(filePath);
+                    var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
+                    if (File.Exists(filePath))
+                    {
+                        LoadIcon(filePath);
+                    }
+                    
+                    mainWindow.Show();
+                }
+                else
+                {
+                    Shutdown();
+                }
             }
-            
-            mainWindow.Show();
+            catch (Exception ex)
+            {
+                var errorMessage = $"An error occurred in App.LoadIcon(): {ex.Message}\n{ex.StackTrace}";
+                if (ex.InnerException != null)
+                {
+                    errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
+                }
+
+                MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void SetTheme(Uri theme)
+        {
+            var currentTheme = Resources.MergedDictionaries.FirstOrDefault(
+                m => m.Source.OriginalString.Contains("Themes/LightTheme.xaml") ||
+                     m.Source.OriginalString.Contains("Themes/DarkTheme.xaml"));
+
+            if (currentTheme != null)
+            {
+                Resources.MergedDictionaries.Remove(currentTheme);
+            }
+
+            Resources.MergedDictionaries.Add(new ResourceDictionary { Source = theme });
         }
         
+        public void ToggleTheme()
+        {
+            var currentTheme = Resources.MergedDictionaries.FirstOrDefault(
+                m => m.Source.OriginalString.Contains("Themes/LightTheme.xaml") ||
+                     m.Source.OriginalString.Contains("Themes/DarkTheme.xaml"));
+
+            if (currentTheme == null) return;
+            var newTheme = currentTheme.Source.OriginalString.Contains("Themes/LightTheme.xaml")
+                ? new Uri("Themes/DarkTheme.xaml", UriKind.Relative)
+                : new Uri("Themes/LightTheme.xaml", UriKind.Relative);
+
+            Resources.MergedDictionaries.Remove(currentTheme);
+            Resources.MergedDictionaries.Add(new ResourceDictionary { Source = newTheme });
+        }
+
         private static void LoadIcon(string filePath)
         {
             try
@@ -41,13 +98,13 @@ namespace AppInstaller
                     while (reader.ReadLine() is { } line)
                     {
                         if (!line.StartsWith("RepackIcon=")) continue;
-                        result = line["RepackIcon=".Length..];
+                        result = line["RepackIcon=".Length..].TrimEnd('\r', '\n');
                         break;
                     }
                 }
-                
+
                 if (result == null) return;
-                
+
                 var iconBytes = Convert.FromBase64String(result);
 
                 using var stream = new MemoryStream(iconBytes);
@@ -60,11 +117,12 @@ namespace AppInstaller
             }
             catch (Exception ex)
             {
-                var errorMessage = $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                var errorMessage = $"An error occurred in App.LoadIcon(): {ex.Message}\n{ex.StackTrace}";
                 if (ex.InnerException != null)
                 {
                     errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
                 }
+
                 MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
