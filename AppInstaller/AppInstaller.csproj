@@ -62,6 +62,10 @@
         </EmbeddedResource>
         <None Remove="Resources\chatgpt.svg" />
         <Resource Include="Resources\chatgpt.svg" />
+        <Page Remove="Themes\DarkTheme.xaml" />
+        <Resource Include="Themes\DarkTheme.xaml" />
+        <Page Remove="Themes\LightTheme.xaml" />
+        <Resource Include="Themes\LightTheme.xaml" />
     </ItemGroup>
     
     <ItemGroup>

@@ -15,8 +15,8 @@
                     <Grid Width="12" Height="12">
                         <Ellipse Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}"
                                  StrokeThickness="1" />
-                        <materialDesign:PackIcon Kind="Check" Width="12" Height="12" Foreground="White"
-                                                 Visibility="Collapsed" x:Name="CheckMark" />
+                        <materialDesign:PackIcon Kind="Check" Width="12" Visibility="Collapsed" x:Name="CheckMark"
+                                                 Foreground="{DynamicResource TextBrush}" Height="12" />
                     </Grid>
                 </BulletDecorator.Bullet>
                 <ContentPresenter VerticalAlignment="Center" />
@@ -47,24 +47,23 @@
             <!-- Фоновый прямоугольник с градиентом -->
             <Rectangle Width="482" Height="310" RadiusX="30" RadiusY="30">
                 <Rectangle.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="#A06CD5" Offset="0" />
-                        <GradientStop Color="#4F2BAE" Offset="1" />
-                    </LinearGradientBrush>
+                    <DynamicResource ResourceKey="TopToBottomGradient" />
                 </Rectangle.Fill>
             </Rectangle>
             <!-- Контейнер с выбором параметров установки -->
             <StackPanel Height="110" VerticalAlignment="Top">
                 <!-- Заголовок "Выбор параметров установки" -->
                 <Grid>
-                    <TextBlock Width="175" Height="15" Margin="5" FontSize="12" Foreground="Black"
+                    <TextBlock Width="175" Height="15" Margin="5" FontSize="12"
+                               Foreground="{DynamicResource ShadowBrush}"
                                Text="{x:Static res:Strings.InstallationOptionsSelection}" TextAlignment="Center">
                         <TextBlock.RenderTransform>
                             <TranslateTransform X="1" Y="1" />
                         </TextBlock.RenderTransform>
                     </TextBlock>
                     <TextBlock Width="175" Height="15" Margin="5" TextAlignment="Center" FontSize="12"
-                               Foreground="White" Text="{x:Static res:Strings.InstallationOptionsSelection}">
+                               Foreground="{DynamicResource TextBrush}"
+                               Text="{x:Static res:Strings.InstallationOptionsSelection}">
                     </TextBlock>
                 </Grid>
                 <!-- Текст "Выберите папку для установки программы" и кнопка "Изменить" -->
@@ -73,21 +72,18 @@
                         <!-- Прямоугольник с градиентом и текстом выбранной папки -->
                         <Rectangle Width="200" Height="29" RadiusX="14.5" RadiusY="14.5">
                             <Rectangle.Fill>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                    <GradientStop Color="#A06CD5" Offset="0" />
-                                    <GradientStop Color="#4F2BAE" Offset="1" />
-                                </LinearGradientBrush>
+                                <DynamicResource ResourceKey="LeftToRightGradient" />
                             </Rectangle.Fill>
                         </Rectangle>
                         <!-- Текст выбранной папки с тенью и белым текстом -->
                         <TextBlock Margin="10,2,2,2" Text="{Binding SelectedPath}" FontStyle="Normal" FontSize="12"
-                                   Foreground="Black" VerticalAlignment="Center">
+                                   Foreground="{DynamicResource ShadowBrush}" VerticalAlignment="Center">
                             <TextBlock.RenderTransform>
                                 <TranslateTransform X="1" Y="1" />
                             </TextBlock.RenderTransform>
                         </TextBlock>
                         <TextBlock Margin="10,2,2,2" Text="{Binding SelectedPath}" FontStyle="Normal" FontSize="12"
-                                   Foreground="White" VerticalAlignment="Center">
+                                   Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center">
                         </TextBlock>
                     </Grid>
                     <!-- Кнопка "Изменить" -->
@@ -98,22 +94,19 @@
                                     <!-- Прямоугольник с градиентом и текстом "Изменить" -->
                                     <Rectangle Width="100" Height="29" RadiusX="14.5" RadiusY="14.5">
                                         <Rectangle.Fill>
-                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                                <GradientStop Color="#590BA9" Offset="0" />
-                                                <GradientStop Color="#4803FF" Offset="1" />
-                                            </LinearGradientBrush>
+                                            <DynamicResource ResourceKey="ChangeButtonGradient" />
                                         </Rectangle.Fill>
                                     </Rectangle>
                                     <!-- Текст "Изменить" с тенью и белым текстом -->
-                                    <TextBlock Margin="2"  Text="{x:Static res:Strings.ChangeOutputDir}" 
-                                               FontStyle="Normal" FontSize="12" Foreground="Black" 
-                                               VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Margin="2" Text="{x:Static res:Strings.ChangeOutputDir}"
+                                               Foreground="{DynamicResource ShadowBrush}" FontStyle="Normal"
+                                               VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12">
                                         <TextBlock.RenderTransform>
                                             <TranslateTransform X="1" Y="1" />
                                         </TextBlock.RenderTransform>
                                     </TextBlock>
-                                    <TextBlock Margin="2"  Text="{x:Static res:Strings.ChangeOutputDir}" 
-                                               FontStyle="Normal" FontSize="12" Foreground="White" 
+                                    <TextBlock Margin="2" Text="{x:Static res:Strings.ChangeOutputDir}"
+                                               FontStyle="Normal" FontSize="12" Foreground="{DynamicResource TextBrush}"
                                                VerticalAlignment="Center" HorizontalAlignment="Center">
                                     </TextBlock>
                                 </Grid>
@@ -125,7 +118,7 @@
                 <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="250">
                     <!-- Текст с тенью и белым текстом -->
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40, 0, 2, 5" FontSize="9"
-                               Foreground="Black">
+                               Foreground="{DynamicResource ShadowBrush}">
                         <Run Text="{x:Static res:Strings.OccupiedByFilesSize}" />
                         <Run Text="{Binding NeededMemory}" />
                         <TextBlock.RenderTransform>
@@ -133,7 +126,7 @@
                         </TextBlock.RenderTransform>
                     </TextBlock>
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40, 0, 2, 5" FontSize="9"
-                               Foreground="White">
+                               Foreground="{DynamicResource TextBrush}">
                         <Run Text="{x:Static res:Strings.OccupiedByFilesSize}" />
                         <Run Text="{Binding NeededMemory}" />
                     </TextBlock>
@@ -144,43 +137,42 @@
                 <!-- Прямоугольник с градиентом -->
                 <Rectangle Width="435" Height="180" RadiusX="30" RadiusY="30">
                     <Rectangle.Fill>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                            <GradientStop Color="#A06CD5" Offset="0" />
-                            <GradientStop Color="#4F2BAE" Offset="1" />
-                        </LinearGradientBrush>
+                        <DynamicResource ResourceKey="DiagonalGradient" />
                     </Rectangle.Fill>
                 </Rectangle>
                 <StackPanel>
                     <!-- Заголовок "Особенности и дополнения" -->
                     <Grid>
-                        <TextBlock Margin="5" Width="168" Height="16" TextWrapping="Wrap" FontSize="12" 
-                                   Text="{x:Static res:Strings.FeaturesAndAddons}" Foreground="Black"
-                                   VerticalAlignment="Top" TextAlignment="Center">
+                        <TextBlock Margin="5" Width="168" Height="16" TextWrapping="Wrap" FontSize="12"
+                                   Text="{x:Static res:Strings.FeaturesAndAddons}" TextAlignment="Center"
+                                   Foreground="{DynamicResource ShadowBrush}" VerticalAlignment="Top">
                             <TextBlock.RenderTransform>
                                 <TranslateTransform X="1" Y="1" />
                             </TextBlock.RenderTransform>
                         </TextBlock>
-                        <TextBlock Margin="5" Width="168" Height="16" TextWrapping="Wrap" FontSize="12" 
-                                   Text="{x:Static res:Strings.FeaturesAndAddons}" Foreground="White"
-                                   VerticalAlignment="Top" TextAlignment="Center">
+                        <TextBlock Margin="5" Width="168" Height="16" TextWrapping="Wrap" FontSize="12"
+                                   Text="{x:Static res:Strings.FeaturesAndAddons}" TextAlignment="Center"
+                                   Foreground="{DynamicResource TextBrush}" VerticalAlignment="Top">
                         </TextBlock>
                     </Grid>
                     <!-- Враппанель с чекбоксом и текстом "Создать ярлык на рабочем столе" -->
                     <WrapPanel Orientation="Horizontal">
                         <!-- Кастомный CheckBox с закругленными углами -->
                         <CheckBox IsChecked="{Binding IconChecked}" Margin="5" Width="12" Height="12"
-                                  VerticalAlignment="Center" Template="{StaticResource RoundCheckBoxTemplate}" />
+                                  VerticalAlignment="Center" Template="{DynamicResource RoundCheckBoxTemplate}" />
                         <Grid>
                             <!-- Текст с тенью и белым текстом -->
                             <TextBlock Margin="5" Width="360" Height="16" TextWrapping="Wrap"
-                                       Text="{x:Static res:Strings.CreateDesktopShortcut}" FontSize="12" Foreground="Black"
+                                       Text="{x:Static res:Strings.CreateDesktopShortcut}" FontSize="12"
+                                       Foreground="{DynamicResource ShadowBrush}"
                                        HorizontalAlignment="Left">
                                 <TextBlock.RenderTransform>
                                     <TranslateTransform X="1" Y="1" />
                                 </TextBlock.RenderTransform>
                             </TextBlock>
                             <TextBlock Margin="5" Width="360" Height="16" TextWrapping="Wrap"
-                                       Text="{x:Static res:Strings.CreateDesktopShortcut}" FontSize="12" Foreground="White"
+                                       Text="{x:Static res:Strings.CreateDesktopShortcut}" FontSize="12"
+                                       Foreground="{DynamicResource TextBrush}"
                                        HorizontalAlignment="Left">
                             </TextBlock>
                         </Grid>
@@ -190,17 +182,20 @@
                             <DataTemplate>
                                 <WrapPanel Orientation="Horizontal" d:DataContext="{d:DesignInstance }">
                                     <CheckBox IsChecked="{Binding IsChecked}" Margin="5" Width="12" Height="12"
-                                              VerticalAlignment="Center" Template="{StaticResource RoundCheckBoxTemplate}" />
+                                              VerticalAlignment="Center"
+                                              Template="{DynamicResource RoundCheckBoxTemplate}" />
                                     <Grid>
                                         <TextBlock Margin="5" Width="360" Height="16" TextWrapping="Wrap"
-                                                   Text="{Binding Name}" FontSize="12" Foreground="Black"
+                                                   Text="{Binding Name}" FontSize="12"
+                                                   Foreground="{DynamicResource ShadowBrush}"
                                                    HorizontalAlignment="Left">
                                             <TextBlock.RenderTransform>
                                                 <TranslateTransform X="1" Y="1" />
                                             </TextBlock.RenderTransform>
                                         </TextBlock>
                                         <TextBlock Margin="5" Width="360" Height="16" TextWrapping="Wrap"
-                                                   Text="{Binding Name}" FontSize="12" Foreground="White"
+                                                   Text="{Binding Name}" FontSize="12"
+                                                   Foreground="{DynamicResource TextBrush}"
                                                    HorizontalAlignment="Left">
                                         </TextBlock>
                                     </Grid>

@@ -96,6 +96,21 @@ public class MainWindowViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _buttonNextText, value);
     }
 
+    private string _currentTheme;
+
+    public string CurrentTheme
+    {
+        get => _currentTheme;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _currentTheme, value);
+            if (_views[3]?.DataContext is InstallingViewModel installingViewModel)
+            {
+                installingViewModel.CurrentTheme = value;
+            }
+        }
+    }
+
     public ReactiveCommand<Unit, Unit> ShowMessageBoxCommand { get; }
     public ReactiveCommand<Unit, Unit> ShowChatGptWindowCommand { get; }
     public ReactiveCommand<Unit, Unit> OpenTgLinkCommand { get; }
@@ -136,6 +151,7 @@ public class MainWindowViewModel : ViewModelBase
             new FinishedView { DataContext = new FinishedViewModel(bigImage) }
         };
 
+        CurrentTheme = "Light";
         _currentViewIndex = 0;
         CurrentView = _views[_currentViewIndex];
         IconChecked = false;
@@ -273,7 +289,7 @@ public class MainWindowViewModel : ViewModelBase
         //     Application.Current.Shutdown();
         // }
     }
-    
+
     private static void ShowCloseMessageBox()
     {
         var result = new CloseMessageBox().ShowDialog();

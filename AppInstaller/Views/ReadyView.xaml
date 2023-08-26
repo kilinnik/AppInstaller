@@ -26,10 +26,7 @@
             <!-- Фоновый прямоугольник с градиентом -->
             <Rectangle Width="482" Height="310" RadiusX="30" RadiusY="30">
                 <Rectangle.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="#A06CD5" Offset="0" />
-                        <GradientStop Color="#4F2BAE" Offset="1" />
-                    </LinearGradientBrush>
+                    <DynamicResource ResourceKey="TopToBottomGradient" />
                 </Rectangle.Fill>
             </Rectangle>
             <!-- Контейнер для отображения информации -->
@@ -38,7 +35,7 @@
                 <Grid Margin="20,10,5,5">
                     <!-- Текст о выбранной папке с тенью и белым текстом -->
                     <TextBlock Margin="5" Height="16" TextWrapping="Wrap" Width="360"
-                               FontSize="12" Foreground="Black" HorizontalAlignment="Left">
+                               FontSize="12" Foreground="{DynamicResource ShadowBrush}" HorizontalAlignment="Left">
                         <Run Text="{x:Static res:Strings.InstallationFolder}" />
                         <Run Text="{Binding SelectedPath}" />
                         <TextBlock.RenderTransform>
@@ -46,7 +43,7 @@
                         </TextBlock.RenderTransform>
                     </TextBlock>
                     <TextBlock Margin="5" Height="16" TextWrapping="Wrap" Width="360"
-                               FontSize="12" Foreground="White" HorizontalAlignment="Left">
+                               FontSize="12" Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Left">
                         <Run Text="{x:Static res:Strings.InstallationFolder}" />
                         <Run Text="{Binding SelectedPath}" />
                     </TextBlock>
@@ -54,16 +51,14 @@
                 <!-- Контейнер с текстом о создании ярлыка -->
                 <Grid Margin="20,5,5,5">
                     <!-- Текст о создании ярлыка с тенью и белым текстом -->
-                    <TextBlock Margin="5" TextWrapping="Wrap" Width="360"
-                               Text="{Binding AdditionalComponents}" FontSize="12" Foreground="Black"
-                               HorizontalAlignment="Left">
+                    <TextBlock Margin="5" TextWrapping="Wrap" Text="{Binding AdditionalComponents}" FontSize="12"
+                               Foreground="{DynamicResource ShadowBrush}" HorizontalAlignment="Left" Width="360">
                         <TextBlock.RenderTransform>
                             <TranslateTransform X="1" Y="1" />
                         </TextBlock.RenderTransform>
                     </TextBlock>
-                    <TextBlock Margin="5" TextWrapping="Wrap" Width="360"
-                               Text="{Binding AdditionalComponents}" FontSize="12" Foreground="White"
-                               HorizontalAlignment="Left">
+                    <TextBlock Margin="5" TextWrapping="Wrap" Text="{Binding AdditionalComponents}" FontSize="12"
+                               Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Left" Width="360">
                     </TextBlock>
                 </Grid>
             </StackPanel>

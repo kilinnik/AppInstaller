@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -22,6 +23,8 @@ namespace AppInstaller
                 var languageSelectionWindow = new LanguageSelectionWindow();
                 if (languageSelectionWindow.ShowDialog() == true)
                 {
+                    SetTheme(new Uri("Themes/LightTheme.xaml", UriKind.Relative));
+                    
                     var selectedCulture = languageSelectionWindow.SelectedCulture;
                     if (selectedCulture != null)
                         Thread.CurrentThread.CurrentUICulture = new CultureInfo(selectedCulture);
@@ -36,7 +39,7 @@ namespace AppInstaller
                     {
                         LoadIcon(filePath);
                     }
-
+                    
                     mainWindow.Show();
                 }
                 else
@@ -54,6 +57,35 @@ namespace AppInstaller
 
                 MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void SetTheme(Uri theme)
+        {
+            var currentTheme = Resources.MergedDictionaries.FirstOrDefault(
+                m => m.Source.OriginalString.Contains("Themes/LightTheme.xaml") ||
+                     m.Source.OriginalString.Contains("Themes/DarkTheme.xaml"));
+
+            if (currentTheme != null)
+            {
+                Resources.MergedDictionaries.Remove(currentTheme);
+            }
+
+            Resources.MergedDictionaries.Add(new ResourceDictionary { Source = theme });
+        }
+        
+        public void ToggleTheme()
+        {
+            var currentTheme = Resources.MergedDictionaries.FirstOrDefault(
+                m => m.Source.OriginalString.Contains("Themes/LightTheme.xaml") ||
+                     m.Source.OriginalString.Contains("Themes/DarkTheme.xaml"));
+
+            if (currentTheme == null) return;
+            var newTheme = currentTheme.Source.OriginalString.Contains("Themes/LightTheme.xaml")
+                ? new Uri("Themes/DarkTheme.xaml", UriKind.Relative)
+                : new Uri("Themes/LightTheme.xaml", UriKind.Relative);
+
+            Resources.MergedDictionaries.Remove(currentTheme);
+            Resources.MergedDictionaries.Add(new ResourceDictionary { Source = newTheme });
         }
 
         private static void LoadIcon(string filePath)

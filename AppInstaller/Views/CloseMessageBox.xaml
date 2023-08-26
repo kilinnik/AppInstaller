@@ -7,15 +7,8 @@
         xmlns:res="clr-namespace:AppInstaller.Resources"
         WindowStyle="None" BorderThickness="1" AllowsTransparency="True"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Height="100" Width="250"
+        Height="100" Width="250" Background="{DynamicResource WindowBackgroundGradient}"
         MouseLeftButtonDown="Window_MouseDown">
-    <Window.Background>
-        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-            <GradientStop Color="#6247AA" Offset="0" />
-            <GradientStop Color="#9F58BE" Offset="0.5424" />
-            <GradientStop Color="#7F58BE" Offset="1" />
-        </LinearGradientBrush>
-    </Window.Background>
     <Window.Template>
         <ControlTemplate TargetType="{x:Type Window}">
             <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
@@ -30,44 +23,39 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock Foreground="White" HorizontalAlignment="Center" Text="{x:Static res:Strings.ExitMessage}"
-                   Margin="10,10,10,10" />
+        <TextBlock Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Center"
+                   Text="{x:Static res:Strings.ExitMessage}" Margin="10,10,10,10" />
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                     Margin="10">
-            <Button Margin="5" FontSize="10" BorderThickness="0" Height="21" Click="CancelButton_Click"
-                    materialDesign:ButtonAssist.CornerRadius="10"
-                    Style="{StaticResource MaterialDesignRaisedDarkButton}">
+            <Button Margin="5" FontSize="10" BorderThickness="0" materialDesign:ButtonAssist.CornerRadius="10"
+                    Style="{DynamicResource MaterialDesignRaisedDarkButton}" Height="21" Click="CancelButton_Click">
                 <Grid>
-                    <TextBlock Text="{x:Static res:Strings.No}" FontStyle="Normal" FontSize="10"
-                               Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="{x:Static res:Strings.No}" FontStyle="Normal" HorizontalAlignment="Center"
+                               Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" FontSize="10">
                         <TextBlock.Effect>
-                            <DropShadowEffect ShadowDepth="1" Color="Black" Opacity="1" BlurRadius="0" Direction="225" />
+                            <DropShadowEffect ShadowDepth="1" Color="{DynamicResource ShadowColor}" Opacity="1"
+                                              BlurRadius="0" Direction="225" />
                         </TextBlock.Effect>
                     </TextBlock>
                 </Grid>
                 <Button.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#A06CD5" Offset="0" />
-                        <GradientStop Color="#4F2BAE" Offset="1" />
-                    </LinearGradientBrush>
+                    <DynamicResource ResourceKey="ButtonGradient" />
                 </Button.Background>
             </Button>
             <Button Margin="5" FontSize="10" BorderThickness="0" Height="21" Click="OkButton_Click"
                     materialDesign:ButtonAssist.CornerRadius="10"
-                    Style="{StaticResource MaterialDesignRaisedDarkButton}">
+                    Style="{DynamicResource MaterialDesignRaisedDarkButton}">
                 <Grid>
-                    <TextBlock Text="{x:Static res:Strings.Yes}" FontStyle="Normal" FontSize="10"
-                               Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="{x:Static res:Strings.Yes}" FontStyle="Normal" HorizontalAlignment="Center"
+                               Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" FontSize="10">
                         <TextBlock.Effect>
-                            <DropShadowEffect ShadowDepth="1" Color="Black" Opacity="1" BlurRadius="0" Direction="225" />
+                            <DropShadowEffect ShadowDepth="1" Color="{DynamicResource ShadowColor}" Opacity="1"
+                                              BlurRadius="0" Direction="225" />
                         </TextBlock.Effect>
                     </TextBlock>
                 </Grid>
                 <Button.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#A06CD5" Offset="0" />
-                        <GradientStop Color="#4F2BAE" Offset="1" />
-                    </LinearGradientBrush>
+                    <DynamicResource ResourceKey="ButtonGradient" />
                 </Button.Background>
             </Button>
         </StackPanel>

@@ -87,14 +87,13 @@ public partial class ChatGptWindow : Window
             VerticalAlignment = VerticalAlignment.Center,
             Text = message,
             Padding = new Thickness(3),
-            Foreground = Brushes.White,
+            Foreground = (Brush)Application.Current.Resources["TextBrush"],
             Margin = new Thickness(marginTextBlock, 2, 2, 2),
             Width = 140,
             TextWrapping = TextWrapping.Wrap,
             IsReadOnly = true,
             BorderThickness = new Thickness(0), 
             Background = Brushes.Transparent,
-            
         };
 
         TextFieldAssist.SetUnderlineBrush(messageTextBox, Brushes.Transparent);
@@ -107,16 +106,7 @@ public partial class ChatGptWindow : Window
             RadiusX = 10,
             RadiusY = 10,
             Margin = new Thickness(marginBackground, 2, 2, 2),
-            Fill = new LinearGradientBrush
-            {
-                StartPoint = new Point(0, 0),
-                EndPoint = new Point(1, 0),
-                GradientStops = new GradientStopCollection
-                {
-                    new(Color.FromRgb(160, 108, 213), 0),
-                    new(Color.FromRgb(79, 43, 174), 1)
-                }
-            }
+            Fill = (Brush)Application.Current.Resources["LeftToRightGradient"]
         };
 
         var gridRow = new RowDefinition { Height = GridLength.Auto };

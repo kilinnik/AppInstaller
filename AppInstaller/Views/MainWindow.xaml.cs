@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using AppInstaller.ViewModels;
 using NAudio.Wave;
 
 namespace AppInstaller.Views
@@ -127,6 +128,14 @@ namespace AppInstaller.Views
             var mainWindow = Application.Current.MainWindow;
 
             if (mainWindow != null) mainWindow.WindowState = WindowState.Minimized;
+        }
+        
+        private void ToggleTheme(object sender, RoutedEventArgs e)
+        {
+            var app = (App)Application.Current;
+            var viewModel = (MainWindowViewModel)DataContext;
+            viewModel.CurrentTheme = viewModel.CurrentTheme == "Light" ? "Dark" : "Light";
+            app.ToggleTheme();
         }
     }
 }

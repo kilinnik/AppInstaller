@@ -10,7 +10,14 @@ namespace AppInstaller.ViewModels;
 public class InstallingViewModel : ViewModelBase
 {
     private readonly InstallingModel _model;
-
+    
+    private string _currentTheme;
+    public string CurrentTheme
+    {
+        get => _currentTheme;
+        set => this.RaiseAndSetIfChanged(ref _currentTheme, value);
+    }
+    
     private MainWindowViewModel MainWindowViewModel { get; }
 
     private string _elapsedTime;
@@ -72,6 +79,7 @@ public class InstallingViewModel : ViewModelBase
     public InstallingViewModel(ImageSource headImage, MainWindowViewModel mainWindowViewModel, ImageSource mascotImage,
         string repackerName, InstallingModel model)
     {
+        CurrentTheme = "Light";
         _model = model;
         _model.ProgressChanged += OnProgressChanged;
         _model.ErrorMessageOccurred += OnErrorMessageOccurred;
