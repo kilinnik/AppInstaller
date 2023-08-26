@@ -97,6 +97,7 @@ public class MainWindowViewModel : ViewModelBase
     }
 
     public ReactiveCommand<Unit, Unit> ShowMessageBoxCommand { get; }
+    public ReactiveCommand<Unit, Unit> ShowChatGptWindowCommand { get; }
     public ReactiveCommand<Unit, Unit> OpenTgLinkCommand { get; }
     public ReactiveCommand<Unit, Unit> OpenAppPurchaseLinkCommand { get; }
     public ReactiveCommand<Unit, Unit> NavigateToNextViewCommand { get; }
@@ -124,7 +125,7 @@ public class MainWindowViewModel : ViewModelBase
             new SelectDirView
             {
                 DataContext = new SelectDirViewModel(this, headImage, _appName,
-                    "Занимаемый файлами размер: " + _mainWindowModel.GetNeededMemory(), _components)
+                    _mainWindowModel.GetNeededMemory(), _components)
             },
             new ReadyView { DataContext = new ReadyViewModel(headImage) },
             new InstallingView
@@ -141,9 +142,10 @@ public class MainWindowViewModel : ViewModelBase
         IsBackButtonVisible = false;
         IsNextButtonVisible = true;
         IsCancelButtonVisible = true;
-        ButtonNextText = "< Вперед";
+        ButtonNextText = Resources.Strings.Next;
 
         ShowMessageBoxCommand = ReactiveCommand.Create(ShowMessageBox);
+        ShowChatGptWindowCommand = ReactiveCommand.Create(ShowChatGptWindow);
         OpenTgLinkCommand = ReactiveCommand.Create(() => OpenLink("https://t.me/nito_kin"));
         OpenAppPurchaseLinkCommand = ReactiveCommand.Create(() => OpenLink(link));
         NavigateToNextViewCommand = ReactiveCommand.Create(NavigateNextView);
@@ -198,13 +200,13 @@ public class MainWindowViewModel : ViewModelBase
                 return;
             case 2 when _views[_currentViewIndex]?.DataContext is ReadyViewModel readyViewModel:
             {
-                readyViewModel.SelectedPath = "Папка установки: " + SelectedPath;
-                var additionalComponentsBuilder = new StringBuilder("Дополнительные задачи:");
+                readyViewModel.SelectedPath = SelectedPath;
+                var additionalComponentsBuilder = new StringBuilder(Resources.Strings.AdditionalTasks);
                 var selectDirViewModel = _views[1]?.DataContext as SelectDirViewModel;
 
                 if (IconChecked)
                 {
-                    additionalComponentsBuilder.AppendLine().Append(" - Создать иконку на рабочем столе");
+                    additionalComponentsBuilder.AppendLine().Append(" - " + Resources.Strings.CreateDesktopShortcut);
                 }
 
                 foreach (var component in selectDirViewModel?.Components)
@@ -230,7 +232,8 @@ public class MainWindowViewModel : ViewModelBase
                 var selectDirViewModel = _views[1]?.DataContext as SelectDirViewModel;
                 installingViewModel.InstallApp(AppDomain.CurrentDomain.BaseDirectory,
                     SelectedPath, _appName, _mainWindowModel.GetAppVersion(), IconChecked,
-                    selectDirViewModel.Components, _mainWindowModel.GetExePaths(), _mainWindowModel.GetNeededMemory());
+                    selectDirViewModel.Components, _mainWindowModel.GetExePaths(),
+                    _mainWindowModel.GetNeededMemory());
                 break;
             }
         }
@@ -256,12 +259,21 @@ public class MainWindowViewModel : ViewModelBase
 
         ButtonNextText = _currentViewIndex switch
         {
-            2 => "Установить",
-            4 => "Завершить",
-            _ => "< Вперед"
+            2 => Resources.Strings.Install,
+            4 => Resources.Strings.Finish,
+            _ => Resources.Strings.Next
         };
     }
 
+    private static void ShowChatGptWindow()
+    {
+        new ChatGptWindow().ShowDialog();
+        // if (result == true)
+        // {
+        //     Application.Current.Shutdown();
+        // }
+    }
+    
     private static void ShowCloseMessageBox()
     {
         var result = new CloseMessageBox().ShowDialog();

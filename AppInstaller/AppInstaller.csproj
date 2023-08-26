@@ -12,6 +12,8 @@
 
     <ItemGroup>
       <PackageReference Include="MaterialDesignThemes" Version="5.0.0-ci330" />
+      <PackageReference Include="Mirror.ChatGpt" Version="1.0.2" />
+      <PackageReference Include="NAudio" Version="2.1.0" />
       <PackageReference Include="ReactiveUI.WPF" Version="19.4.1" />
       <PackageReference Include="SevenZip" Version="19.0.0" />
       <PackageReference Include="SevenZipSharp.Net45" Version="1.0.19" />
@@ -48,6 +50,18 @@
         <None Remove="Resources\nintendo.com.svg" />
         <None Remove="Resources\store.epicgames.com.svg" />
         <EmbeddedResource Include="Resources\store.epicgames.com.svg" />
+        <None Remove="Resources\default_track.txt" />
+        <EmbeddedResource Include="Resources\default_track.txt" />
+        <EmbeddedResource Update="Resources\Strings.en-US.resx">
+          <Generator>PublicResXFileCodeGenerator</Generator>
+          <CustomToolNamespace>AppInstaller.Resources</CustomToolNamespace>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\Strings.ru-RU.resx">
+          <Generator>PublicResXFileCodeGenerator</Generator>
+          <CustomToolNamespace>AppInstaller.Resources</CustomToolNamespace>
+        </EmbeddedResource>
+        <None Remove="Resources\chatgpt.svg" />
+        <Resource Include="Resources\chatgpt.svg" />
     </ItemGroup>
     
     <ItemGroup>

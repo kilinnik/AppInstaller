@@ -16,12 +16,12 @@ public class WelcomeViewModel : ViewModelBase
     }
 
     // Приветственное сообщение, отображаемое в представлении
-    private string? _welcomeMessage;
+    private string? _appName;
 
-    public string? WelcomeMessage
+    public string? AppName
     {
-        get => _welcomeMessage;
-        set => this.RaiseAndSetIfChanged(ref _welcomeMessage, value);
+        get => _appName;
+        set => this.RaiseAndSetIfChanged(ref _appName, value);
     }
 
     // Изображение, отображаемое в представлении
@@ -35,7 +35,7 @@ public class WelcomeViewModel : ViewModelBase
     
     public WelcomeViewModel(string? appName, ImageSource? bigImage, string appDescription)
     {
-        WelcomeMessage = $"Приветствуем вас в установщике \"{appName}\"";
+        AppName = $"\"{appName}\"";
         AppDescription = appDescription;
         BigImage = bigImage;
     }

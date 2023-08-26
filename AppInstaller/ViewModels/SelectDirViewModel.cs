@@ -70,11 +70,9 @@ namespace AppInstaller.ViewModels
             _appName = appName;
             SelectedPath = $@"C:\Program Files (x86)\{_appName}";
             NeededMemory = neededMemory;
-            var i = 1;
             foreach (var component in components)
             {
-                Components.Add(new Components { Name = component.Value, FolderName = component.Key,IsChecked = false });
-                i++;
+                Components.Add(new Components { Name = component.Value, FolderName = component.Key, IsChecked = false });
             }
             // Создаем команду для выбора директории установки и связываем ее с методом ChooseDirectory
             ChooseDirectoryCommand = ReactiveCommand.Create(ChooseDirectory);

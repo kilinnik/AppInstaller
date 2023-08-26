@@ -49,7 +49,7 @@ public class InstallingModel
         {
             _timerModel.Start();
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            timer.Tick += (_, _) => TimeChanged("Времени прошло: ", FormatElapsedTime(), true);
+            timer.Tick += (_, _) => TimeChanged($"{Resources.Strings.TimeElapsed} ", FormatElapsedTime(), true);
             timer.Start();
             if (destinationFolderPath != null)
             {
@@ -163,7 +163,7 @@ public class InstallingModel
                 var remainingSeconds = timePerByte * remainingSize;
                 var remainingTime = TimeSpan.FromSeconds(Math.Min(remainingSeconds, TimeSpan.MaxValue.TotalSeconds));
                 var formattedRemainingTime = remainingTime.ToString(@"hh\:mm\:ss");
-                TimeChanged("Времени осталось: ", formattedRemainingTime, false);
+                TimeChanged($"{Resources.Strings.TimeRemaining} ", formattedRemainingTime, false);
             }
 
             // Лямбда-обработчик события

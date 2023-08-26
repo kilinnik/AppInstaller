@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -14,7 +14,9 @@ public class MainWindowModel
     public event Action<string, string, MessageBoxButton, MessageBoxImage> ErrorMessageOccurred;
 
     public string SelectedPath { get; set; }
+
     public bool IconChecked { get; set; }
+
     private readonly string _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
 
     public MainWindowModel()
@@ -63,14 +65,31 @@ public class MainWindowModel
     public ImageSource GetBigImage() => GetImageFromConfig("AppBigImage");
     public ImageSource GetHeadImage() => GetImageFromConfig("AppHeadImage");
 
-    
+    private static string GetCurrentCultureSuffix()
+    {
+        return Thread.CurrentThread.CurrentUICulture.Name switch
+        {
+            "ru-RU" => "Ru",
+            "en-US" => "En",
+            _ => "En"
+        };
+    }
+
     public string GetNeededMemory() => GetValueFromConfig("AppSize", "RepackDescription");
-    public string GetRepackDescription() => GetValueFromConfig("RepackDescription", "AppPurchaseLink");
+    public string GetRepackDescription()
+    {
+        var suffix = GetCurrentCultureSuffix();
+        return GetValueFromConfig($"RepackDescription{suffix}", suffix == "En" ? "AppPurchaseLink" : "RepackDescriptionEn");
+    }
     public string GetAppPurchaseLink() => GetValueFromConfig("AppPurchaseLink", "RepackerName");
     public string GetRepackerName() => GetValueFromConfig("RepackerName", "AppVersion");
     public string GetAppVersion() => GetValueFromConfig("AppVersion", "AppName");
     public string GetAppName() => GetValueFromConfig("AppName", "AppDescription");
-    public string GetAppDescription() => GetValueFromConfig("AppDescription", "RepackIcon");
+    public string GetAppDescription()
+    {
+        var suffix = GetCurrentCultureSuffix();
+        return GetValueFromConfig($"AppDescription{suffix}", suffix == "En" ? "RepackIcon" : "AppDescriptionEn");
+    }
 
     private string GetValueFromConfig(string startTag, string endTag)
     {
@@ -102,13 +121,16 @@ public class MainWindowModel
         {
             if (!File.Exists(_filePath)) throw new FileNotFoundException("Config file not found.");
             var lines = File.ReadLines(_filePath);
+            var prefix = GetCurrentCultureSuffix();
 
             return (from line in lines.TakeWhile(line => !line.StartsWith("AppExePath"))
+                where line.StartsWith(prefix)
                 select line.Split('=')
                 into parts
                 where parts.Length == 2
-                let folderName = parts[0].Trim()
+                let folderNameWithPrefix = parts[0].Trim()
                 let componentName = parts[1].Trim()
+                let folderName = folderNameWithPrefix.Replace(prefix, "")
                 select new KeyValuePair<string, string>(folderName, componentName)).ToList();
         }
         catch (Exception ex)
@@ -124,13 +146,13 @@ public class MainWindowModel
             throw;
         }
     }
-    
+
     public List<string> GetExePaths()
     {
         try
         {
             if (!File.Exists(_filePath)) throw new FileNotFoundException("Config file not found.");
-            
+
             var paths = new List<string>();
 
             using var reader = new StreamReader(_filePath);

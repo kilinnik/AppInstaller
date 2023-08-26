@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:res="clr-namespace:AppInstaller.Resources"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -57,13 +58,13 @@
                 <!-- Заголовок "Выбор параметров установки" -->
                 <Grid>
                     <TextBlock Width="175" Height="15" Margin="5" FontSize="12" Foreground="Black"
-                               Text="Выбор параметров установки" TextAlignment="Center">
+                               Text="{x:Static res:Strings.InstallationOptionsSelection}" TextAlignment="Center">
                         <TextBlock.RenderTransform>
                             <TranslateTransform X="1" Y="1" />
                         </TextBlock.RenderTransform>
                     </TextBlock>
                     <TextBlock Width="175" Height="15" Margin="5" TextAlignment="Center" FontSize="12"
-                               Foreground="White" Text="Выбор параметров установки">
+                               Foreground="White" Text="{x:Static res:Strings.InstallationOptionsSelection}">
                     </TextBlock>
                 </Grid>
                 <!-- Текст "Выберите папку для установки программы" и кнопка "Изменить" -->
@@ -104,16 +105,16 @@
                                         </Rectangle.Fill>
                                     </Rectangle>
                                     <!-- Текст "Изменить" с тенью и белым текстом -->
-                                    <TextBlock Margin="2" Text="Изменить" FontStyle="Normal" FontSize="12"
-                                               Foreground="Black" VerticalAlignment="Center"
-                                               HorizontalAlignment="Center">
+                                    <TextBlock Margin="2"  Text="{x:Static res:Strings.ChangeOutputDir}" 
+                                               FontStyle="Normal" FontSize="12" Foreground="Black" 
+                                               VerticalAlignment="Center" HorizontalAlignment="Center">
                                         <TextBlock.RenderTransform>
                                             <TranslateTransform X="1" Y="1" />
                                         </TextBlock.RenderTransform>
                                     </TextBlock>
-                                    <TextBlock Margin="2" Text="Изменить" FontStyle="Normal" FontSize="12"
-                                               Foreground="White" VerticalAlignment="Center"
-                                               HorizontalAlignment="Center">
+                                    <TextBlock Margin="2"  Text="{x:Static res:Strings.ChangeOutputDir}" 
+                                               FontStyle="Normal" FontSize="12" Foreground="White" 
+                                               VerticalAlignment="Center" HorizontalAlignment="Center">
                                     </TextBlock>
                                 </Grid>
                             </ControlTemplate>
@@ -124,13 +125,17 @@
                 <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="250">
                     <!-- Текст с тенью и белым текстом -->
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40, 0, 2, 5" FontSize="9"
-                               Foreground="Black" Text="{Binding NeededMemory}">
+                               Foreground="Black">
+                        <Run Text="{x:Static res:Strings.OccupiedByFilesSize}" />
+                        <Run Text="{Binding NeededMemory}" />
                         <TextBlock.RenderTransform>
                             <TranslateTransform X="1" Y="1" />
                         </TextBlock.RenderTransform>
                     </TextBlock>
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40, 0, 2, 5" FontSize="9"
-                               Foreground="White" Text="{Binding NeededMemory}">
+                               Foreground="White">
+                        <Run Text="{x:Static res:Strings.OccupiedByFilesSize}" />
+                        <Run Text="{Binding NeededMemory}" />
                     </TextBlock>
                 </Grid>
             </StackPanel>
@@ -148,18 +153,16 @@
                 <StackPanel>
                     <!-- Заголовок "Особенности и дополнения" -->
                     <Grid>
-                        <TextBlock Margin="5" Width="168" Height="16" TextWrapping="Wrap"
-                                   Text="Особенности и дополнения" FontSize="12" Foreground="Black"
-                                   VerticalAlignment="Top"
-                                   TextAlignment="Center">
+                        <TextBlock Margin="5" Width="168" Height="16" TextWrapping="Wrap" FontSize="12" 
+                                   Text="{x:Static res:Strings.FeaturesAndAddons}" Foreground="Black"
+                                   VerticalAlignment="Top" TextAlignment="Center">
                             <TextBlock.RenderTransform>
                                 <TranslateTransform X="1" Y="1" />
                             </TextBlock.RenderTransform>
                         </TextBlock>
-                        <TextBlock Margin="5" Width="168" Height="16" TextWrapping="Wrap"
-                                   Text="Особенности и дополнения" FontSize="12" Foreground="White"
-                                   VerticalAlignment="Top"
-                                   TextAlignment="Center">
+                        <TextBlock Margin="5" Width="168" Height="16" TextWrapping="Wrap" FontSize="12" 
+                                   Text="{x:Static res:Strings.FeaturesAndAddons}" Foreground="White"
+                                   VerticalAlignment="Top" TextAlignment="Center">
                         </TextBlock>
                     </Grid>
                     <!-- Враппанель с чекбоксом и текстом "Создать ярлык на рабочем столе" -->
@@ -170,14 +173,14 @@
                         <Grid>
                             <!-- Текст с тенью и белым текстом -->
                             <TextBlock Margin="5" Width="360" Height="16" TextWrapping="Wrap"
-                                       Text="Создать ярлык на рабочем столе" FontSize="12" Foreground="Black"
+                                       Text="{x:Static res:Strings.CreateDesktopShortcut}" FontSize="12" Foreground="Black"
                                        HorizontalAlignment="Left">
                                 <TextBlock.RenderTransform>
                                     <TranslateTransform X="1" Y="1" />
                                 </TextBlock.RenderTransform>
                             </TextBlock>
                             <TextBlock Margin="5" Width="360" Height="16" TextWrapping="Wrap"
-                                       Text="Создать ярлык на рабочем столе" FontSize="12" Foreground="White"
+                                       Text="{x:Static res:Strings.CreateDesktopShortcut}" FontSize="12" Foreground="White"
                                        HorizontalAlignment="Left">
                             </TextBlock>
                         </Grid>

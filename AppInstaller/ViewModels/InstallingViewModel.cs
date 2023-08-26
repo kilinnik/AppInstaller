@@ -79,8 +79,8 @@ public class InstallingViewModel : ViewModelBase
 
         HeadImage = headImage;
         MainWindowViewModel = mainWindowViewModel;
-        ElapsedTime = "Времени прошло: 00:00:00";
-        RemainingTime = "Времени осталось: 00:00:00";
+        ElapsedTime = $"{Resources.Strings.TimeElapsed} 00:00:00";
+        RemainingTime = $"{Resources.Strings.TimeRemaining} 00:00:00";
         MascotImage = mascotImage;
         RepackerName = "by " + repackerName;
     }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using AppInstaller.ViewModels;
@@ -14,23 +16,46 @@ namespace AppInstaller
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
+            try
+            {
+                base.OnStartup(e);
+                var languageSelectionWindow = new LanguageSelectionWindow();
+                if (languageSelectionWindow.ShowDialog() == true)
+                {
+                    var selectedCulture = languageSelectionWindow.SelectedCulture;
+                    if (selectedCulture != null)
+                        Thread.CurrentThread.CurrentUICulture = new CultureInfo(selectedCulture);
+                    var mainWindowViewModel = new MainWindowViewModel();
+                    var mainWindow = new MainWindow
+                    {
+                        DataContext = mainWindowViewModel
+                    };
 
-            var mainWindowViewModel = new MainWindowViewModel();
-            var mainWindow = new MainWindow
-            {
-                DataContext = mainWindowViewModel
-            };
-            
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
-            if (File.Exists(filePath))
-            {
-                LoadIcon(filePath);
+                    var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
+                    if (File.Exists(filePath))
+                    {
+                        LoadIcon(filePath);
+                    }
+
+                    mainWindow.Show();
+                }
+                else
+                {
+                    Shutdown();
+                }
             }
-            
-            mainWindow.Show();
+            catch (Exception ex)
+            {
+                var errorMessage = $"An error occurred in App.LoadIcon(): {ex.Message}\n{ex.StackTrace}";
+                if (ex.InnerException != null)
+                {
+                    errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
+                }
+
+                MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-        
+
         private static void LoadIcon(string filePath)
         {
             try
@@ -45,9 +70,9 @@ namespace AppInstaller
                         break;
                     }
                 }
-                
+
                 if (result == null) return;
-                
+
                 var iconBytes = Convert.FromBase64String(result);
 
                 using var stream = new MemoryStream(iconBytes);
@@ -65,6 +90,7 @@ namespace AppInstaller
                 {
                     errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
                 }
+
                 MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

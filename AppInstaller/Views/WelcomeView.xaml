@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:res="clr-namespace:AppInstaller.Resources"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <!-- Задаем контекст данных (ViewModel) для этого UserControl -->
@@ -31,15 +32,17 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <!-- Текстовый блок с приветственным сообщением, тенью -->
-                <TextBlock Margin="2" FontSize="12" Foreground="Black"
-                           Text="{Binding WelcomeMessage}" HorizontalAlignment="Center">
+                <TextBlock Margin="2" FontSize="12" Foreground="Black" HorizontalAlignment="Center">
+                    <Run Text="{x:Static res:Strings.WelcomeMessage}" />
+                    <Run Text="{Binding AppName}" />
                     <TextBlock.RenderTransform>
                         <TranslateTransform X="1" Y="1" />
                     </TextBlock.RenderTransform>
                 </TextBlock>
                 <!-- Текстовый блок с приветственным сообщением, белым текстом -->
-                <TextBlock Grid.Row="0" Margin="2" FontSize="12" Foreground="White"
-                           Text="{Binding WelcomeMessage}" HorizontalAlignment="Center">
+                <TextBlock Grid.Row="0" Margin="2" FontSize="12" Foreground="White" HorizontalAlignment="Center">
+                    <Run Text="{x:Static res:Strings.WelcomeMessage}" />
+                    <Run Text="{Binding AppName}" />
                 </TextBlock>
                 <!-- Контейнер с прокручиваемым описанием программы -->
                 <ScrollViewer Grid.Row="1" MaxHeight="48" HorizontalAlignment="Center" VerticalAlignment="Center"

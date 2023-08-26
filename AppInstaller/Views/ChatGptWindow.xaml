@@ -1,0 +1,87 @@
+﻿<Window x:Class="AppInstaller.Views.ChatGptWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:AppInstaller.Views"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:res="clr-namespace:AppInstaller.Resources"
+        WindowStyle="None" BorderThickness="1" AllowsTransparency="True"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+        Height="300" Width="300"
+        MouseLeftButtonDown="Window_MouseDown">
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+            <GradientStop Color="#6247AA" Offset="0" />
+            <GradientStop Color="#9F58BE" Offset="0.5424" />
+            <GradientStop Color="#7F58BE" Offset="1" />
+        </LinearGradientBrush>
+    </Window.Background>
+    <Window.Template>
+        <ControlTemplate TargetType="{x:Type Window}">
+            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                <ContentPresenter />
+            </Border>
+        </ControlTemplate>
+    </Window.Template>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock HorizontalAlignment="Left" Margin="10,2,2,2" Text="ChatGPT" VerticalAlignment="Center"
+                       FontSize="12"
+                       Foreground="White" Width="50">
+            </TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" FlowDirection="RightToLeft">
+            <Button Margin="0" Width="50" Background="Transparent" Foreground="#ff4d4d" BorderThickness="0"
+                    Click="CloseButton_Click">
+                <materialDesign:PackIcon Kind="Close" />
+            </Button>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" Name="MessagesScrollViewer">
+            <Grid Name="MessagesGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+            </Grid>
+        </ScrollViewer>
+        <WrapPanel Grid.Row="3">
+            <TextBox
+                Width="294" MinHeight="40" Foreground="White" Padding="2,2,38,2" VerticalScrollBarVisibility="Hidden"
+                VerticalAlignment="Top" MaxHeight="100" Margin="2" BorderThickness="1" materialDesign:TextFieldAssist.UnderlineCornerRadius="0"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}" Name="MessageTextBox"
+                TextWrapping="Wrap" TextChanged="MessageTextBox_TextChanged" KeyDown="MessageTextBox_KeyDown">
+                <TextBox.CaretBrush>
+                    <SolidColorBrush Color="White" />
+                </TextBox.CaretBrush>
+                <TextBox.BorderBrush>
+                    <SolidColorBrush Color="White" />
+                </TextBox.BorderBrush>
+            </TextBox>
+        </WrapPanel>
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <WrapPanel Grid.Row="1" FlowDirection="RightToLeft">
+                <Button Padding="0" Margin="3,4,3,3" Width="35" Height="36" Foreground="White"
+                        Name="SendButton" Click="SendMessage_Click">
+                    <materialDesign:PackIcon Name="SendIcon" Kind="SendLock" />
+                    <Button.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#A06CD5" Offset="0" />
+                            <GradientStop Color="#4F2BAE" Offset="1" />
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+            </WrapPanel>
+        </Grid>
+    </Grid>
+</Window>

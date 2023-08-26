@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <!-- ... другие метаданные ... -->
+    <data name="CreateDesktopShortcut" xml:space="preserve">
+    <value>Create desktop shortcut</value>
+  </data>
+    <data name="FeaturesAndAdd-ons" xml:space="preserve">
+      <value>Features and Add-ons</value>
+    </data>
+    <data name="ChangeOutputDir" xml:space="preserve">
+      <value>Change</value>
+    </data>
+    <data name="InstallationOptionsSelection" xml:space="preserve">
+      <value>Installation Options Selection</value>
+    </data>
+    <data name="OccupiedByFilesSize" xml:space="preserve">
+      <value>Occupied by files size: </value>
+    </data>
+    <data name="Back" xml:space="preserve">
+      <value>Back &gt;</value>
+    </data>
+    <data name="Cancel" xml:space="preserve">
+      <value>Cancel</value>
+    </data>
+    <data name="Next" xml:space="preserve">
+      <value>&lt; Next</value>
+    </data>
+    <data name="Installation" xml:space="preserve">
+      <value>Installation</value>
+    </data>
+    <data name="Yes" xml:space="preserve">
+      <value>Yes</value>
+    </data>
+    <data name="No" xml:space="preserve">
+      <value>No</value>
+    </data>
+    <data name="ExitMessage" xml:space="preserve">
+      <value>Do you really want to get out?</value>
+    </data>
+    <data name="InstallationFolder" xml:space="preserve">
+      <value>Installation folder: </value>
+    </data>
+    <data name="AdditionalTasks" xml:space="preserve">
+      <value>Additional tasks:</value>
+    </data>
+    <data name="AppLink" xml:space="preserve">
+      <value>Link to app in store</value>
+    </data>
+    <data name="PlayPause" xml:space="preserve">
+      <value>Play/Pause</value>
+    </data>
+    <data name="PlayFromTheBeginning" xml:space="preserve">
+      <value>Play from the beginning</value>
+    </data>
+    <data name="WelcomeMessage" xml:space="preserve">
+      <value>Welcome to the installer of </value>
+    </data>
+    <data name="TimeElapsed" xml:space="preserve">
+      <value>Time elapsed:</value>
+    </data>
+    <data name="TimeRemaining" xml:space="preserve">
+      <value>Time remaining:</value>
+    </data>
+    <data name="InstallationComplete" xml:space="preserve">
+      <value>Installation complete</value>
+    </data>
+    <data name="Install" xml:space="preserve">
+      <value>Install</value>
+    </data>
+    <data name="Finish" xml:space="preserve">
+      <value>Finish</value>
+    </data>
+    <data name="NoInternetConnection" xml:space="preserve">
+      <value>No internet connection. Please check your connection and try again.</value>
+    </data>
+    <!-- ... другие строки ... -->
+</root>

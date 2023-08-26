@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:res="clr-namespace:AppInstaller.Resources"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid d:DataContext="{d:DesignInstance }">
@@ -36,16 +37,18 @@
                 <!-- Контейнер с текстом о выбранной папке -->
                 <Grid Margin="20,10,5,5">
                     <!-- Текст о выбранной папке с тенью и белым текстом -->
-                    <TextBlock Margin="5" Height="16" TextWrapping="Wrap"
-                               Text="{Binding SelectedPath}" FontSize="12" Foreground="Black"
-                               HorizontalAlignment="Left">
+                    <TextBlock Margin="5" Height="16" TextWrapping="Wrap" Width="360"
+                               FontSize="12" Foreground="Black" HorizontalAlignment="Left">
+                        <Run Text="{x:Static res:Strings.InstallationFolder}" />
+                        <Run Text="{Binding SelectedPath}" />
                         <TextBlock.RenderTransform>
                             <TranslateTransform X="1" Y="1" />
                         </TextBlock.RenderTransform>
                     </TextBlock>
-                    <TextBlock Margin="5" Height="16" TextWrapping="Wrap"
-                               Text="{Binding SelectedPath}" FontSize="12" Foreground="White"
-                               HorizontalAlignment="Left">
+                    <TextBlock Margin="5" Height="16" TextWrapping="Wrap" Width="360"
+                               FontSize="12" Foreground="White" HorizontalAlignment="Left">
+                        <Run Text="{x:Static res:Strings.InstallationFolder}" />
+                        <Run Text="{Binding SelectedPath}" />
                     </TextBlock>
                 </Grid>
                 <!-- Контейнер с текстом о создании ярлыка -->
