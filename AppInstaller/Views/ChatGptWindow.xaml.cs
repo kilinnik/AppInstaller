@@ -13,7 +13,6 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using Mirror.ChatGpt;
 using Mirror.ChatGpt.Models.ChatGpt;
-using MaterialDesignThemes.Wpf;
 
 namespace AppInstaller.Views;
 
