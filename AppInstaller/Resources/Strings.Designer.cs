@@ -36,7 +36,7 @@ public class Strings
     public static string No => ResourceManager.GetString("No");
     public static string NoInternetConnection => ResourceManager.GetString("NoInternetConnection");
     public static string OccupiedByFilesSize => ResourceManager.GetString("OccupiedByFilesSize");
-    public static string PlayFromTheBeginning => ResourceManager.GetString("PlayFromTheBeginning");
+    public static string PlayFromTheStart => ResourceManager.GetString("PlayFromTheBeginning");
     public static string PlayPause => ResourceManager.GetString("PlayPause");
     public static string TimeElapsed => ResourceManager.GetString("TimeElapsed");
     public static string TimeRemaining => ResourceManager.GetString("TimeRemaining");

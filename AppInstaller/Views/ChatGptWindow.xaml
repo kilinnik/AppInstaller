@@ -49,10 +49,10 @@
                 Style="{DynamicResource MaterialDesignOutlinedTextBox}" Name="MessageTextBox"
                 TextWrapping="Wrap" TextChanged="MessageTextBox_TextChanged" KeyDown="MessageTextBox_KeyDown">
                 <TextBox.CaretBrush>
-                    <SolidColorBrush Color="{DynamicResource WhiteColor}" />
+                    <SolidColorBrush Color="{DynamicResource TextColor}" />
                 </TextBox.CaretBrush>
                 <TextBox.BorderBrush>
-                    <SolidColorBrush Color="{DynamicResource WhiteColor}" />
+                    <SolidColorBrush Color="{DynamicResource TextColor}" />
                 </TextBox.BorderBrush>
             </TextBox>
         </WrapPanel>
@@ -62,8 +62,8 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <WrapPanel Grid.Row="1" FlowDirection="RightToLeft">
-                <Button Padding="0" Margin="3,4,3,3" Width="35" Height="36" Foreground="{DynamicResource TextBrush}"
-                        Name="SendButton" Click="SendMessage_Click">
+                <Button Padding="0" Margin="3,4,3,4" Width="35" Height="36" Foreground="{DynamicResource TextBrush}"
+                        Click="SendMessage_Click" BorderThickness="0">
                     <materialDesign:PackIcon Name="SendIcon" Kind="SendLock" />
                     <Button.Background>
                         <DynamicResource ResourceKey="ButtonGradient" />

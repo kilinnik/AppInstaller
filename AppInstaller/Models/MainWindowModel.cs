@@ -48,7 +48,7 @@ public class MainWindowModel
         catch (Exception ex)
         {
             var errorMessage =
-                $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                $"An error occurred in MainWindowModel.GetImageFromConfig(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
@@ -104,7 +104,7 @@ public class MainWindowModel
         catch (Exception ex)
         {
             var errorMessage =
-                $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                $"An error occurred in MainWindowModel.GetValueFromConfig(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
@@ -136,7 +136,7 @@ public class MainWindowModel
         catch (Exception ex)
         {
             var errorMessage =
-                $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                $"An error occurred in MainWindowModel.GetComponentNames(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
@@ -171,7 +171,7 @@ public class MainWindowModel
         catch (Exception ex)
         {
             var errorMessage =
-                $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                $"An error occurred in MainWindowModel.GetExePaths(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";

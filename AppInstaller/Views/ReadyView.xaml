@@ -34,7 +34,7 @@
                 <!-- Контейнер с текстом о выбранной папке -->
                 <Grid Margin="20,10,5,5">
                     <!-- Текст о выбранной папке с тенью и белым текстом -->
-                    <TextBlock Margin="5" Height="16" TextWrapping="Wrap" Width="360"
+                    <TextBlock Margin="5" Height="Auto" TextWrapping="Wrap" Width="445"
                                FontSize="12" Foreground="{DynamicResource ShadowBrush}" HorizontalAlignment="Left">
                         <Run Text="{x:Static res:Strings.InstallationFolder}" />
                         <Run Text="{Binding SelectedPath}" />
@@ -42,7 +42,7 @@
                             <TranslateTransform X="1" Y="1" />
                         </TextBlock.RenderTransform>
                     </TextBlock>
-                    <TextBlock Margin="5" Height="16" TextWrapping="Wrap" Width="360"
+                    <TextBlock Margin="5" Height="Auto" TextWrapping="Wrap" Width="445"
                                FontSize="12" Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Left">
                         <Run Text="{x:Static res:Strings.InstallationFolder}" />
                         <Run Text="{Binding SelectedPath}" />
@@ -52,13 +52,13 @@
                 <Grid Margin="20,5,5,5">
                     <!-- Текст о создании ярлыка с тенью и белым текстом -->
                     <TextBlock Margin="5" TextWrapping="Wrap" Text="{Binding AdditionalComponents}" FontSize="12"
-                               Foreground="{DynamicResource ShadowBrush}" HorizontalAlignment="Left" Width="360">
+                               Foreground="{DynamicResource ShadowBrush}" HorizontalAlignment="Left" Width="445">
                         <TextBlock.RenderTransform>
                             <TranslateTransform X="1" Y="1" />
                         </TextBlock.RenderTransform>
                     </TextBlock>
                     <TextBlock Margin="5" TextWrapping="Wrap" Text="{Binding AdditionalComponents}" FontSize="12"
-                               Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Left" Width="360">
+                               Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Left" Width="445">
                     </TextBlock>
                 </Grid>
             </StackPanel>

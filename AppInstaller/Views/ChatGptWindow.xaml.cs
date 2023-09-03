@@ -16,7 +16,7 @@ using Mirror.ChatGpt.Models.ChatGpt;
 
 namespace AppInstaller.Views;
 
-public partial class ChatGptWindow : Window
+public partial class ChatGptWindow
 {
     private readonly ChatGptClient _chatGptClient;
     private readonly MessageEntry[] _context;
@@ -33,7 +33,7 @@ public partial class ChatGptWindow : Window
     private static ChatGptClient InitializeChatGptClient()
     {
         var services = new ServiceCollection();
-        services.AddChatGptClient(new ChatGptClientOptions { ApiKey = "ApiKey" });
+        services.AddChatGptClient(new ChatGptClientOptions { ApiKey = "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" });
         var app = services.BuildServiceProvider();
         return app.GetRequiredService<ChatGptClient>();
     }
@@ -125,7 +125,7 @@ public partial class ChatGptWindow : Window
             Duration = new Duration(TimeSpan.FromMilliseconds(300))
         };
 
-        animation.Completed += (s, e) => MessagesScrollViewer.ScrollToEnd();
+        animation.Completed += (_, _) => MessagesScrollViewer.ScrollToEnd();
         translateTransform.BeginAnimation(TranslateTransform.YProperty, animation);
         
         Grid.SetRow(container, MessagesGrid.RowDefinitions.Count - 1);

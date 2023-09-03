@@ -84,6 +84,7 @@ public class InstallingViewModel : ViewModelBase
         _model.ProgressChanged += OnProgressChanged;
         _model.ErrorMessageOccurred += OnErrorMessageOccurred;
         _model.TimeChanged += OnTimeChanged;
+        mainWindowViewModel.ExitRequested += () => model.Cancel();
 
         HeadImage = headImage;
         MainWindowViewModel = mainWindowViewModel;
@@ -93,6 +94,14 @@ public class InstallingViewModel : ViewModelBase
         RepackerName = "by " + repackerName;
     }
 
+    public async Task InstallApp(string archiveFolderPath, string? destinationFolderPath,
+        string appName, string appVersion, bool iconChecked, IEnumerable<Components> components, List<string> exePaths)
+    {
+        await _model.InstallApp(archiveFolderPath, destinationFolderPath, appName, appVersion, iconChecked,
+            components, exePaths);
+        MainWindowViewModel.NavigateNextView();
+    }
+    
     private void OnTimeChanged(string message, string time, bool flag)
     {
         Application.Current.Dispatcher.Invoke(() =>
@@ -115,14 +124,5 @@ public class InstallingViewModel : ViewModelBase
         MessageBoxImage icon)
     {
         MessageBox.Show(message, caption, buttons, icon);
-    }
-
-    public async Task InstallApp(string archiveFolderPath, string? destinationFolderPath,
-        string appName, string appVersion, bool iconChecked, IEnumerable<Components> components, List<string> exePaths,
-        string size)
-    {
-        await _model.InstallApp(archiveFolderPath, destinationFolderPath, appName, appVersion, iconChecked,
-            components, exePaths, size);
-        MainWindowViewModel.NavigateNextView();
     }
 }

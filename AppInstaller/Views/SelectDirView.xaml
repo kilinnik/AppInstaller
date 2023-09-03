@@ -13,7 +13,7 @@
             <BulletDecorator Background="Transparent">
                 <BulletDecorator.Bullet>
                     <Grid Width="12" Height="12">
-                        <Ellipse Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}"
+                        <Ellipse Fill="{DynamicResource CheckBoxBrush}" Stroke="{DynamicResource CheckBoxBrush}"
                                  StrokeThickness="1" />
                         <materialDesign:PackIcon Kind="Check" Width="12" Visibility="Collapsed" x:Name="CheckMark"
                                                  Foreground="{DynamicResource TextBrush}" Height="12" />

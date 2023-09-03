@@ -7,7 +7,7 @@ namespace AppInstaller;
 
 public class BooleanToHiddenVisibilityConverter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is bool boolValue)
         {
@@ -17,7 +17,7 @@ public class BooleanToHiddenVisibilityConverter : IValueConverter
         return Visibility.Hidden;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is Visibility visibilityValue)
         {

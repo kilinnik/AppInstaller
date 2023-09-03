@@ -1,0 +1,54 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Window Background Gradient -->
+    <LinearGradientBrush x:Key="WindowBackgroundGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+        <GradientStop Color="#bf8be8" Offset="0" />
+        <GradientStop Color="#a153e0" Offset="0.5424" />
+        <GradientStop Color="#8c40c9" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="LeftToRightGradient" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#bc81eb" Offset="0" />
+        <GradientStop Color="#931ff0" Offset="1" />
+    </LinearGradientBrush>
+
+    <!-- Button Gradient -->
+    <LinearGradientBrush x:Key="ButtonGradient" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#bc81eb" Offset="0" />
+        <GradientStop Color="#931ff0" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BottomToTopGradient" StartPoint="0,1" EndPoint="0,0">
+        <GradientStop Color="#bc81eb" Offset="0" />
+        <GradientStop Color="#931ff0" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="DiagonalGradient" StartPoint="0,1" EndPoint="1,0">
+        <GradientStop Color="#bc81eb" Offset="0" />
+        <GradientStop Color="#931ff0" Offset="1" />
+    </LinearGradientBrush>
+
+    <!-- Change Button Gradient -->
+    <LinearGradientBrush x:Key="ChangeButtonGradient" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#bc81eb" Offset="0" />
+        <GradientStop Color="#931ff0" Offset="1" />
+    </LinearGradientBrush>
+    
+    <Style x:Key="ButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
+    </Style>
+    
+    <!-- Other Colors -->
+    <Color x:Key="TextColor">#E0E0E0</Color>
+    <Color x:Key="ShadowColor">#000000</Color>
+    <Color x:Key="CloseColor">#FF4D4D</Color>
+    <Color x:Key="TgColor">#229ED9</Color>
+    <Color x:Key="BoisColor">#A9A18C</Color>
+    <Color x:Key="CheckBoxColor">#13082F</Color>
+    
+    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
+    <SolidColorBrush x:Key="ShadowBrush" Color="{StaticResource ShadowColor}" />
+    <SolidColorBrush x:Key="CloseBrush" Color="{StaticResource CloseColor}" />
+    <SolidColorBrush x:Key="TgBrush" Color="{StaticResource TgColor}" />
+    <SolidColorBrush x:Key="BoisBrush" Color="{StaticResource BoisColor}" />
+    <SolidColorBrush x:Key="CheckBoxBrush" Color="{StaticResource CheckBoxColor}" />
+</ResourceDictionary>

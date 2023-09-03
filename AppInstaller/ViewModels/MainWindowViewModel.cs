@@ -118,6 +118,8 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> NavigateToNextViewCommand { get; }
     public ReactiveCommand<Unit, Unit> NavigateToPreviousViewCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelCommand { get; }
+    
+    public event Action ExitRequested;
 
     public MainWindowViewModel()
     {
@@ -151,7 +153,7 @@ public class MainWindowViewModel : ViewModelBase
             new FinishedView { DataContext = new FinishedViewModel(bigImage) }
         };
 
-        CurrentTheme = "Light";
+        CurrentTheme = "LightStandard";
         _currentViewIndex = 0;
         CurrentView = _views[_currentViewIndex];
         IconChecked = false;
@@ -248,8 +250,7 @@ public class MainWindowViewModel : ViewModelBase
                 var selectDirViewModel = _views[1]?.DataContext as SelectDirViewModel;
                 installingViewModel.InstallApp(AppDomain.CurrentDomain.BaseDirectory,
                     SelectedPath, _appName, _mainWindowModel.GetAppVersion(), IconChecked,
-                    selectDirViewModel.Components, _mainWindowModel.GetExePaths(),
-                    _mainWindowModel.GetNeededMemory());
+                    selectDirViewModel.Components, _mainWindowModel.GetExePaths());
                 break;
             }
         }
@@ -284,19 +285,14 @@ public class MainWindowViewModel : ViewModelBase
     private static void ShowChatGptWindow()
     {
         new ChatGptWindow().ShowDialog();
-        // if (result == true)
-        // {
-        //     Application.Current.Shutdown();
-        // }
     }
 
-    private static void ShowCloseMessageBox()
+    private void ShowCloseMessageBox()
     {
         var result = new CloseMessageBox().ShowDialog();
-        if (result == true)
-        {
-            Application.Current.Shutdown();
-        }
+        if (result != true) return;
+        ExitRequested?.Invoke();
+        Application.Current.Shutdown();
     }
 
     private void ShowMessageBox()
@@ -310,7 +306,7 @@ public class MainWindowViewModel : ViewModelBase
         catch (Exception ex)
         {
             var errorMessage =
-                $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                $"An error occurred in MainWindowViewModel.ShowMessageBox(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";

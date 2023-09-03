@@ -8,16 +8,6 @@ namespace AppInstaller;
 
 public class ProgressBarGradientConverter : IMultiValueConverter
 {
-    // public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    // {
-    //     throw new NotImplementedException();
-    // }
-    //
-    // public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    // {
-    //     throw new NotImplementedException();
-    // }
-
     public object? Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
         if (values.Length != 2 || values[0] is not double || values[1] is not string)
@@ -30,7 +20,7 @@ public class ProgressBarGradientConverter : IMultiValueConverter
 
         switch (currentTheme)
         {
-            case "Light":
+            case "LightStandard":
                 switch (progressValue)
                 {
                     case <= 33:
@@ -54,7 +44,7 @@ public class ProgressBarGradientConverter : IMultiValueConverter
                 }
 
                 break;
-            case "Dark":
+            case "DarkStandard":
                 switch (progressValue)
                 {
                     case <= 33:
@@ -73,6 +63,54 @@ public class ProgressBarGradientConverter : IMultiValueConverter
                         gradient.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#5C3A8F"),
                             0.6666));
                         gradient.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#4C3A8F"),
+                            1));
+                        break;
+                }
+
+                break;
+            case "LightClassic":
+                switch (progressValue)
+                {
+                    case <= 33:
+                        gradient.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#FFFFFF"),
+                            1));
+                        break;
+                    case <= 66:
+                        gradient.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#FFFFFF"),
+                            0.3333));
+                        gradient.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#E0E0E0"),
+                            1));
+                        break;
+                    default:
+                        gradient.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#FFFFFF"),
+                            0.3333));
+                        gradient.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#E0E0E0"),
+                            0.6666));
+                        gradient.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#B0B0B0"),
+                            1));
+                        break;
+                }
+
+                break;
+            case "DarkClassic":
+                switch (progressValue)
+                {
+                    case <= 33:
+                        gradient.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#4D4D4D"),
+                            1));
+                        break;
+                    case <= 66:
+                        gradient.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#4D4D4D"),
+                            0.3333));
+                        gradient.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#2E2E2E"),
+                            1));
+                        break;
+                    default:
+                        gradient.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#4D4D4D"),
+                            0.3333));
+                        gradient.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#2E2E2E"),
+                            0.6666));
+                        gradient.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#1A1A1A"),
                             1));
                         break;
                 }

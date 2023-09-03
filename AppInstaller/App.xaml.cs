@@ -8,123 +8,127 @@ using System.Windows.Media.Imaging;
 using AppInstaller.ViewModels;
 using AppInstaller.Views;
 
-namespace AppInstaller
+namespace AppInstaller;
+
+/// <summary>
+/// Interaction logic for App.xaml
+/// </summary>
+public partial class App
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App
+    protected override void OnStartup(StartupEventArgs e)
     {
-        protected override void OnStartup(StartupEventArgs e)
+        try
         {
-            try
+            base.OnStartup(e);
+            var languageSelectionWindow = new LanguageSelectionWindow();
+            if (languageSelectionWindow.ShowDialog() == true)
             {
-                base.OnStartup(e);
-                var languageSelectionWindow = new LanguageSelectionWindow();
-                if (languageSelectionWindow.ShowDialog() == true)
-                {
-                    SetTheme(new Uri("Themes/LightTheme.xaml", UriKind.Relative));
                     
-                    var selectedCulture = languageSelectionWindow.SelectedCulture;
-                    if (selectedCulture != null)
-                        Thread.CurrentThread.CurrentUICulture = new CultureInfo(selectedCulture);
-                    var mainWindowViewModel = new MainWindowViewModel();
-                    var mainWindow = new MainWindow
-                    {
-                        DataContext = mainWindowViewModel
-                    };
+                var selectedCulture = languageSelectionWindow.SelectedCulture;
+                if (selectedCulture != null)
+                    Thread.CurrentThread.CurrentUICulture = new CultureInfo(selectedCulture);
+                var mainWindowViewModel = new MainWindowViewModel();
+                var mainWindow = new MainWindow
+                {
+                    DataContext = mainWindowViewModel
+                };
 
-                    var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
-                    if (File.Exists(filePath))
-                    {
-                        LoadIcon(filePath);
-                    }
+                var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
+                if (File.Exists(filePath))
+                {
+                    LoadIcon(filePath);
+                }
                     
-                    mainWindow.Show();
-                }
-                else
-                {
-                    Shutdown();
-                }
+                mainWindow.Show();
             }
-            catch (Exception ex)
+            else
             {
-                var errorMessage = $"An error occurred in App.LoadIcon(): {ex.Message}\n{ex.StackTrace}";
-                if (ex.InnerException != null)
-                {
-                    errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
-                }
-
-                MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Shutdown();
             }
         }
-
-        private void SetTheme(Uri theme)
+        catch (Exception ex)
         {
-            var currentTheme = Resources.MergedDictionaries.FirstOrDefault(
-                m => m.Source.OriginalString.Contains("Themes/LightTheme.xaml") ||
-                     m.Source.OriginalString.Contains("Themes/DarkTheme.xaml"));
-
-            if (currentTheme != null)
+            var errorMessage = $"An error occurred in App.OnStartup(): {ex.Message}\n{ex.StackTrace}";
+            if (ex.InnerException != null)
             {
-                Resources.MergedDictionaries.Remove(currentTheme);
+                errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
             }
 
-            Resources.MergedDictionaries.Add(new ResourceDictionary { Source = theme });
+            MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-        
-        public void ToggleTheme()
+    }
+
+    public void ChangeTheme(string theme)
+    {
+        var currentTheme = Resources.MergedDictionaries.FirstOrDefault(
+            m => m.Source.OriginalString.Contains("Themes/LightThemeStandard.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/DarkThemeStandard.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/LightThemeClassic.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/DarkThemeClassic.xaml"));
+
+        if (currentTheme == null) return;
+
+        var isLightTheme = currentTheme.Source.OriginalString.Contains("Light");
+        var newTheme = new Uri($"Themes/{(isLightTheme ? "Light" : "Dark")}Theme{theme}.xaml", UriKind.Relative);
+
+        Resources.MergedDictionaries.Remove(currentTheme);
+        Resources.MergedDictionaries.Add(new ResourceDictionary { Source = newTheme });
+    }
+    
+    public void ToggleTheme(string theme)
+    {
+        var currentTheme = Resources.MergedDictionaries.FirstOrDefault(
+            m => m.Source.OriginalString.Contains("Themes/LightThemeStandard.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/DarkThemeStandard.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/LightThemeClassic.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/DarkThemeClassic.xaml"));
+
+        if (currentTheme == null) return;
+
+        var newTheme = currentTheme.Source.OriginalString.Contains("Light")
+            ? new Uri($"Themes/DarkTheme{theme}.xaml", UriKind.Relative)
+            : new Uri($"Themes/LightTheme{theme}.xaml", UriKind.Relative);
+
+        Resources.MergedDictionaries.Remove(currentTheme);
+        Resources.MergedDictionaries.Add(new ResourceDictionary { Source = newTheme });
+    }
+
+    private static void LoadIcon(string filePath)
+    {
+        try
         {
-            var currentTheme = Resources.MergedDictionaries.FirstOrDefault(
-                m => m.Source.OriginalString.Contains("Themes/LightTheme.xaml") ||
-                     m.Source.OriginalString.Contains("Themes/DarkTheme.xaml"));
+            string? result = null;
+            using (var reader = new StreamReader(filePath))
+            {
+                while (reader.ReadLine() is { } line)
+                {
+                    if (!line.StartsWith("RepackIcon=")) continue;
+                    result = line["RepackIcon=".Length..].TrimEnd('\r', '\n');
+                    break;
+                }
+            }
 
-            if (currentTheme == null) return;
-            var newTheme = currentTheme.Source.OriginalString.Contains("Themes/LightTheme.xaml")
-                ? new Uri("Themes/DarkTheme.xaml", UriKind.Relative)
-                : new Uri("Themes/LightTheme.xaml", UriKind.Relative);
+            if (result == null) return;
 
-            Resources.MergedDictionaries.Remove(currentTheme);
-            Resources.MergedDictionaries.Add(new ResourceDictionary { Source = newTheme });
+            var iconBytes = Convert.FromBase64String(result);
+
+            using var stream = new MemoryStream(iconBytes);
+            var iconImageSource = BitmapFrame.Create(stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+
+            if (Current.MainWindow != null)
+            {
+                Current.MainWindow.Icon = iconImageSource;
+            }
         }
-
-        private static void LoadIcon(string filePath)
+        catch (Exception ex)
         {
-            try
+            var errorMessage = $"An error occurred in App.LoadIcon(): {ex.Message}\n{ex.StackTrace}";
+            if (ex.InnerException != null)
             {
-                string? result = null;
-                using (var reader = new StreamReader(filePath))
-                {
-                    while (reader.ReadLine() is { } line)
-                    {
-                        if (!line.StartsWith("RepackIcon=")) continue;
-                        result = line["RepackIcon=".Length..].TrimEnd('\r', '\n');
-                        break;
-                    }
-                }
-
-                if (result == null) return;
-
-                var iconBytes = Convert.FromBase64String(result);
-
-                using var stream = new MemoryStream(iconBytes);
-                var iconImageSource = BitmapFrame.Create(stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
-
-                if (Current.MainWindow != null)
-                {
-                    Current.MainWindow.Icon = iconImageSource;
-                }
+                errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
             }
-            catch (Exception ex)
-            {
-                var errorMessage = $"An error occurred in App.LoadIcon(): {ex.Message}\n{ex.StackTrace}";
-                if (ex.InnerException != null)
-                {
-                    errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
-                }
 
-                MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

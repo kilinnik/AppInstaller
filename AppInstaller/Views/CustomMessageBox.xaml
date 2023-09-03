@@ -6,7 +6,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         WindowStyle="None" BorderThickness="1" AllowsTransparency="True"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Height="300" Width="300" Background="{DynamicResource WindowBackgroundGradient}"
+        Height="400" Width="400" Background="{DynamicResource WindowBackgroundGradient}"
         MouseLeftButtonDown="Window_MouseDown">
     <Window.Template>
         <ControlTemplate TargetType="{x:Type Window}">

@@ -39,16 +39,21 @@
         <GradientStop Color="#4F2BAE" Offset="1" />
     </LinearGradientBrush>
 
-    <!-- Other Colors -->
-    <Color x:Key="WhiteColor">#FFFFFF</Color>
-    <Color x:Key="ShadowColor">#000000</Color>
-    <Color x:Key="RedColor">#FF4D4D</Color>
-    <Color x:Key="BlueColor">#229ED9</Color>
-    <Color x:Key="BoisColor">#DBD3C9</Color>
+    <Style x:Key="ButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
+    </Style>
     
-    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource WhiteColor}" />
+    <!-- Other Colors -->
+    <Color x:Key="TextColor">#FFFFFF</Color>
+    <Color x:Key="ShadowColor">#000000</Color>
+    <Color x:Key="CloseColor">#FF4D4D</Color>
+    <Color x:Key="TgColor">#229ED9</Color>
+    <Color x:Key="BoisColor">#DBD3C9</Color>
+    <Color x:Key="CheckBoxColor">#4F2BAE</Color>
+    
+    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
     <SolidColorBrush x:Key="ShadowBrush" Color="{StaticResource ShadowColor}" />
-    <SolidColorBrush x:Key="CloseBrush" Color="{StaticResource RedColor}" />
-    <SolidColorBrush x:Key="BlueBrush" Color="{StaticResource BlueColor}" />
+    <SolidColorBrush x:Key="CloseBrush" Color="{StaticResource CloseColor}" />
+    <SolidColorBrush x:Key="TgBrush" Color="{StaticResource TgColor}" />
     <SolidColorBrush x:Key="BoisBrush" Color="{StaticResource BoisColor}" />
+    <SolidColorBrush x:Key="CheckBoxBrush" Color="{StaticResource CheckBoxColor}" />
 </ResourceDictionary>
