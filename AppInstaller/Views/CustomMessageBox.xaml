@@ -6,7 +6,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         WindowStyle="None" BorderThickness="1" AllowsTransparency="True"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Height="300" Width="300" Background="{DynamicResource WindowBackgroundGradient}"
+        Height="400" Width="400" Background="{DynamicResource WindowBackgroundGradient}"
         MouseLeftButtonDown="Window_MouseDown">
     <Window.Template>
         <ControlTemplate TargetType="{x:Type Window}">
@@ -22,7 +22,8 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ContentControl Foreground="{DynamicResource TextBrush}" Name="MessageContent" Margin="10,10,10,10" />
+        <FlowDocumentScrollViewer Grid.Row="1" Margin="10,10,10,10" Name="MessageContent"
+                                  Foreground="{DynamicResource TextBrush}"/>
         <Button Grid.Row="2" FontSize="10" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                 Height="21" Click="OkButton_Click" Margin="10" materialDesign:ButtonAssist.CornerRadius="10"
                 Style="{DynamicResource MaterialDesignRaisedDarkButton}">
@@ -32,7 +33,7 @@
                            HorizontalAlignment="Center">
                     <TextBlock.Effect>
                         <DropShadowEffect Color="{DynamicResource ShadowColor}" Opacity="1" BlurRadius="0"
-                                          Direction="315" ShadowDepth="1"/>
+                                          Direction="315" ShadowDepth="1" />
                     </TextBlock.Effect>
                 </TextBlock>
             </Grid>

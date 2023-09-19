@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -8,28 +7,31 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using AppInstaller.Resources;
 using Microsoft.Win32;
-using SevenZip;
 
 namespace AppInstaller.Models;
 
 public class InstallingModel
 {
-    public event Action<int> ProgressChanged;
-    public event Action<string, string, MessageBoxButton, MessageBoxImage> ErrorMessageOccurred;
-    public event Action<string, string, bool> TimeChanged;
-
-    private DateTime _lastUpdateTime = DateTime.MinValue;
+    public event Action<int>? ProgressChanged;
+    public event Action<string, string, MessageBoxButton, MessageBoxImage>? ErrorMessageOccurred;
+    public event Action<string, string, bool>? TimeChanged;
 
     private readonly TimerModel _timerModel;
-    private Func<Func<ArchiveFileInfo, decimal>, decimal> _sum;
+    private string _sevenZipPath;
+
+    private readonly CancellationTokenSource _cts = new();
 
     public InstallingModel(TimerModel timerModel)
     {
         _timerModel = timerModel;
+        _sevenZipPath = @"C:\Program Files\7-Zip\7z.exe";
     }
 
     private string FormatElapsedTime()
@@ -41,38 +43,36 @@ public class InstallingModel
         return $"{hours:D2}:{minutes:D2}:{seconds:D2}";
     }
 
-    public async Task InstallApp(string archiveFolderPath, string? destinationFolderPath,
-        string appName, string appVersion, bool iconChecked, IEnumerable<Components> components, List<string> exePaths,
-        string size)
+    public async Task InstallApp(string archiveFolderPath, string? installPath, string appName,
+        string appVersion, bool iconChecked, IEnumerable<Components> components, List<string> exePaths)
     {
         try
         {
             _timerModel.Start();
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            timer.Tick += (_, _) => TimeChanged($"{Resources.Strings.TimeElapsed} ", FormatElapsedTime(), true);
+            timer.Tick += (_, _) => TimeChanged($"{Strings.TimeElapsed} ", FormatElapsedTime(), true);
             timer.Start();
-            if (destinationFolderPath != null)
+            if (installPath != null)
             {
-                if (!Directory.Exists(destinationFolderPath))
+                if (!Directory.Exists(installPath))
                 {
-                    Directory.CreateDirectory(destinationFolderPath);
+                    Directory.CreateDirectory(installPath);
                 }
 
-                foreach (var file in Directory.EnumerateFiles(destinationFolderPath, "*", SearchOption.AllDirectories))
+                foreach (var file in Directory.EnumerateFiles(installPath, "*", SearchOption.AllDirectories))
                 {
                     File.Delete(file);
                 }
 
-                await Task.Run(() =>
-                    DecompressWithComponents(destinationFolderPath, archiveFolderPath, appName, components, size));
+                await Task.Run(() => DecompressApp(installPath, archiveFolderPath, appName, components));
 
                 if (iconChecked)
                 {
-                    CreateShortCut(destinationFolderPath, exePaths);
+                    CreateShortCut(installPath, exePaths);
                 }
 
-                var uninstallBatPath = CreateUninstallBat(exePaths, destinationFolderPath, appName);
-                AppRegistration(appName, appVersion, destinationFolderPath + exePaths[0], uninstallBatPath);
+                var uninstallBatPath = CreateUninstallBat(exePaths, installPath, appName);
+                AppRegistration(appName, appVersion, installPath + exePaths[0], uninstallBatPath);
             }
 
             var configFiles = Directory.GetFiles(AppContext.BaseDirectory, "*.dll.config");
@@ -87,122 +87,193 @@ public class InstallingModel
         catch (Exception ex)
         {
             var errorMessage =
-                $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                $"An error occurred in InstallingModel.InstallApp(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
             }
 
-            ErrorMessageOccurred(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ErrorMessageOccurred?.Invoke(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             _timerModel.Stop();
             _timerModel.Reset();
         }
     }
 
-    private static void LoadEmbeddedSevenZipLibrary()
+    private static string? Get7ZipPathFromUser()
     {
-        var assembly = Assembly.GetExecutingAssembly();
-        const string resourceName = "AppInstaller.7z.dll";
-        using var stream = assembly.GetManifestResourceStream(resourceName);
-        if (stream == null) throw new Exception("Resource not found!");
-        var bytes = new byte[stream.Length];
-        stream.Read(bytes, 0, bytes.Length);
-
-        var tempDllPath = Path.Combine(Path.GetTempPath(), "7z.dll");
-
-        // Загрузите конфигурационный файл
-        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-
-        // Замените значение ключа или добавьте его, если он не существует
-        config.AppSettings.Settings.Remove("7zLocation");
-        config.AppSettings.Settings.Add("7zLocation", tempDllPath);
-
-        // Сохраните изменения
-        config.Save(ConfigurationSaveMode.Modified);
-
-        // Обновите кэш настроек в текущем приложении
-        ConfigurationManager.RefreshSection("appSettings");
-
-        File.WriteAllBytes(tempDllPath, bytes);
-        SevenZipBase.SetLibraryPath(tempDllPath);
+        var openFileDialog = new OpenFileDialog
+        {
+            Filter = $"{Strings.SevenZipExecutable} (7z.exe)|7z.exe",
+            Title = Strings.TitleSelectExecutable,
+        };
+        
+        return openFileDialog.ShowDialog() == true ? openFileDialog.FileName : null;
     }
 
-    private void DecompressWithComponents(string installPath, string archiveFolderPath, string appName,
-        IEnumerable<Components> components, string appSize)
+    private async Task DecompressApp(string installPath, string archiveFolderPath, string appName,
+        IEnumerable<Components> components)
     {
         try
         {
-            LoadEmbeddedSevenZipLibrary();
-
-            // Получаем все архивы
-            var archiveFiles = Directory.GetFiles(archiveFolderPath, "*.7z.001");
-
-            // Вычисляем общий размер всех архивов
-            var gigabytes = double.Parse(appSize[..^3]);
-            var totalSize = (long)(gigabytes * 1024 * 1024 * 1024);
-            var processedSize = 0L;
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            void UpdateProgress(ulong size)
+            var flag = !File.Exists(_sevenZipPath);
+            if (flag)
             {
-                processedSize += (long)size;
-                var progressPercentage = (int)((double)processedSize / totalSize * 100);
-                if (progressPercentage > 100)
-                {
-                    processedSize = 100;
-                }
-                ProgressChanged(progressPercentage);
-                
-                var now = DateTime.Now;
-                if (!((now - _lastUpdateTime).TotalSeconds >= 1)) return;
-                _lastUpdateTime = now;
-
-                var timePerByte = stopwatch.Elapsed.TotalSeconds / processedSize;
-                var remainingSize = totalSize - processedSize;
-                var remainingSeconds = timePerByte * remainingSize;
-                var remainingTime = TimeSpan.FromSeconds(Math.Min(remainingSeconds, TimeSpan.MaxValue.TotalSeconds));
-                var formattedRemainingTime = remainingTime.ToString(@"hh\:mm\:ss");
-                TimeChanged($"{Resources.Strings.TimeRemaining} ", formattedRemainingTime, false);
+                await Install7ZipAsync();
+            }
+            
+            if (!File.Exists(_sevenZipPath))
+            {
+                _sevenZipPath = Get7ZipPathFromUser() ?? throw new Exception(Strings.PathNotProvided);
+                flag = false;
             }
 
-            // Лямбда-обработчик события
-            void FileExtractionFinishedHandler(object? _, FileInfoEventArgs e) => UpdateProgress(e.FileInfo.Size);
+            var mainArchivePath = File.Exists($"{archiveFolderPath}\\{appName}.7z.001")
+                ? $"{archiveFolderPath}\\{appName}.7z.001"
+                : $"{archiveFolderPath}\\{appName}.7z";
 
-            // Распаковка основного приложения и компонентов
-            void ExtractFiles(IEnumerable<string> filesToExtract)
-            {
-                foreach (var file in filesToExtract)
-                {
-                    using var extractor = new SevenZipExtractor(file);
-                    extractor.FileExtractionFinished += FileExtractionFinishedHandler;
-                    extractor.ExtractArchive(installPath);
-                    extractor.FileExtractionFinished -= FileExtractionFinishedHandler;
-                }
-            }
-
-            var mainArchiveFiles = archiveFiles.Where(file => file.Contains($"{appName}.7z.")).OrderBy(file => file)
-                .ToList();
-            ExtractFiles(mainArchiveFiles);
+            await DecompressArchiveWith7Zip(installPath, mainArchivePath);
 
             foreach (var component in components.Where(c => c.IsChecked))
             {
-                var componentArchiveFiles = archiveFiles.Where(file => file.Contains($"{component.FolderName}.7z."))
-                    .OrderBy(file => file).ToList();
-                ExtractFiles(componentArchiveFiles);
+                var componentArchivePath = File.Exists($"{archiveFolderPath}\\{component.FolderName}.7z.001")
+                    ? $"{archiveFolderPath}\\{component.FolderName}.7z.001"
+                    : $"{archiveFolderPath}\\{component.FolderName}.7z";
+
+                await DecompressArchiveWith7Zip(installPath, componentArchivePath);
+            }
+
+            if (flag)
+            {
+                await Delete7ZipAsync();
             }
         }
         catch (Exception ex)
         {
             var errorMessage =
-                $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                @"Если установлен 7zip, то он обязательно должен находиться в папке C:\Program Files\7-Zip. " +
+                $"An error occurred in InstallingModel.DecompressApp(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
             }
 
-            ErrorMessageOccurred(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ErrorMessageOccurred?.Invoke(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+
+    private async Task DecompressArchiveWith7Zip(string extractPath, string archivePath)
+    {
+        var args = $"x \"{archivePath}\" -o\"{extractPath}\" -aoa -mmt -bsp1";
+
+        using var process = new Process();
+        process.StartInfo = new ProcessStartInfo
+        {
+            FileName = _sevenZipPath,
+            Arguments = args,
+            RedirectStandardOutput = true,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+        };
+        process.EnableRaisingEvents = true;
+
+        _cts.Token.Register(() =>
+        {
+            if (!process.HasExited)
+                process.Kill();
+        });
+
+        process.Start();
+        var outputReadTask = ReadOutputAsync(process.StandardOutput);
+
+        await process.WaitForExitAsync();
+        await outputReadTask;
+
+        if (process.ExitCode != 0)
+        {
+            var errorMessage = $"7-Zip process exited with code {process.ExitCode}";
+            ErrorMessageOccurred?.Invoke(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private async Task ReadOutputAsync(TextReader reader)
+    {
+        var stopwatch = Stopwatch.StartNew();
+        var nextUpdatePercent = 1;
+
+        while (await reader.ReadLineAsync() is { } line)
+        {
+            var match = Regex.Match(line, @"(\d+)%");
+            if (!match.Success) continue;
+            var progressPercentage = int.Parse(match.Groups[1].Value);
+
+            if (progressPercentage > 100) progressPercentage = 100;
+            if (progressPercentage > nextUpdatePercent)
+            {
+                ProgressChanged?.Invoke(progressPercentage);
+                nextUpdatePercent = progressPercentage;
+            }
+
+            var elapsedSeconds = stopwatch.Elapsed.TotalSeconds;
+            var remainingTime = TimeSpan.FromSeconds(Math.Min(
+                elapsedSeconds * (100 - progressPercentage) / progressPercentage, TimeSpan.MaxValue.TotalSeconds));
+            var formattedRemainingTime = remainingTime.ToString(@"hh\:mm\:ss");
+
+            TimeChanged($"{Strings.TimeRemaining} ", formattedRemainingTime, false);
+        }
+    }
+
+    private async Task Delete7ZipAsync()
+    {
+        const string sevenZipUninstallPath = @"C:\Program Files\7-Zip\Uninstall.exe";
+
+        var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = sevenZipUninstallPath,
+                Arguments = "/S",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            }
+        };
+
+        process.Start();
+        await process.WaitForExitAsync(_cts.Token);
+    }
+
+    private async Task Install7ZipAsync()
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        const string resourceName = "AppInstaller.Resources.7z2301-x64.exe";
+        await using var stream = assembly.GetManifestResourceStream(resourceName);
+        if (stream == null) throw new Exception("Resource not found!");
+
+        var tempInstallerPath = Path.Combine(Path.GetTempPath(), "7z2301-x64.exe");
+        await using (var fileStream = new FileStream(tempInstallerPath, FileMode.Create, FileAccess.Write,
+                         FileShare.None, 4096, true))
+        {
+            await stream.CopyToAsync(fileStream, 4096, _cts.Token);
+        }
+
+        var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = tempInstallerPath,
+                Arguments = "/S",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            }
+        };
+
+        _cts.Token.Register(() =>
+        {
+            if (!process.HasExited)
+                process.Kill();
+        });
+
+        process.Start();
+        await process.WaitForExitAsync(_cts.Token);
     }
 
     private static void CreateShortCut(string appFolder, List<string> exePaths)
@@ -214,6 +285,7 @@ public class InstallingModel
             // Настройка информации о ярлыке
             link.SetDescription("repack by nitokin");
             link.SetPath(appFolder + exePath);
+            link.SetWorkingDirectory(Path.GetDirectoryName(appFolder + exePath));
 
             // Сохранение
             var shortcut = (IPersistFile)link;
@@ -240,7 +312,7 @@ public class InstallingModel
 
     private string CreateUninstallBat(IEnumerable<string> exePaths, string pathToApp, string appName)
     {
-        var pathToBat = $@"{pathToApp}\uninstall{appName}.bat";
+        var pathToBat = $@"{pathToApp}\uninstall.bat";
         //var newFilePath = string.Empty;
         try
         {
@@ -264,35 +336,25 @@ public class InstallingModel
 
             // Записываем обратно в файл
             File.WriteAllLines(pathToBat, lines);
-
-            // // Получаем путь к папке appdata\local текущего пользователя
-            // var appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            //     "uninstalls");
-            //
-            // // Создаем директорию, если она не существует
-            // Directory.CreateDirectory(appDataPath);
-            // // Перемещаем файл
-            // newFilePath = Path.Combine(appDataPath, Path.GetFileName(pathToBat));
-            // if (File.Exists(newFilePath))
-            // {
-            //     File.Delete(newFilePath);
-            // }
-            //
-            // File.Move(pathToBat, newFilePath);
         }
         catch (Exception ex)
         {
             var errorMessage =
-                $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                $"An error occurred in InstallingModel.CreateUninstallBat(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
             }
 
-            ErrorMessageOccurred(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ErrorMessageOccurred?.Invoke(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         return pathToBat;
+    }
+
+    public void Cancel()
+    {
+        _cts.Cancel();
     }
 
     [ComImport]

@@ -24,6 +24,7 @@ public class Strings
     public static string Cancel => ResourceManager.GetString("Cancel");
     public static string ChangeOutputDir => ResourceManager.GetString("ChangeOutputDir");
     public static string CreateDesktopShortcut => ResourceManager.GetString("CreateDesktopShortcut");
+    public static string DiskSpace => ResourceManager.GetString("DiskSpace");
     public static string ExitMessage => ResourceManager.GetString("ExitMessage");
     public static string FeaturesAndAddons => ResourceManager.GetString("FeaturesAndAdd-ons");
     public static string Finish=> ResourceManager.GetString("Finish");
@@ -36,10 +37,13 @@ public class Strings
     public static string No => ResourceManager.GetString("No");
     public static string NoInternetConnection => ResourceManager.GetString("NoInternetConnection");
     public static string OccupiedByFilesSize => ResourceManager.GetString("OccupiedByFilesSize");
-    public static string PlayFromTheBeginning => ResourceManager.GetString("PlayFromTheBeginning");
+    public static string PathNotProvided => ResourceManager.GetString("PathNotProvided");
+    public static string PlayFromTheStart => ResourceManager.GetString("PlayFromTheBeginning");
     public static string PlayPause => ResourceManager.GetString("PlayPause");
+    public static string SevenZipExecutable => ResourceManager.GetString("SevenZipExecutable");
     public static string TimeElapsed => ResourceManager.GetString("TimeElapsed");
     public static string TimeRemaining => ResourceManager.GetString("TimeRemaining");
+    public static string TitleSelectExecutable => ResourceManager.GetString("SelectExecutable");
     public static string WelcomeMessage => ResourceManager.GetString("WelcomeMessage");
     public static string Yes => ResourceManager.GetString("Yes");
 

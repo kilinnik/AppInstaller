@@ -8,6 +8,8 @@
         <UseWindowsForms>true</UseWindowsForms>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <ApplicationIcon>Resources\nitokin repack app icon1.ico</ApplicationIcon>
+<!--        <_SuppressWinFormsTrimError>true</_SuppressWinFormsTrimError>-->
+<!--        <_SuppressWpfTrimError>true</_SuppressWpfTrimError>-->
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,8 +17,6 @@
       <PackageReference Include="Mirror.ChatGpt" Version="1.0.2" />
       <PackageReference Include="NAudio" Version="2.1.0" />
       <PackageReference Include="ReactiveUI.WPF" Version="19.4.1" />
-      <PackageReference Include="SevenZip" Version="19.0.0" />
-      <PackageReference Include="SevenZipSharp.Net45" Version="1.0.19" />
       <PackageReference Include="SharpVectors.Wpf" Version="1.8.1" />
     </ItemGroup>
 
@@ -24,9 +24,7 @@
         <None Remove="tglogo.svg" />
         <None Remove="nitokin repack app icon1.ico" />
         <None Remove="7z.dll" />
-        <EmbeddedResource Include="7z.dll" />
         <None Remove="App.config" />
-        <Resource Include="App.config" />
         <Resource Include="Resources\nitokin repack app icon1.ico" />
         <EmbeddedResource Include="Resources\store.steampowered.com.svg" />
         <Resource Include="Resources\tglogo.svg" />
@@ -63,9 +61,9 @@
         <None Remove="Resources\chatgpt.svg" />
         <Resource Include="Resources\chatgpt.svg" />
         <Page Remove="Themes\DarkTheme.xaml" />
-        <Resource Include="Themes\DarkTheme.xaml" />
         <Page Remove="Themes\LightTheme.xaml" />
-        <Resource Include="Themes\LightTheme.xaml" />
+        <None Remove="Resources\7z2301-x64.exe" />
+        <EmbeddedResource Include="Resources\7z2301-x64.exe" />
     </ItemGroup>
     
     <ItemGroup>

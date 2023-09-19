@@ -7,10 +7,16 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
         xmlns:res="clr-namespace:AppInstaller.Resources"
+        xmlns:interactivity="http://schemas.microsoft.com/xaml/behaviors"
         WindowStyle="None" BorderThickness="1" AllowsTransparency="True"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         Height="540" Width="531" Background="{DynamicResource WindowBackgroundGradient}"
-        MouseLeftButtonDown="Window_MouseDown" Closing="MainWindow_Closing">
+        MouseLeftButtonDown="Window_MouseDown" d:DataContext="{d:DesignInstance }">
+    <interactivity:Interaction.Triggers>
+        <interactivity:EventTrigger EventName="Closing">
+            <interactivity:InvokeCommandAction Command="{Binding CancelCommand}" />
+        </interactivity:EventTrigger>
+    </interactivity:Interaction.Triggers>
     <!-- Задаем фон окна с градиентом -->
     <!-- Устанавливаем кастомный шаблон для окна -->
     <Window.Template>
@@ -24,9 +30,28 @@
     <Window.Resources>
         <!-- Добавляем ресурс для конвертера из bool в Visibility -->
         <local:BooleanToHiddenVisibilityConverter x:Key="BoolToHiddenVisibilityConverter" />
+        <Style TargetType="{x:Type RadioButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Ellipse Fill="{DynamicResource CheckBoxBrush}" Width="12" Height="12" />
+                            <materialDesign:PackIcon Kind="Check" Width="12" Height="12"
+                                                     Foreground="{DynamicResource TextBrush}"
+                                                     Visibility="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}, 
+                                         Converter={StaticResource BoolToHiddenVisibilityConverter}}" />
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,0" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <local:ThemeToVisibilityConverter x:Key="ThemeToVisibilityConverter" />
     </Window.Resources>
     <!-- Основной контейнер Grid для компоновки элементов интерфейса -->
-    <Grid d:DataContext="{d:DesignInstance }">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -52,6 +77,68 @@
                     Click="ToggleTheme">
                 <materialDesign:PackIcon Kind="ThemeLightDark" />
             </Button>
+            <Button Name="ThemeButton" Width="50" Background="Transparent" Foreground="{DynamicResource TextBrush}"
+                    BorderThickness="0" Click="ThemeButton_Click">
+                <materialDesign:PackIcon Kind="ArrowDownDropCircleOutline" />
+            </Button>
+            <Popup Name="ThemePopup" PlacementTarget="{Binding ElementName=ThemeButton}" Placement="Bottom"
+                   StaysOpen="False" FlowDirection="LeftToRight">
+                <Border BorderThickness="0">
+                    <ListBox Background="{DynamicResource WindowBackgroundGradient}">
+                        <ListBoxItem>
+                            <WrapPanel HorizontalAlignment="Left">
+                                <RadioButton Margin="2" Name="Standard"
+                                             IsChecked="True" GroupName="Theme" Checked="RadioButton_Checked" />
+                                <TextBlock Margin="2" Text="Standard" Foreground="{DynamicResource TextBrush}" />
+                            </WrapPanel>
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <WrapPanel HorizontalAlignment="Left">
+                                <RadioButton Margin="2" Name="Classic" GroupName="Theme" Checked="RadioButton_Checked" />
+                                <TextBlock Margin="2" Text="Classic" Foreground="{DynamicResource TextBrush}" />
+                            </WrapPanel>
+                        </ListBoxItem>
+                        <ListBoxItem
+                            Visibility="{Binding Path=AppTheme, Converter={StaticResource ThemeToVisibilityConverter}, ConverterParameter=livingsamurai}">
+                            <WrapPanel HorizontalAlignment="Left">
+                                <RadioButton Margin="2" Name="Livingsamurai"
+                                             GroupName="Theme" Checked="RadioButton_Checked" />
+                                <TextBlock Margin="2" Text="livingsamurai" Foreground="{DynamicResource TextBrush}" />
+                            </WrapPanel>
+                        </ListBoxItem>
+                        <ListBoxItem
+                            Visibility="{Binding Path=AppTheme, Converter={StaticResource ThemeToVisibilityConverter}, ConverterParameter=TemplarFulga}">
+                            <WrapPanel HorizontalAlignment="Left">
+                                <RadioButton Margin="2" Name="TemplarFulga"
+                                             GroupName="Theme" Checked="RadioButton_Checked" />
+                                <TextBlock Margin="2" Text="TemplarFulga" Foreground="{DynamicResource TextBrush}" />
+                            </WrapPanel>
+                        </ListBoxItem>
+                        <ListBoxItem
+                            Visibility="{Binding Path=AppTheme, Converter={StaticResource ThemeToVisibilityConverter}, ConverterParameter=Qwerty}">
+                            <WrapPanel HorizontalAlignment="Left">
+                                <RadioButton Margin="2" Name="Qwerty" GroupName="Theme" Checked="RadioButton_Checked" />
+                                <TextBlock Margin="2" Text="Qwerty" Foreground="{DynamicResource TextBrush}" />
+                            </WrapPanel>
+                        </ListBoxItem>
+                        <ListBoxItem
+                            Visibility="{Binding Path=AppTheme, Converter={StaticResource ThemeToVisibilityConverter}, ConverterParameter=MrMeGaBaN}">
+                            <WrapPanel HorizontalAlignment="Left">
+                                <RadioButton Margin="2" Name="MrMeGaBaN" GroupName="Theme"
+                                             Checked="RadioButton_Checked" />
+                                <TextBlock Margin="2" Text="MrMeGaBaN" Foreground="{DynamicResource TextBrush}" />
+                            </WrapPanel>
+                        </ListBoxItem>
+                        <ListBoxItem
+                            Visibility="{Binding Path=AppTheme, Converter={StaticResource ThemeToVisibilityConverter}, ConverterParameter=Grustyck}">
+                            <WrapPanel HorizontalAlignment="Left">
+                                <RadioButton Margin="2" Name="Grustyck" GroupName="Theme" Checked="RadioButton_Checked" />
+                                <TextBlock Margin="2" Text="Grustyck" Foreground="{DynamicResource TextBrush}" />
+                            </WrapPanel>
+                        </ListBoxItem>
+                    </ListBox>
+                </Border>
+            </Popup>
         </StackPanel>
         <!-- Заголовок -->
         <Grid Grid.Row="1" Margin="2,7,2,10">
@@ -80,7 +167,8 @@
         <!-- Контейнер для кнопок FAQ, ссылки на Telegram и ссылки на программу в магазине -->
         <StackPanel Grid.Row="3">
             <WrapPanel Margin="50,2,2,2">
-                <Button Foreground="{DynamicResource BlueBrush}" BorderThickness="0" Command="{Binding ShowMessageBoxCommand}"
+                <Button Foreground="{DynamicResource TgBrush}" BorderThickness="0"
+                        Command="{Binding ShowMessageBoxCommand}"
                         Height="21" Margin="2" ToolTip="FAQ by nitokin"
                         materialDesign:ButtonAssist.CornerRadius="10" Padding="13,2,13,2"
                         Style="{StaticResource MaterialDesignRaisedDarkButton}">
@@ -116,16 +204,15 @@
             <WrapPanel Margin="50,2,2,2">
                 <Button BorderThickness="0" Click="PlayPause_Click" Height="21" Margin="2" Padding="13,2,13,2"
                         materialDesign:ButtonAssist.CornerRadius="10" ToolTip="{x:Static res:Strings.PlayPause}"
-                        Style="{StaticResource MaterialDesignRaisedDarkButton}">
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}" Foreground="{DynamicResource TgBrush}">
                     <Button.Background>
                         <DynamicResource ResourceKey="ButtonGradient" />
                     </Button.Background>
                     <materialDesign:PackIcon x:Name="PlayIcon" Kind="Play" />
                 </Button>
                 <Button BorderThickness="0" Click="ResetTrack_Click" Height="21" Margin="2" Padding="13,2,13,2"
-                        materialDesign:ButtonAssist.CornerRadius="10"
-                        ToolTip="{x:Static res:Strings.PlayFromTheBeginning}"
-                        Style="{StaticResource MaterialDesignRaisedDarkButton}">
+                        ToolTip="{x:Static res:Strings.PlayFromTheStart}" materialDesign:ButtonAssist.CornerRadius="10"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}" Foreground="{DynamicResource TgBrush}">
                     <Button.Background>
                         <DynamicResource ResourceKey="ButtonGradient" />
                     </Button.Background>
@@ -133,7 +220,7 @@
                 </Button>
                 <Button BorderThickness="0" Height="21" Margin="2" Padding="15.5,2,15.5,2" ToolTip="ChatGPT"
                         materialDesign:ButtonAssist.CornerRadius="10" Command="{Binding ShowChatGptWindowCommand}"
-                        Style="{StaticResource MaterialDesignRaisedDarkButton}">
+                        Style="{StaticResource MaterialDesignRaisedLightButton}">
                     <Button.Background>
                         <DynamicResource ResourceKey="ButtonGradient" />
                     </Button.Background>
@@ -148,7 +235,7 @@
         <!-- Контейнер для кнопок "Вперед/Установить/Завершить", "Назад" и "Отмена" -->
         <WrapPanel Margin="2,2,50,2" Grid.Row="3" FlowDirection="RightToLeft">
             <Button FontSize="10" BorderThickness="0" Command="{Binding NavigateToNextViewCommand}"
-                    Height="21" Margin="2"
+                    Height="21" Margin="2" Padding="12,2,12,2"
                     materialDesign:ButtonAssist.CornerRadius="10"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Visibility="{Binding IsNextButtonVisible, Converter={StaticResource BoolToHiddenVisibilityConverter}}">
@@ -173,7 +260,7 @@
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Visibility="{Binding IsCancelButtonVisible, Converter={StaticResource BoolToHiddenVisibilityConverter}}">
                 <Grid>
-                    <TextBlock Text="{x:Static res:Strings.Cancel}">
+                    <TextBlock Text="{x:Static res:Strings.Cancel}" Foreground="{DynamicResource TextBrush}">
                         <!-- Эффект для текста (тень) -->
                         <TextBlock.Effect>
                             <DropShadowEffect ShadowDepth="1" Color="{DynamicResource ShadowColor}" Opacity="1"
@@ -191,7 +278,7 @@
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Visibility="{Binding IsBackButtonVisible, Converter={StaticResource BoolToHiddenVisibilityConverter}}">
                 <Grid>
-                    <TextBlock Text="{x:Static res:Strings.Back}">
+                    <TextBlock Text="{x:Static res:Strings.Back}" Foreground="{DynamicResource TextBrush}">
                         <!-- Эффект для текста (тень) -->
                         <TextBlock.Effect>
                             <DropShadowEffect ShadowDepth="1" Color="{DynamicResource ShadowColor}" Opacity="1"
@@ -206,7 +293,9 @@
         </WrapPanel>
         <!-- Контейнер для текста "designed by BOIS" -->
         <DockPanel Margin="2,45,20,2" Grid.Row="3" FlowDirection="RightToLeft">
-            <TextBlock DockPanel.Dock="Bottom" FontSize="7" Foreground="{DynamicResource BoisBrush}" Text="designed by BOIS"></TextBlock>
+            <TextBlock DockPanel.Dock="Bottom" FontSize="7" Foreground="{DynamicResource BoisBrush}"
+                       Text="designed by BOIS">
+            </TextBlock>
         </DockPanel>
     </Grid>
 </Window>

@@ -1,14 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Reactive;
 using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Media;
 using AppInstaller.Models;
+using AppInstaller.Resources;
 using AppInstaller.Views;
 using ReactiveUI;
 using SharpVectors.Converters;
@@ -95,6 +100,14 @@ public class MainWindowViewModel : ViewModelBase
         get => _buttonNextText;
         set => this.RaiseAndSetIfChanged(ref _buttonNextText, value);
     }
+    
+    private string? _appTheme;
+
+    public string? AppTheme
+    {
+        get => _appTheme;
+        set => this.RaiseAndSetIfChanged(ref _appTheme, value);
+    }
 
     private string _currentTheme;
 
@@ -119,12 +132,15 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> NavigateToPreviousViewCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelCommand { get; }
 
+    public event Action ExitRequested;
+
     public MainWindowViewModel()
     {
         _mainWindowModel = new MainWindowModel();
         _mainWindowModel.ErrorMessageOccurred += OnErrorMessageOccurred;
         _components = _mainWindowModel.GetComponentNames();
         _appName = _mainWindowModel.GetAppName();
+        AppTheme = _mainWindowModel.GetAppTheme();
         AppTitleDisplay = $"R. G. NITOKIN - {_appName}";
         var bigImage = _mainWindowModel.GetBigImage();
         var headImage = _mainWindowModel.GetHeadImage();
@@ -151,7 +167,7 @@ public class MainWindowViewModel : ViewModelBase
             new FinishedView { DataContext = new FinishedViewModel(bigImage) }
         };
 
-        CurrentTheme = "Light";
+        CurrentTheme = "LightStandard";
         _currentViewIndex = 0;
         CurrentView = _views[_currentViewIndex];
         IconChecked = false;
@@ -216,6 +232,29 @@ public class MainWindowViewModel : ViewModelBase
                 return;
             case 2 when _views[_currentViewIndex]?.DataContext is ReadyViewModel readyViewModel:
             {
+                var driveLetter = Path.GetPathRoot(SelectedPath);
+                if (driveLetter != null)
+                {
+                    var drive = new DriveInfo(driveLetter);
+                    var availableSpace = drive.AvailableFreeSpace;
+
+                    var memoryString = _mainWindowModel.GetNeededMemory();
+                    var cleanedMemoryString =
+                        new string(memoryString.Where(c => char.IsDigit(c) || c == ',' || c == '.').ToArray());
+
+                    cleanedMemoryString = cleanedMemoryString.Replace(',', '.');
+
+                    var requiredSpaceInGb = double.Parse(cleanedMemoryString, CultureInfo.InvariantCulture);
+                    var requiredSpaceInBytes = (long)(requiredSpaceInGb * 1024 * 1024 * 1024);
+
+                    if (availableSpace < requiredSpaceInBytes + 10L * 1024 * 1024 * 1024)
+                    {
+                        CustomMessageBox.Show(Strings.DiskSpace);
+                        _currentViewIndex--;
+                        return;
+                    }
+                }
+
                 readyViewModel.SelectedPath = SelectedPath;
                 var additionalComponentsBuilder = new StringBuilder(Resources.Strings.AdditionalTasks);
                 var selectDirViewModel = _views[1]?.DataContext as SelectDirViewModel;
@@ -248,8 +287,7 @@ public class MainWindowViewModel : ViewModelBase
                 var selectDirViewModel = _views[1]?.DataContext as SelectDirViewModel;
                 installingViewModel.InstallApp(AppDomain.CurrentDomain.BaseDirectory,
                     SelectedPath, _appName, _mainWindowModel.GetAppVersion(), IconChecked,
-                    selectDirViewModel.Components, _mainWindowModel.GetExePaths(),
-                    _mainWindowModel.GetNeededMemory());
+                    selectDirViewModel.Components, _mainWindowModel.GetExePaths());
                 break;
             }
         }
@@ -283,20 +321,24 @@ public class MainWindowViewModel : ViewModelBase
 
     private static void ShowChatGptWindow()
     {
-        new ChatGptWindow().ShowDialog();
-        // if (result == true)
-        // {
-        //     Application.Current.Shutdown();
-        // }
+        try
+        {
+            new ChatGptWindow().ShowDialog();
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = $"An error occurred in MainWindowViewModel.ShowChatGptWindow(): {ex.Message}";
+
+            MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
-    private static void ShowCloseMessageBox()
+    private void ShowCloseMessageBox()
     {
         var result = new CloseMessageBox().ShowDialog();
-        if (result == true)
-        {
-            Application.Current.Shutdown();
-        }
+        if (result != true) return;
+        ExitRequested?.Invoke();
+        Application.Current.Shutdown();
     }
 
     private void ShowMessageBox()
@@ -304,33 +346,32 @@ public class MainWindowViewModel : ViewModelBase
         try
         {
             var result = ParseXamlFormattedText(_mainWindowModel.GetRepackDescription());
-
             CustomMessageBox.Show(result);
         }
         catch (Exception ex)
         {
             var errorMessage =
-                $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                $"An error occurred in MainWindowViewModel.ShowMessageBox(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
             }
 
-            CustomMessageBox.Show(new TextBlock { Text = errorMessage });
+            CustomMessageBox.Show(errorMessage);
         }
     }
 
-    private static TextBlock ParseXamlFormattedText(string formattedText)
+    private static FlowDocument ParseXamlFormattedText(string formattedText)
     {
         var result = formattedText.Replace("\n", "<LineBreak />").Replace("\r\n", "<LineBreak />")
             .Replace("<b>", "<Bold>").Replace("</b>", "</Bold>")
             .Replace("<u>", "<Underline>").Replace("</u>", "</Underline>")
             .Replace("<i>", "<Italic>").Replace("</i>", "</Italic>");
         result =
-            "<TextBlock xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" TextWrapping=\"Wrap\">" +
-            result + "</TextBlock>";
+            $"<FlowDocument xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\">" +
+            $"<Paragraph FontSize=\"12\">{result}</Paragraph></FlowDocument>";
 
-        return (TextBlock)XamlReader.Parse(result);
+        return (FlowDocument)XamlReader.Parse(result);
     }
 
     private static void OpenLink(string? url)

@@ -48,7 +48,7 @@ public class MainWindowModel
         catch (Exception ex)
         {
             var errorMessage =
-                $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                $"An error occurred in MainWindowModel.GetImageFromConfig(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
@@ -88,8 +88,9 @@ public class MainWindowModel
     public string GetAppDescription()
     {
         var suffix = GetCurrentCultureSuffix();
-        return GetValueFromConfig($"AppDescription{suffix}", suffix == "En" ? "RepackIcon" : "AppDescriptionEn");
+        return GetValueFromConfig($"AppDescription{suffix}", suffix == "En" ? "AppTheme" : "AppDescriptionEn");
     }
+    public string GetAppTheme() => GetValueFromConfig("AppTheme", "RepackIcon");
 
     private string GetValueFromConfig(string startTag, string endTag)
     {
@@ -104,7 +105,7 @@ public class MainWindowModel
         catch (Exception ex)
         {
             var errorMessage =
-                $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                $"An error occurred in MainWindowModel.GetValueFromConfig(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
@@ -136,7 +137,7 @@ public class MainWindowModel
         catch (Exception ex)
         {
             var errorMessage =
-                $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                $"An error occurred in MainWindowModel.GetComponentNames(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
@@ -171,7 +172,7 @@ public class MainWindowModel
         catch (Exception ex)
         {
             var errorMessage =
-                $"An error occurred in InstallingModel.DecompressWithComponents(): {ex.Message}\n{ex.StackTrace}";
+                $"An error occurred in MainWindowModel.GetExePaths(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";

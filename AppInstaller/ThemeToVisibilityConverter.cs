@@ -5,25 +5,19 @@ using System.Windows.Data;
 
 namespace AppInstaller;
 
-public class BooleanToHiddenVisibilityConverter : IValueConverter
+public class ThemeToVisibilityConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is bool boolValue)
+        if (value is string theme && parameter is string radioButtonName)
         {
-            return boolValue ? Visibility.Visible : Visibility.Hidden;
+            return theme == radioButtonName ? Visibility.Visible : Visibility.Collapsed;
         }
-
-        return Visibility.Hidden;
+        return Visibility.Collapsed;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is Visibility visibilityValue)
-        {
-            return visibilityValue == Visibility.Visible;
-        }
-
-        return false;
+        throw new NotImplementedException();
     }
 }
