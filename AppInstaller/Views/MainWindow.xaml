@@ -48,6 +48,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <local:ThemeToVisibilityConverter x:Key="ThemeToVisibilityConverter" />
     </Window.Resources>
     <!-- Основной контейнер Grid для компоновки элементов интерфейса -->
     <Grid>
@@ -86,16 +87,53 @@
                     <ListBox Background="{DynamicResource WindowBackgroundGradient}">
                         <ListBoxItem>
                             <WrapPanel HorizontalAlignment="Left">
-                                <RadioButton Margin="2" Name="StandardRadioButton"
+                                <RadioButton Margin="2" Name="Standard"
                                              IsChecked="True" GroupName="Theme" Checked="RadioButton_Checked" />
                                 <TextBlock Margin="2" Text="Standard" Foreground="{DynamicResource TextBrush}" />
                             </WrapPanel>
                         </ListBoxItem>
                         <ListBoxItem>
                             <WrapPanel HorizontalAlignment="Left">
-                                <RadioButton Margin="2" Name="ClassicRadioButton"
-                                             GroupName="Theme" Checked="RadioButton_Checked" />
+                                <RadioButton Margin="2" Name="Classic" GroupName="Theme" Checked="RadioButton_Checked" />
                                 <TextBlock Margin="2" Text="Classic" Foreground="{DynamicResource TextBrush}" />
+                            </WrapPanel>
+                        </ListBoxItem>
+                        <ListBoxItem
+                            Visibility="{Binding Path=AppTheme, Converter={StaticResource ThemeToVisibilityConverter}, ConverterParameter=livingsamurai}">
+                            <WrapPanel HorizontalAlignment="Left">
+                                <RadioButton Margin="2" Name="Livingsamurai"
+                                             GroupName="Theme" Checked="RadioButton_Checked" />
+                                <TextBlock Margin="2" Text="livingsamurai" Foreground="{DynamicResource TextBrush}" />
+                            </WrapPanel>
+                        </ListBoxItem>
+                        <ListBoxItem
+                            Visibility="{Binding Path=AppTheme, Converter={StaticResource ThemeToVisibilityConverter}, ConverterParameter=TemplarFulga}">
+                            <WrapPanel HorizontalAlignment="Left">
+                                <RadioButton Margin="2" Name="TemplarFulga"
+                                             GroupName="Theme" Checked="RadioButton_Checked" />
+                                <TextBlock Margin="2" Text="TemplarFulga" Foreground="{DynamicResource TextBrush}" />
+                            </WrapPanel>
+                        </ListBoxItem>
+                        <ListBoxItem
+                            Visibility="{Binding Path=AppTheme, Converter={StaticResource ThemeToVisibilityConverter}, ConverterParameter=Qwerty}">
+                            <WrapPanel HorizontalAlignment="Left">
+                                <RadioButton Margin="2" Name="Qwerty" GroupName="Theme" Checked="RadioButton_Checked" />
+                                <TextBlock Margin="2" Text="Qwerty" Foreground="{DynamicResource TextBrush}" />
+                            </WrapPanel>
+                        </ListBoxItem>
+                        <ListBoxItem
+                            Visibility="{Binding Path=AppTheme, Converter={StaticResource ThemeToVisibilityConverter}, ConverterParameter=MrMeGaBaN}">
+                            <WrapPanel HorizontalAlignment="Left">
+                                <RadioButton Margin="2" Name="MrMeGaBaN" GroupName="Theme"
+                                             Checked="RadioButton_Checked" />
+                                <TextBlock Margin="2" Text="MrMeGaBaN" Foreground="{DynamicResource TextBrush}" />
+                            </WrapPanel>
+                        </ListBoxItem>
+                        <ListBoxItem
+                            Visibility="{Binding Path=AppTheme, Converter={StaticResource ThemeToVisibilityConverter}, ConverterParameter=Grustyck}">
+                            <WrapPanel HorizontalAlignment="Left">
+                                <RadioButton Margin="2" Name="Grustyck" GroupName="Theme" Checked="RadioButton_Checked" />
+                                <TextBlock Margin="2" Text="Grustyck" Foreground="{DynamicResource TextBrush}" />
                             </WrapPanel>
                         </ListBoxItem>
                     </ListBox>

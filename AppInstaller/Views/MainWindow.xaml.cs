@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using AppInstaller.ViewModels;
 using NAudio.Wave;
 
@@ -13,6 +15,24 @@ namespace AppInstaller.Views;
 public partial class MainWindow
 {
     private static readonly string FilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
+
+    private readonly Dictionary<string, string> _themeToggles = new()
+    {
+        { "LightStandard", "DarkStandard" },
+        { "DarkStandard", "LightStandard" },
+        { "LightClassic", "DarkClassic" },
+        { "DarkClassic", "LightClassic" },
+        { "LightLivingsamurai", "DarkLivingsamurai" },
+        { "DarkLivingsamurai", "LightLivingsamurai" },
+        { "LightTemplarFulga", "DarkTemplarFulga" },
+        { "DarkTemplarFulga", "LightTemplarFulga" },
+        { "LightQwerty", "DarkQwerty" },
+        { "DarkQwerty", "LightQwerty" },
+        { "LightMrMeGaBaN", "DarkMrMeGaBaN" },
+        { "DarkMrMeGaBaN", "LightMrMeGaBaN" },
+        { "LightGrustyck", "DarkGrustyck" },
+        { "DarkGrustyck", "LightGrustyck" }
+    };
 
     private bool IsPlaying { get; set; }
 
@@ -129,15 +149,13 @@ public partial class MainWindow
     {
         var app = (App)Application.Current;
         var viewModel = (MainWindowViewModel)DataContext;
-        viewModel.CurrentTheme = viewModel.CurrentTheme switch
-        {
-            "LightStandard" => "DarkStandard",
-            "DarkStandard" => "LightStandard",
-            "LightClassic" => "DarkClassic",
-            "DarkClassic" => "LightClassic",
-            _ => viewModel.CurrentTheme
-        };
-        app.ToggleTheme(StandardRadioButton.IsChecked == true ? "Standard" : "Classic");
+
+        viewModel.CurrentTheme = _themeToggles.TryGetValue(viewModel.CurrentTheme, out var newTheme) 
+            ? newTheme 
+            : viewModel.CurrentTheme;
+
+        var themeType = viewModel.CurrentTheme.Replace("Light", "").Replace("Dark", "");
+        app.ToggleTheme(themeType);
     }
 
     private void RadioButton_Checked(object sender, RoutedEventArgs e)
@@ -145,20 +163,15 @@ public partial class MainWindow
         var app = (App)Application.Current;
         var viewModel = (MainWindowViewModel)DataContext;
         if (viewModel is null) return;
-        if (Equals(sender, StandardRadioButton))
-        {
-            app.ChangeTheme("Standard");
-            viewModel.CurrentTheme = viewModel.CurrentTheme.Contains("Standard")
-                ? viewModel.CurrentTheme
-                : viewModel.CurrentTheme.Replace("Classic", "Standard");
-        }
-        else if (Equals(sender, ClassicRadioButton))
-        {
-            app.ChangeTheme("Classic");
-            viewModel.CurrentTheme = viewModel.CurrentTheme.Contains("Classic")
-                ? viewModel.CurrentTheme
-                : viewModel.CurrentTheme.Replace("Standard", "Classic");
-        }
+
+        var themeName = (sender as RadioButton)?.Name;
+        if (string.IsNullOrEmpty(themeName)) return;
+
+        var isLightTheme = viewModel.CurrentTheme.Contains("Light");
+        var fullThemeName = isLightTheme ? $"Light{themeName}" : $"Dark{themeName}";
+
+        app.ChangeTheme(themeName);
+        viewModel.CurrentTheme = fullThemeName;
     }
 
     private void ThemeButton_Click(object sender, RoutedEventArgs e)

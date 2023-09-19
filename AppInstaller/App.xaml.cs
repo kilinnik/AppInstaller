@@ -23,7 +23,6 @@ public partial class App
             var languageSelectionWindow = new LanguageSelectionWindow();
             if (languageSelectionWindow.ShowDialog() == true)
             {
-                    
                 var selectedCulture = languageSelectionWindow.SelectedCulture;
                 if (selectedCulture != null)
                     Thread.CurrentThread.CurrentUICulture = new CultureInfo(selectedCulture);
@@ -38,7 +37,7 @@ public partial class App
                 {
                     LoadIcon(filePath);
                 }
-                    
+
                 mainWindow.Show();
             }
             else
@@ -64,7 +63,17 @@ public partial class App
             m => m.Source.OriginalString.Contains("Themes/LightThemeStandard.xaml") ||
                  m.Source.OriginalString.Contains("Themes/DarkThemeStandard.xaml") ||
                  m.Source.OriginalString.Contains("Themes/LightThemeClassic.xaml") ||
-                 m.Source.OriginalString.Contains("Themes/DarkThemeClassic.xaml"));
+                 m.Source.OriginalString.Contains("Themes/DarkThemeClassic.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/LightThemeLivingsamurai.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/DarkThemeLivingsamurai.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/LightThemeTemplarFulga.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/DarkThemeTemplarFulga.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/LightThemeQwerty.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/DarkThemeQwerty.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/LightThemeMrMeGaBaN.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/DarkThemeMrMeGaBaN.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/LightThemeGrustyck.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/DarkThemeGrustyck.xaml"));
 
         if (currentTheme == null) return;
 
@@ -74,14 +83,24 @@ public partial class App
         Resources.MergedDictionaries.Remove(currentTheme);
         Resources.MergedDictionaries.Add(new ResourceDictionary { Source = newTheme });
     }
-    
+
     public void ToggleTheme(string theme)
     {
         var currentTheme = Resources.MergedDictionaries.FirstOrDefault(
             m => m.Source.OriginalString.Contains("Themes/LightThemeStandard.xaml") ||
                  m.Source.OriginalString.Contains("Themes/DarkThemeStandard.xaml") ||
                  m.Source.OriginalString.Contains("Themes/LightThemeClassic.xaml") ||
-                 m.Source.OriginalString.Contains("Themes/DarkThemeClassic.xaml"));
+                 m.Source.OriginalString.Contains("Themes/DarkThemeClassic.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/LightThemeLivingsamurai.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/DarkThemeLivingsamurai.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/LightThemeTemplarFulga.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/DarkThemeTemplarFulga.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/LightThemeQwerty.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/DarkThemeQwerty.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/LightThemeMrMeGaBaN.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/DarkThemeMrMeGaBaN.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/LightThemeGrustyck.xaml") ||
+                 m.Source.OriginalString.Contains("Themes/DarkThemeGrustyck.xaml"));
 
         if (currentTheme == null) return;
 

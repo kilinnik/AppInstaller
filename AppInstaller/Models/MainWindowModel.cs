@@ -88,8 +88,9 @@ public class MainWindowModel
     public string GetAppDescription()
     {
         var suffix = GetCurrentCultureSuffix();
-        return GetValueFromConfig($"AppDescription{suffix}", suffix == "En" ? "RepackIcon" : "AppDescriptionEn");
+        return GetValueFromConfig($"AppDescription{suffix}", suffix == "En" ? "AppTheme" : "AppDescriptionEn");
     }
+    public string GetAppTheme() => GetValueFromConfig("AppTheme", "RepackIcon");
 
     private string GetValueFromConfig(string startTag, string endTag)
     {

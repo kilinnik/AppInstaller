@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using AppInstaller.Resources;
 using Microsoft.Win32;
 
 namespace AppInstaller.Models;
@@ -23,12 +24,14 @@ public class InstallingModel
     public event Action<string, string, bool>? TimeChanged;
 
     private readonly TimerModel _timerModel;
+    private string _sevenZipPath;
 
     private readonly CancellationTokenSource _cts = new();
 
     public InstallingModel(TimerModel timerModel)
     {
         _timerModel = timerModel;
+        _sevenZipPath = @"C:\Program Files\7-Zip\7z.exe";
     }
 
     private string FormatElapsedTime()
@@ -47,7 +50,7 @@ public class InstallingModel
         {
             _timerModel.Start();
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            timer.Tick += (_, _) => TimeChanged($"{Resources.Strings.TimeElapsed} ", FormatElapsedTime(), true);
+            timer.Tick += (_, _) => TimeChanged($"{Strings.TimeElapsed} ", FormatElapsedTime(), true);
             timer.Start();
             if (installPath != null)
             {
@@ -96,23 +99,47 @@ public class InstallingModel
         }
     }
 
+    private static string? Get7ZipPathFromUser()
+    {
+        var openFileDialog = new OpenFileDialog
+        {
+            Filter = $"{Strings.SevenZipExecutable} (7z.exe)|7z.exe",
+            Title = Strings.TitleSelectExecutable,
+        };
+        
+        return openFileDialog.ShowDialog() == true ? openFileDialog.FileName : null;
+    }
+
     private async Task DecompressApp(string installPath, string archiveFolderPath, string appName,
         IEnumerable<Components> components)
     {
         try
         {
-            const string sevenZipPath = @"C:\Program Files\7-Zip\7z.exe";
-            var flag = !File.Exists(sevenZipPath);
+            var flag = !File.Exists(_sevenZipPath);
             if (flag)
             {
                 await Install7ZipAsync();
             }
+            
+            if (!File.Exists(_sevenZipPath))
+            {
+                _sevenZipPath = Get7ZipPathFromUser() ?? throw new Exception(Strings.PathNotProvided);
+                flag = false;
+            }
 
-            await DecompressArchiveWith7Zip(installPath, @$"{archiveFolderPath}\{appName}.7z.001");
+            var mainArchivePath = File.Exists($"{archiveFolderPath}\\{appName}.7z.001")
+                ? $"{archiveFolderPath}\\{appName}.7z.001"
+                : $"{archiveFolderPath}\\{appName}.7z";
+
+            await DecompressArchiveWith7Zip(installPath, mainArchivePath);
 
             foreach (var component in components.Where(c => c.IsChecked))
             {
-                await DecompressArchiveWith7Zip(installPath, @$"{archiveFolderPath}\{component.FolderName}.7z.001");
+                var componentArchivePath = File.Exists($"{archiveFolderPath}\\{component.FolderName}.7z.001")
+                    ? $"{archiveFolderPath}\\{component.FolderName}.7z.001"
+                    : $"{archiveFolderPath}\\{component.FolderName}.7z";
+
+                await DecompressArchiveWith7Zip(installPath, componentArchivePath);
             }
 
             if (flag)
@@ -136,14 +163,12 @@ public class InstallingModel
 
     private async Task DecompressArchiveWith7Zip(string extractPath, string archivePath)
     {
-        const string sevenZipPath = @"C:\Program Files\7-Zip\7z.exe";
-
         var args = $"x \"{archivePath}\" -o\"{extractPath}\" -aoa -mmt -bsp1";
 
         using var process = new Process();
         process.StartInfo = new ProcessStartInfo
         {
-            FileName = sevenZipPath,
+            FileName = _sevenZipPath,
             Arguments = args,
             RedirectStandardOutput = true,
             UseShellExecute = false,
@@ -193,7 +218,7 @@ public class InstallingModel
                 elapsedSeconds * (100 - progressPercentage) / progressPercentage, TimeSpan.MaxValue.TotalSeconds));
             var formattedRemainingTime = remainingTime.ToString(@"hh\:mm\:ss");
 
-            TimeChanged($"{Resources.Strings.TimeRemaining} ", formattedRemainingTime, false);
+            TimeChanged($"{Strings.TimeRemaining} ", formattedRemainingTime, false);
         }
     }
 

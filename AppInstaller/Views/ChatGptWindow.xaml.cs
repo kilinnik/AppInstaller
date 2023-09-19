@@ -22,28 +22,29 @@ public partial class ChatGptWindow
     private readonly MessageEntry[] _context;
     private const int MaxRetryAttempts = 3;
     private const int DelayBetweenRetriesInSeconds = 2;
-    
+
     public ChatGptWindow()
     {
         InitializeComponent();
         _context = new MessageEntry[50];
         _chatGptClient = InitializeChatGptClient();
     }
-    
+
     private static ChatGptClient InitializeChatGptClient()
     {
         var services = new ServiceCollection();
-        services.AddChatGptClient(new ChatGptClientOptions { ApiKey = "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" });
+        services.AddChatGptClient(new ChatGptClientOptions
+            { ApiKey = "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" });
         var app = services.BuildServiceProvider();
         return app.GetRequiredService<ChatGptClient>();
     }
-    
+
     private static bool IsInternetAvailable()
     {
         try
         {
             using var ping = new Ping();
-            var reply = ping.Send("8.8.8.8", 2000); 
+            var reply = ping.Send("8.8.8.8", 2000);
             return reply.Status == IPStatus.Success;
         }
         catch
@@ -51,18 +52,19 @@ public partial class ChatGptWindow
             return false;
         }
     }
-    
+
     private async void SendMessage_Click(object sender, RoutedEventArgs e)
     {
         if (string.IsNullOrWhiteSpace(MessageTextBox.Text)) return;
-        
+
         if (!IsInternetAvailable())
         {
             MessageBox.Show(AppInstaller.Resources.Strings.NoInternetConnection);
             return;
         }
+
         AddMessageToGrid(MessageTextBox.Text, 150, 145);
-        
+
         var index = Array.IndexOf(_context, null);
         if (index != -1)
         {
@@ -70,14 +72,14 @@ public partial class ChatGptWindow
         }
 
         MessageTextBox.Text = string.Empty;
-        
+
         var messageEntries = _context.Where(entry => entry != null).ToArray();
 
         var response = await RequestChatGpt(messageEntries);
 
         AddMessageToGrid(response, 7, 2);
     }
-    
+
     private void AddMessageToGrid(string message, double marginTextBlock, double marginBackground)
     {
         var messageTextBox = new TextBox
@@ -91,7 +93,7 @@ public partial class ChatGptWindow
             Width = 140,
             TextWrapping = TextWrapping.Wrap,
             IsReadOnly = true,
-            BorderThickness = new Thickness(0), 
+            BorderThickness = new Thickness(0),
             Background = Brushes.Transparent,
         };
 
@@ -127,12 +129,11 @@ public partial class ChatGptWindow
 
         animation.Completed += (_, _) => MessagesScrollViewer.ScrollToEnd();
         translateTransform.BeginAnimation(TranslateTransform.YProperty, animation);
-        
+
         Grid.SetRow(container, MessagesGrid.RowDefinitions.Count - 1);
         MessagesGrid.Children.Add(container);
-        
     }
-    
+
     private void MessageTextBox_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key != Key.Enter) return;
@@ -146,10 +147,10 @@ public partial class ChatGptWindow
         else
         {
             SendMessage_Click(sender, e);
-            e.Handled = true; 
+            e.Handled = true;
         }
     }
-    
+
     private async Task<string> RequestChatGpt(MessageEntry[] messages)
     {
         var retryCount = 0;
@@ -184,7 +185,7 @@ public partial class ChatGptWindow
             }
         }
     }
-    
+
     private void MessageTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         var text = MessageTextBox.Text.Trim();
@@ -196,7 +197,7 @@ public partial class ChatGptWindow
     {
         DragMove();
     }
-    
+
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Application.Current.Windows[1]?.Close();

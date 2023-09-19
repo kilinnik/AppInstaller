@@ -2,54 +2,54 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- Window Background Gradient -->
     <LinearGradientBrush x:Key="WindowBackgroundGradient" StartPoint="0.5,0" EndPoint="0.5,1">
-        <GradientStop Color="#53446A" Offset="0" />
-        <GradientStop Color="#66557D" Offset="0.5424" />
-        <GradientStop Color="#736291" Offset="1" />
+        <GradientStop Color="#6E8CA0" Offset="0" />
+        <GradientStop Color="#8F6E9C" Offset="0.5424" />
+        <GradientStop Color="#504050" Offset="1" />
     </LinearGradientBrush>
-
+    
     <LinearGradientBrush x:Key="LeftToRightGradient" StartPoint="0,0" EndPoint="1,0">
-        <GradientStop Color="#66557D" Offset="0" />
-        <GradientStop Color="#53446A" Offset="1" />
+        <GradientStop Color="#664444" Offset="0" />
+        <GradientStop Color="#6E8CA0" Offset="1" />
     </LinearGradientBrush>
-
+    
     <!-- Button Gradient -->
     <LinearGradientBrush x:Key="ButtonGradient" StartPoint="0,0" EndPoint="1,0">
-        <GradientStop Color="#66557D" Offset="0" />
-        <GradientStop Color="#53446A" Offset="1" />
+        <GradientStop Color="#7E4040" Offset="0" />
+        <GradientStop Color="#D67676" Offset="1" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="BottomToTopGradient" StartPoint="0,1" EndPoint="0,0">
-        <GradientStop Color="#66557D" Offset="0" />
-        <GradientStop Color="#53446A" Offset="1" />
+        <GradientStop Color="#664444" Offset="0" />
+        <GradientStop Color="#6E8CA0" Offset="1" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="DiagonalGradient" StartPoint="0,1" EndPoint="1,0">
-        <GradientStop Color="#66557D" Offset="0" />
-        <GradientStop Color="#53446A" Offset="1" />
+        <GradientStop Color="#664444" Offset="0" />
+        <GradientStop Color="#6E8CA0" Offset="1" />
     </LinearGradientBrush>
 
     <!-- Change Button Gradient -->
     <LinearGradientBrush x:Key="ChangeButtonGradient" StartPoint="0,0" EndPoint="1,0">
-        <GradientStop Color="#736291" Offset="0" />
-        <GradientStop Color="#53446A" Offset="1" />
+        <GradientStop Color="#6F3030" Offset="0" />
+        <GradientStop Color="#6A80A0" Offset="1" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="TopToBottomGradient" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#66557D" Offset="0" />
-        <GradientStop Color="#53446A" Offset="1" />
+        <GradientStop Color="#664444" Offset="0" />
+        <GradientStop Color="#6E8CA0" Offset="1" />
     </LinearGradientBrush>
-    
+
     <Style x:Key="ButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
     </Style>
-    
-    <!-- Other Colors -->
+
+    <!--#E0E0E0 Other Colors #000000-->
     <Color x:Key="TextColor">#E0E0E0</Color>
     <Color x:Key="ShadowColor">#000000</Color>
     <Color x:Key="CloseColor">#FF4D4D</Color>
     <Color x:Key="TgColor">#229ED9</Color>
     <Color x:Key="BoisColor">#A9A18C</Color>
-    <Color x:Key="CheckBoxColor">#53446A</Color>
-    
+    <Color x:Key="CheckBoxColor">#6E8CA0</Color>
+
     <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
     <SolidColorBrush x:Key="ShadowBrush" Color="{StaticResource ShadowColor}" />
     <SolidColorBrush x:Key="CloseBrush" Color="{StaticResource CloseColor}" />

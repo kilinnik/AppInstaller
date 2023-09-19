@@ -72,5 +72,17 @@
   <data name="NoInternetConnection" xml:space="preserve">
     <value>Отсутствует интернет-соединение. Пожалуйста, проверьте ваше соединение и попробуйте снова.</value>
   </data>
+  <data name="DiskSpace" xml:space="preserve">
+    <value>Недостаточно места на диске. Пожалуйста, выберите другой путь для установки или освободите место на диске.</value>
+  </data>
+  <data name="SevenZipExecutable" xml:space="preserve">
+    <value>Исполняемый файл 7-Zip</value>
+  </data>
+  <data name="SelectExecutable" xml:space="preserve">
+    <value>Выберите 7-Zip.exe</value>
+  </data>
+  <data name="PathNotProvided" xml:space="preserve">
+    <value>Путь к 7-Zip не был указан.</value>
+  </data>
   <!-- ... другие строки ... -->
 </root>
