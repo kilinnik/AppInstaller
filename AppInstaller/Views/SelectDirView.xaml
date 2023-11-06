@@ -51,7 +51,7 @@
                 </Rectangle.Fill>
             </Rectangle>
             <!-- Контейнер с выбором параметров установки -->
-            <StackPanel Height="110" VerticalAlignment="Top">
+            <StackPanel Height="100" VerticalAlignment="Top">
                 <!-- Заголовок "Выбор параметров установки" -->
                 <Grid>
                     <TextBlock Width="175" Height="15" Margin="5" FontSize="12"
@@ -106,7 +106,8 @@
                                         </TextBlock.RenderTransform>
                                     </TextBlock>
                                     <TextBlock Margin="2" Text="{x:Static res:Strings.ChangeOutputDir}"
-                                               FontStyle="Normal" FontSize="12" Foreground="{DynamicResource TextBrush}"
+                                               FontStyle="Normal" FontSize="12"
+                                               Foreground="{DynamicResource TextBrush}"
                                                VerticalAlignment="Center" HorizontalAlignment="Center">
                                     </TextBlock>
                                 </Grid>
@@ -117,7 +118,7 @@
                 <!-- Текст с необходимым объемом памяти -->
                 <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="250">
                     <!-- Текст с тенью и белым текстом -->
-                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40, 0, 2, 5" FontSize="9"
+                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40, 0, 2, 0" FontSize="9"
                                Foreground="{DynamicResource ShadowBrush}">
                         <Run Text="{x:Static res:Strings.OccupiedByFilesSize}" />
                         <Run Text="{Binding NeededMemory}" />
@@ -125,7 +126,7 @@
                             <TranslateTransform X="1" Y="1" />
                         </TextBlock.RenderTransform>
                     </TextBlock>
-                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40, 0, 2, 5" FontSize="9"
+                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40, 0, 2, 0" FontSize="9"
                                Foreground="{DynamicResource TextBrush}">
                         <Run Text="{x:Static res:Strings.OccupiedByFilesSize}" />
                         <Run Text="{Binding NeededMemory}" />
@@ -133,9 +134,9 @@
                 </Grid>
             </StackPanel>
             <!-- Контейнер с особенностями и дополнениями -->
-            <Grid VerticalAlignment="Bottom" Margin="30, 5,30,20">
+            <Grid VerticalAlignment="Bottom" Margin="30, -5,30,15">
                 <!-- Прямоугольник с градиентом -->
-                <Rectangle Width="435" Height="180" RadiusX="30" RadiusY="30">
+                <Rectangle Width="435" Height="200" RadiusX="30" RadiusY="30">
                     <Rectangle.Fill>
                         <DynamicResource ResourceKey="DiagonalGradient" />
                     </Rectangle.Fill>
@@ -143,14 +144,14 @@
                 <StackPanel>
                     <!-- Заголовок "Особенности и дополнения" -->
                     <Grid>
-                        <TextBlock Margin="5" Width="168" Height="16" TextWrapping="Wrap" FontSize="12"
+                        <TextBlock Margin="4" Width="168" Height="16" TextWrapping="Wrap" FontSize="12"
                                    Text="{x:Static res:Strings.FeaturesAndAddons}" TextAlignment="Center"
                                    Foreground="{DynamicResource ShadowBrush}" VerticalAlignment="Top">
                             <TextBlock.RenderTransform>
                                 <TranslateTransform X="1" Y="1" />
                             </TextBlock.RenderTransform>
                         </TextBlock>
-                        <TextBlock Margin="5" Width="168" Height="16" TextWrapping="Wrap" FontSize="12"
+                        <TextBlock Margin="4" Width="168" Height="16" TextWrapping="Wrap" FontSize="12"
                                    Text="{x:Static res:Strings.FeaturesAndAddons}" TextAlignment="Center"
                                    Foreground="{DynamicResource TextBrush}" VerticalAlignment="Top">
                         </TextBlock>
@@ -162,7 +163,7 @@
                                   VerticalAlignment="Center" Template="{DynamicResource RoundCheckBoxTemplate}" />
                         <Grid>
                             <!-- Текст с тенью и белым текстом -->
-                            <TextBlock Margin="5" Width="360" Height="16" TextWrapping="Wrap"
+                            <TextBlock Margin="4" Width="360" Height="16" TextWrapping="Wrap"
                                        Text="{x:Static res:Strings.CreateDesktopShortcut}" FontSize="12"
                                        Foreground="{DynamicResource ShadowBrush}"
                                        HorizontalAlignment="Left">
@@ -170,7 +171,7 @@
                                     <TranslateTransform X="1" Y="1" />
                                 </TextBlock.RenderTransform>
                             </TextBlock>
-                            <TextBlock Margin="5" Width="360" Height="16" TextWrapping="Wrap"
+                            <TextBlock Margin="4" Width="360" Height="16" TextWrapping="Wrap"
                                        Text="{x:Static res:Strings.CreateDesktopShortcut}" FontSize="12"
                                        Foreground="{DynamicResource TextBrush}"
                                        HorizontalAlignment="Left">
@@ -185,7 +186,7 @@
                                               VerticalAlignment="Center"
                                               Template="{DynamicResource RoundCheckBoxTemplate}" />
                                     <Grid>
-                                        <TextBlock Margin="5" Width="360" Height="16" TextWrapping="Wrap"
+                                        <TextBlock Margin="4" Width="360" Height="16" TextWrapping="Wrap"
                                                    Text="{Binding Name}" FontSize="12"
                                                    Foreground="{DynamicResource ShadowBrush}"
                                                    HorizontalAlignment="Left">
@@ -193,7 +194,7 @@
                                                 <TranslateTransform X="1" Y="1" />
                                             </TextBlock.RenderTransform>
                                         </TextBlock>
-                                        <TextBlock Margin="5" Width="360" Height="16" TextWrapping="Wrap"
+                                        <TextBlock Margin="4" Width="360" Height="16" TextWrapping="Wrap"
                                                    Text="{Binding Name}" FontSize="12"
                                                    Foreground="{DynamicResource TextBrush}"
                                                    HorizontalAlignment="Left">

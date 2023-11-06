@@ -124,5 +124,6 @@ public class InstallingViewModel : ViewModelBase
         MessageBoxImage icon)
     {
         MessageBox.Show(message, caption, buttons, icon);
+        Application.Current.Shutdown();
     }
 }

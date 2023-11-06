@@ -74,11 +74,11 @@
                 <materialDesign:PackIcon Kind="Minus" />
             </Button>
             <Button Width="50" Background="Transparent" Foreground="{DynamicResource TextBrush}" BorderThickness="0"
-                    Click="ToggleTheme">
+                    Click="ToggleTheme" ToolTip="{x:Static res:Strings.DarkLightTheme}">
                 <materialDesign:PackIcon Kind="ThemeLightDark" />
             </Button>
             <Button Name="ThemeButton" Width="50" Background="Transparent" Foreground="{DynamicResource TextBrush}"
-                    BorderThickness="0" Click="ThemeButton_Click">
+                    BorderThickness="0" Click="ThemeButton_Click" ToolTip="{x:Static res:Strings.ChangeTheme}">
                 <materialDesign:PackIcon Kind="ArrowDownDropCircleOutline" />
             </Button>
             <Popup Name="ThemePopup" PlacementTarget="{Binding ElementName=ThemeButton}" Placement="Bottom"
@@ -130,10 +130,10 @@
                             </WrapPanel>
                         </ListBoxItem>
                         <ListBoxItem
-                            Visibility="{Binding Path=AppTheme, Converter={StaticResource ThemeToVisibilityConverter}, ConverterParameter=Grustyck}">
+                            Visibility="{Binding Path=AppTheme, Converter={StaticResource ThemeToVisibilityConverter}, ConverterParameter=grustyck}">
                             <WrapPanel HorizontalAlignment="Left">
                                 <RadioButton Margin="2" Name="Grustyck" GroupName="Theme" Checked="RadioButton_Checked" />
-                                <TextBlock Margin="2" Text="Grustyck" Foreground="{DynamicResource TextBrush}" />
+                                <TextBlock Margin="2" Text="grustyck" Foreground="{DynamicResource TextBrush}" />
                             </WrapPanel>
                         </ListBoxItem>
                     </ListBox>

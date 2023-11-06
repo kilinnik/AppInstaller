@@ -84,5 +84,11 @@
   <data name="PathNotProvided" xml:space="preserve">
     <value>Путь к 7-Zip не был указан.</value>
   </data>
+  <data name="DarkLightTheme" xml:space="preserve">
+    <value>Светлая/Тёмная</value>
+  </data>
+  <data name="ChangeTheme" xml:space="preserve">
+    <value>Изменить тему</value>
+  </data>
   <!-- ... другие строки ... -->
 </root>

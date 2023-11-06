@@ -174,7 +174,7 @@ public class MainWindowViewModel : ViewModelBase
         IsBackButtonVisible = false;
         IsNextButtonVisible = true;
         IsCancelButtonVisible = true;
-        ButtonNextText = Resources.Strings.Next;
+        ButtonNextText = Strings.Next;
 
         ShowMessageBoxCommand = ReactiveCommand.Create(ShowMessageBox);
         ShowChatGptWindowCommand = ReactiveCommand.Create(ShowChatGptWindow);

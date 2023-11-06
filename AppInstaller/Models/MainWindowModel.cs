@@ -131,7 +131,7 @@ public class MainWindowModel
                 where parts.Length == 2
                 let folderNameWithPrefix = parts[0].Trim()
                 let componentName = parts[1].Trim()
-                let folderName = folderNameWithPrefix.Replace(prefix, "")
+                let folderName = ReplaceFirst(folderNameWithPrefix, prefix, "")
                 select new KeyValuePair<string, string>(folderName, componentName)).ToList();
         }
         catch (Exception ex)
@@ -148,6 +148,12 @@ public class MainWindowModel
         }
     }
 
+    private static string ReplaceFirst(string text, string search, string replace)
+    {
+        var pos = text.IndexOf(search, StringComparison.Ordinal);
+        return pos < 0 ? text : string.Concat(text.AsSpan(0, pos), replace, text.AsSpan(pos + search.Length));
+    }
+    
     public List<string> GetExePaths()
     {
         try

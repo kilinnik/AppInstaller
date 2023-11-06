@@ -23,7 +23,9 @@ public class Strings
     public static string Back => ResourceManager.GetString("Back");
     public static string Cancel => ResourceManager.GetString("Cancel");
     public static string ChangeOutputDir => ResourceManager.GetString("ChangeOutputDir");
+    public static string ChangeTheme => ResourceManager.GetString("ChangeTheme");
     public static string CreateDesktopShortcut => ResourceManager.GetString("CreateDesktopShortcut");
+    public static string DarkLightTheme => ResourceManager.GetString("DarkLightTheme");
     public static string DiskSpace => ResourceManager.GetString("DiskSpace");
     public static string ExitMessage => ResourceManager.GetString("ExitMessage");
     public static string FeaturesAndAddons => ResourceManager.GetString("FeaturesAndAdd-ons");
