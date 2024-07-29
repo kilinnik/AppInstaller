@@ -73,7 +73,7 @@ public partial class ChatGptWindow
 
         MessageTextBox.Text = string.Empty;
 
-        var messageEntries = _context.Where(entry => entry != null).ToArray();
+        var messageEntries = _context.ToArray();
 
         var response = await RequestChatGpt(messageEntries);
 

@@ -2,7 +2,7 @@ using System.Windows.Controls;
 
 namespace AppInstaller.Views;
 
-public partial class SelectDirView : UserControl
+public partial class SelectDirView
 {
     public SelectDirView()
     {

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
-namespace AppInstaller;
+namespace AppInstaller.Views;
 
 public partial class CloseMessageBox
 {

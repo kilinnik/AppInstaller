@@ -17,7 +17,7 @@ public class MainWindowModel
 
     public bool IconChecked { get; set; }
 
-    private readonly string _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
+    private readonly string _filePath = GetConfigFilePath();
 
     public MainWindowModel()
     {
@@ -187,5 +187,18 @@ public class MainWindowModel
             ErrorMessageOccurred(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             throw;
         }
+    }
+    
+    private static string GetConfigFilePath()
+    {
+        var files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "config_*.txt");
+        var configFilePath = files.FirstOrDefault();
+    
+        if (configFilePath == null)
+        {
+            throw new FileNotFoundException("Config file not found.");
+        }
+    
+        return configFilePath;
     }
 }

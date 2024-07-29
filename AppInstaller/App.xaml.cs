@@ -32,7 +32,7 @@ public partial class App
                     DataContext = mainWindowViewModel
                 };
 
-                var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
+                var filePath = GetConfigFilePath();
                 if (File.Exists(filePath))
                 {
                     LoadIcon(filePath);
@@ -149,5 +149,18 @@ public partial class App
 
             MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+    
+    private static string GetConfigFilePath()
+    {
+        var files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "config_*.txt");
+        var configFilePath = files.FirstOrDefault();
+    
+        if (configFilePath == null)
+        {
+            throw new FileNotFoundException("Config file not found.");
+        }
+    
+        return configFilePath;
     }
 }

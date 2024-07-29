@@ -4,12 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:AppInstaller"
+             xmlns:converters1="clr-namespace:AppInstaller.Converters"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <!-- Ресурсы UserControl -->
     <UserControl.Resources>
         <!-- Конвертер для градиента ProgressBar -->
-        <converters:ProgressBarGradientConverter x:Key="ProgressBarGradientConverter" />
+        <converters1:ProgressBarGradientConverter x:Key="ProgressBarGradientConverter" />
         <!-- Стиль для ProgressBar с закругленными углами -->
         <Style x:Key="RoundedCornersProgressBar" TargetType="{x:Type ProgressBar}">
             <Setter Property="Template">

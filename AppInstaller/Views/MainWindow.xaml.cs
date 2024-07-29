@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,36 +10,36 @@ using NAudio.Wave;
 
 namespace AppInstaller.Views;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow
 {
-    private static readonly string FilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
+    private const string FilePattern = "config_*.txt";
+    private static readonly string DirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+    private static readonly string FilePath = FindConfigFile();
 
-    private readonly Dictionary<string, string> _themeToggles = new()
-    {
-        { "LightStandard", "DarkStandard" },
-        { "DarkStandard", "LightStandard" },
-        { "LightClassic", "DarkClassic" },
-        { "DarkClassic", "LightClassic" },
-        { "LightLivingsamurai", "DarkLivingsamurai" },
-        { "DarkLivingsamurai", "LightLivingsamurai" },
-        { "LightTemplarFulga", "DarkTemplarFulga" },
-        { "DarkTemplarFulga", "LightTemplarFulga" },
-        { "LightQwerty", "DarkQwerty" },
-        { "DarkQwerty", "LightQwerty" },
-        { "LightMrMeGaBaN", "DarkMrMeGaBaN" },
-        { "DarkMrMeGaBaN", "LightMrMeGaBaN" },
-        { "LightGrustyck", "DarkGrustyck" },
-        { "DarkGrustyck", "LightGrustyck" }
-    };
+    private readonly Dictionary<string, string> _themeToggles =
+        new()
+        {
+            { "LightStandard", "DarkStandard" },
+            { "DarkStandard", "LightStandard" },
+            { "LightClassic", "DarkClassic" },
+            { "DarkClassic", "LightClassic" },
+            { "LightLivingsamurai", "DarkLivingsamurai" },
+            { "DarkLivingsamurai", "LightLivingsamurai" },
+            { "LightTemplarFulga", "DarkTemplarFulga" },
+            { "DarkTemplarFulga", "LightTemplarFulga" },
+            { "LightQwerty", "DarkQwerty" },
+            { "DarkQwerty", "LightQwerty" },
+            { "LightMrMeGaBaN", "DarkMrMeGaBaN" },
+            { "DarkMrMeGaBaN", "LightMrMeGaBaN" },
+            { "LightGrustyck", "DarkGrustyck" },
+            { "DarkGrustyck", "LightGrustyck" }
+        };
 
     private bool IsPlaying { get; set; }
 
-    private readonly WaveOutEvent _waveOut;
+    private WaveOutEvent _waveOut;
 
-    private readonly Mp3FileReader _mp3Reader;
+    private Mp3FileReader _mp3Reader;
 
     public MainWindow()
     {
@@ -46,12 +47,24 @@ public partial class MainWindow
 
         var track = GetTrack();
 
-        _waveOut = new WaveOutEvent();
-        _waveOut.PlaybackStopped += OnPlaybackStopped;
+        if (WaveOut.DeviceCount > 0)
+        {
+            _waveOut = new WaveOutEvent();
+            _waveOut.PlaybackStopped += OnPlaybackStopped;
 
-        var ms = new MemoryStream(track);
-        _mp3Reader = new Mp3FileReader(ms);
-        _waveOut.Init(_mp3Reader);
+            var ms = new MemoryStream(track);
+            _mp3Reader = new Mp3FileReader(ms);
+            _waveOut.Init(_mp3Reader);
+        }
+        else
+        {
+            MessageBox.Show(
+                "Аудиоустройства не обнаружены. Воспроизведение отключено.",
+                "Внимание",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning
+            );
+        }
     }
 
     private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
@@ -62,7 +75,8 @@ public partial class MainWindow
             return;
         }
 
-        if (!IsPlaying) return;
+        if (!IsPlaying)
+            return;
         _mp3Reader.Position = 0;
         _waveOut.Play();
     }
@@ -86,7 +100,8 @@ public partial class MainWindow
     private void ResetTrack_Click(object sender, RoutedEventArgs e)
     {
         _mp3Reader.Position = 0;
-        if (IsPlaying) return;
+        if (IsPlaying)
+            return;
         _waveOut.Play();
         IsPlaying = true;
     }
@@ -96,7 +111,8 @@ public partial class MainWindow
         var result = string.Empty;
         try
         {
-            if (!File.Exists(FilePath)) throw new FileNotFoundException("Config file not found.");
+            if (!File.Exists(FilePath))
+                throw new FileNotFoundException("Config file not found.");
 
             var content = File.ReadAllText(FilePath);
             var startIndex = content.IndexOf("Track=", StringComparison.Ordinal) + "Track=".Length;
@@ -109,7 +125,9 @@ public partial class MainWindow
             {
                 var assembly = Assembly.GetExecutingAssembly();
 
-                using var stream = assembly.GetManifestResourceStream("AppInstaller.Resources.default_track.txt");
+                using var stream = assembly.GetManifestResourceStream(
+                    "AppInstaller.Resources.default_track.txt"
+                );
                 if (stream != null)
                 {
                     using var reader = new StreamReader(stream);
@@ -123,7 +141,8 @@ public partial class MainWindow
                 $"An error occurred in MainWindow.GetTrack(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
-                errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
+                errorMessage +=
+                    $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
             }
 
             MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -142,7 +161,8 @@ public partial class MainWindow
     {
         var mainWindow = Application.Current.MainWindow;
 
-        if (mainWindow != null) mainWindow.WindowState = WindowState.Minimized;
+        if (mainWindow != null)
+            mainWindow.WindowState = WindowState.Minimized;
     }
 
     private void ToggleTheme(object sender, RoutedEventArgs e)
@@ -150,8 +170,8 @@ public partial class MainWindow
         var app = (App)Application.Current;
         var viewModel = (MainWindowViewModel)DataContext;
 
-        viewModel.CurrentTheme = _themeToggles.TryGetValue(viewModel.CurrentTheme, out var newTheme) 
-            ? newTheme 
+        viewModel.CurrentTheme = _themeToggles.TryGetValue(viewModel.CurrentTheme, out var newTheme)
+            ? newTheme
             : viewModel.CurrentTheme;
 
         var themeType = viewModel.CurrentTheme.Replace("Light", "").Replace("Dark", "");
@@ -162,10 +182,12 @@ public partial class MainWindow
     {
         var app = (App)Application.Current;
         var viewModel = (MainWindowViewModel)DataContext;
-        if (viewModel is null) return;
+        if (viewModel is null)
+            return;
 
         var themeName = (sender as RadioButton)?.Name;
-        if (string.IsNullOrEmpty(themeName)) return;
+        if (string.IsNullOrEmpty(themeName))
+            return;
 
         var isLightTheme = viewModel.CurrentTheme.Contains("Light");
         var fullThemeName = isLightTheme ? $"Light{themeName}" : $"Dark{themeName}";
@@ -177,5 +199,11 @@ public partial class MainWindow
     private void ThemeButton_Click(object sender, RoutedEventArgs e)
     {
         ThemePopup.IsOpen = true;
+    }
+
+    private static string FindConfigFile()
+    {
+        var files = Directory.GetFiles(DirectoryPath, FilePattern);
+        return files.FirstOrDefault() ?? throw new FileNotFoundException();
     }
 }

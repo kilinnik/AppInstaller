@@ -1,11 +1,7 @@
-﻿using System.IO;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Markup;
-using System.Xml;
 
-namespace AppInstaller;
+namespace AppInstaller.Views;
 
 public partial class CustomMessageBox
 {

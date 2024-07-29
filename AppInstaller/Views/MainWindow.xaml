@@ -8,6 +8,7 @@
         xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
         xmlns:res="clr-namespace:AppInstaller.Resources"
         xmlns:interactivity="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:converters="clr-namespace:AppInstaller.Converters"
         WindowStyle="None" BorderThickness="1" AllowsTransparency="True"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         Height="540" Width="531" Background="{DynamicResource WindowBackgroundGradient}"
@@ -29,7 +30,7 @@
     </Window.Template>
     <Window.Resources>
         <!-- Добавляем ресурс для конвертера из bool в Visibility -->
-        <local:BooleanToHiddenVisibilityConverter x:Key="BoolToHiddenVisibilityConverter" />
+        <converters:BooleanToHiddenVisibilityConverter x:Key="BoolToHiddenVisibilityConverter" />
         <Style TargetType="{x:Type RadioButton}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -48,7 +49,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <local:ThemeToVisibilityConverter x:Key="ThemeToVisibilityConverter" />
+        <converters:ThemeToVisibilityConverter x:Key="ThemeToVisibilityConverter" />
     </Window.Resources>
     <!-- Основной контейнер Grid для компоновки элементов интерфейса -->
     <Grid>
