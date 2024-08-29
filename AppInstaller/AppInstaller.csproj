@@ -5,9 +5,9 @@
         <TargetFramework>net6.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
-        <UseWindowsForms>true</UseWindowsForms>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <ApplicationIcon>Resources\nitokin repack app icon.ico</ApplicationIcon>
+        <UserSecretsId>aeefcc6c-c774-4f4d-902b-99f953e7ea6e</UserSecretsId>
 <!--        <_SuppressWinFormsTrimError>true</_SuppressWinFormsTrimError>-->
 <!--        <_SuppressWpfTrimError>true</_SuppressWpfTrimError>-->
     </PropertyGroup>
@@ -25,7 +25,6 @@
         <None Remove="nitokin repack app icon1.ico" />
         <None Remove="7z.dll" />
         <None Remove="App.config" />
-        <None Include="Resources\nitokin repack app icon1.ico" />
         <EmbeddedResource Include="Resources\store.steampowered.com.svg" />
         <Resource Include="Resources\tglogo.svg" />
         <None Remove="Resources\default.svg" />
@@ -66,6 +65,8 @@
         <EmbeddedResource Include="Resources\7z2301-x64.exe" />
         <None Remove="Resources\nitokin repack app icon.ico" />
         <Resource Include="Resources\nitokin repack app icon.ico" />
+        <None Remove="Resources\TIN NIKO (10).png" />
+        <Resource Include="Resources\TIN NIKO (10).png" />
     </ItemGroup>
     
     <ItemGroup>

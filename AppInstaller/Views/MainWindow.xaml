@@ -137,6 +137,13 @@
                                 <TextBlock Margin="2" Text="grustyck" Foreground="{DynamicResource TextBrush}" />
                             </WrapPanel>
                         </ListBoxItem>
+                        <ListBoxItem
+                            Visibility="{Binding Path=AppTheme, Converter={StaticResource ThemeToVisibilityConverter}, ConverterParameter=Clave}">
+                            <WrapPanel HorizontalAlignment="Left">
+                                <RadioButton Margin="2" Name="Clave" GroupName="Theme" Checked="RadioButton_Checked" />
+                                <TextBlock Margin="2" Text="Clave" Foreground="{DynamicResource TextBrush}" />
+                            </WrapPanel>
+                        </ListBoxItem>
                     </ListBox>
                 </Border>
             </Popup>
@@ -219,17 +226,13 @@
                     </Button.Background>
                     <materialDesign:PackIcon Kind="Restore" />
                 </Button>
-                <Button BorderThickness="0" Height="21" Margin="2" Padding="15.5,2,15.5,2" ToolTip="ChatGPT"
-                        materialDesign:ButtonAssist.CornerRadius="10" Command="{Binding ShowChatGptWindowCommand}"
+                <Button BorderThickness="0" Height="21" Margin="2" Padding="15.5,2,15.5,2" ToolTip="Наш сайт"
+                        materialDesign:ButtonAssist.CornerRadius="10" Command="{Binding OpenSiteLinkCommand}"
                         Style="{StaticResource MaterialDesignRaisedLightButton}">
                     <Button.Background>
                         <DynamicResource ResourceKey="ButtonGradient" />
                     </Button.Background>
-                    <Image>
-                        <Image.Source>
-                            <svg:SvgImage Source="/Resources/chatgpt.svg" />
-                        </Image.Source>
-                    </Image>
+                    <Image Source="/Resources/nitokin repack app icon.ico" />
                 </Button>
             </WrapPanel>
         </StackPanel>

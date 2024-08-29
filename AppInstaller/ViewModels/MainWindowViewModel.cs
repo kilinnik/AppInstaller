@@ -125,7 +125,7 @@ public class MainWindowViewModel : ViewModelBase
     }
 
     public ReactiveCommand<Unit, Unit> ShowMessageBoxCommand { get; }
-    public ReactiveCommand<Unit, Unit> ShowChatGptWindowCommand { get; }
+    public ReactiveCommand<Unit, Unit> OpenSiteLinkCommand { get; }
     public ReactiveCommand<Unit, Unit> OpenTgLinkCommand { get; }
     public ReactiveCommand<Unit, Unit> OpenAppPurchaseLinkCommand { get; }
     public ReactiveCommand<Unit, Unit> NavigateToNextViewCommand { get; }
@@ -177,7 +177,7 @@ public class MainWindowViewModel : ViewModelBase
         ButtonNextText = Strings.Next;
 
         ShowMessageBoxCommand = ReactiveCommand.Create(ShowMessageBox);
-        ShowChatGptWindowCommand = ReactiveCommand.Create(ShowChatGptWindow);
+        OpenSiteLinkCommand = ReactiveCommand.Create(() => OpenLink("https://nitokinoff.org/"));
         OpenTgLinkCommand = ReactiveCommand.Create(() => OpenLink("https://t.me/nito_kin"));
         OpenAppPurchaseLinkCommand = ReactiveCommand.Create(() => OpenLink(link));
         NavigateToNextViewCommand = ReactiveCommand.Create(NavigateNextView);
@@ -256,12 +256,12 @@ public class MainWindowViewModel : ViewModelBase
                 }
 
                 readyViewModel.SelectedPath = SelectedPath;
-                var additionalComponentsBuilder = new StringBuilder(Resources.Strings.AdditionalTasks);
+                var additionalComponentsBuilder = new StringBuilder(Strings.AdditionalTasks);
                 var selectDirViewModel = _views[1]?.DataContext as SelectDirViewModel;
 
                 if (IconChecked)
                 {
-                    additionalComponentsBuilder.AppendLine().Append(" - " + Resources.Strings.CreateDesktopShortcut);
+                    additionalComponentsBuilder.AppendLine().Append(" - " + Strings.CreateDesktopShortcut);
                 }
 
                 foreach (var component in selectDirViewModel?.Components)
@@ -313,24 +313,10 @@ public class MainWindowViewModel : ViewModelBase
 
         ButtonNextText = _currentViewIndex switch
         {
-            2 => Resources.Strings.Install,
-            4 => Resources.Strings.Finish,
-            _ => Resources.Strings.Next
+            2 => Strings.Install,
+            4 => Strings.Finish,
+            _ => Strings.Next
         };
-    }
-
-    private static void ShowChatGptWindow()
-    {
-        try
-        {
-            new ChatGptWindow().ShowDialog();
-        }
-        catch (Exception ex)
-        {
-            var errorMessage = $"An error occurred in MainWindowViewModel.ShowChatGptWindow(): {ex.Message}";
-
-            MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
     }
 
     private void ShowCloseMessageBox()

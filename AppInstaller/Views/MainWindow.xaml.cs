@@ -32,7 +32,9 @@ public partial class MainWindow
             { "LightMrMeGaBaN", "DarkMrMeGaBaN" },
             { "DarkMrMeGaBaN", "LightMrMeGaBaN" },
             { "LightGrustyck", "DarkGrustyck" },
-            { "DarkGrustyck", "LightGrustyck" }
+            { "DarkGrustyck", "LightGrustyck" },
+            { "LightClave", "DarkClave" },
+            { "DarkClave", "LightClave" }
         };
 
     private bool IsPlaying { get; set; }
@@ -44,6 +46,7 @@ public partial class MainWindow
     public MainWindow()
     {
         InitializeComponent();
+        Closing += OnWindowClosing;
 
         var track = GetTrack();
 
@@ -65,6 +68,14 @@ public partial class MainWindow
                 MessageBoxImage.Warning
             );
         }
+    }
+    
+    private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+    {
+        _waveOut.Stop();
+        _waveOut.Dispose();
+        _mp3Reader.Dispose();
+        Application.Current.Shutdown(); 
     }
 
     private void OnPlaybackStopped(object? sender, StoppedEventArgs e)

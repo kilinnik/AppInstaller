@@ -313,7 +313,6 @@ public class InstallingModel
     private string CreateUninstallBat(IEnumerable<string> exePaths, string pathToApp, string appName)
     {
         var pathToBat = $@"{pathToApp}\uninstall.bat";
-        //var newFilePath = string.Empty;
         try
         {
             // Читаем все строки из файла
