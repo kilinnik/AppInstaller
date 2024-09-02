@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Reactive;
-using System.Windows.Forms;
 using System.Windows.Media;
 using AppInstaller.Models;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ReactiveUI;
 
 namespace AppInstaller.ViewModels;
@@ -16,8 +16,8 @@ public class SelectDirViewModel : ViewModelBase
     private MainWindowViewModel MainWindowViewModel { get; }
 
     private readonly string? _appName;
-        
-    public ObservableCollection<Components> Components { get; } = new();
+
+    public ObservableCollection<Components> Components { get; } = [];
 
     private bool _iconChecked;
 
@@ -63,8 +63,13 @@ public class SelectDirViewModel : ViewModelBase
     // Команда для выбора директории установки
     public ReactiveCommand<Unit, Unit> ChooseDirectoryCommand { get; }
 
-    public SelectDirViewModel(MainWindowViewModel mainWindowViewModel, ImageSource? headImage, string? appName,
-        string neededMemory, IEnumerable<KeyValuePair<string, string>> components)
+    public SelectDirViewModel(
+        MainWindowViewModel mainWindowViewModel,
+        ImageSource? headImage,
+        string? appName,
+        string neededMemory,
+        IEnumerable<KeyValuePair<string, string>> components
+    )
     {
         MainWindowViewModel = mainWindowViewModel;
         HeadImage = headImage;
@@ -73,13 +78,24 @@ public class SelectDirViewModel : ViewModelBase
         NeededMemory = neededMemory;
         foreach (var (folderName, value) in components)
         {
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, folderName + ".7z.001");
+            var filePath = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                folderName + ".7z.001"
+            );
 
             if (File.Exists(filePath))
             {
-                Components.Add(new Components { Name = value, FolderName = folderName, IsChecked = false });
+                Components.Add(
+                    new Components
+                    {
+                        Name = value,
+                        FolderName = folderName,
+                        IsChecked = false
+                    }
+                );
             }
         }
+
         // Создаем команду для выбора директории установки и связываем ее с методом ChooseDirectory
         ChooseDirectoryCommand = ReactiveCommand.Create(ChooseDirectory);
     }
@@ -87,14 +103,18 @@ public class SelectDirViewModel : ViewModelBase
     // Метод, который вызывается при выборе директории установки
     private void ChooseDirectory()
     {
-        var folderDialog = new FolderBrowserDialog
+        var dialog = new CommonOpenFileDialog
         {
-            RootFolder = Environment.SpecialFolder.Desktop
+            IsFolderPicker = true,
+            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
         };
 
-        var result = folderDialog.ShowDialog();
-        if (result != DialogResult.OK) return;
-        SelectedPath = $@"{folderDialog.SelectedPath}\{_appName}";
+        if (dialog.ShowDialog() != CommonFileDialogResult.Ok)
+        {
+            return;
+        }
+
+        SelectedPath = $@"{dialog.FileName}\{_appName}";
         MainWindowViewModel.SelectedPath = SelectedPath;
     }
 }

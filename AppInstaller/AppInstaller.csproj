@@ -2,22 +2,23 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net6.0-windows</TargetFramework>
+        <TargetFramework>net8.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
         <ApplicationManifest>app.manifest</ApplicationManifest>
-        <ApplicationIcon>Resources\nitokin repack app icon.ico</ApplicationIcon>
+        <ApplicationIcon>Resources\nitokin repack app icon11.ico</ApplicationIcon>
         <UserSecretsId>aeefcc6c-c774-4f4d-902b-99f953e7ea6e</UserSecretsId>
 <!--        <_SuppressWinFormsTrimError>true</_SuppressWinFormsTrimError>-->
 <!--        <_SuppressWpfTrimError>true</_SuppressWpfTrimError>-->
+        <TrimMode>Link</TrimMode>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MaterialDesignThemes" Version="5.0.0-ci330" />
-      <PackageReference Include="Mirror.ChatGpt" Version="1.0.2" />
-      <PackageReference Include="NAudio" Version="2.1.0" />
-      <PackageReference Include="ReactiveUI.WPF" Version="19.4.1" />
-      <PackageReference Include="SharpVectors.Wpf" Version="1.8.1" />
+      <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci738" />
+      <PackageReference Include="NAudio" Version="2.2.1" />
+      <PackageReference Include="ReactiveUI.WPF" Version="20.1.1" />
+      <PackageReference Include="SharpVectors.Wpf" Version="1.8.4.2" />
+      <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,17 +30,8 @@
         <Resource Include="Resources\tglogo.svg" />
         <None Remove="Resources\default.svg" />
         <EmbeddedResource Include="Resources\default.svg" />
-        <None Remove="Resources\ea.svg" />
-        <EmbeddedResource Include="Resources\ea.com.svg" />
-        <None Remove="Resources\egs.svg" />
         <None Remove="Resources\gog.svg" />
         <EmbeddedResource Include="Resources\gog.com.svg" />
-        <None Remove="Resources\rockstar.svg" />
-        <EmbeddedResource Include="Resources\store.rockstargames.com.svg" />
-        <None Remove="Resources\uplay.svg" />
-        <EmbeddedResource Include="Resources\ubisoft.com.svg" />
-        <None Remove="Resources\blizzard.com.svg" />
-        <EmbeddedResource Include="Resources\blizzard.com.svg" />
         <None Remove="Resources\xbox.com.svg" />
         <EmbeddedResource Include="Resources\xbox.com.svg" />
         <None Remove="Resources\playstation.com.svg" />
@@ -57,16 +49,24 @@
           <Generator>PublicResXFileCodeGenerator</Generator>
           <CustomToolNamespace>AppInstaller.Resources</CustomToolNamespace>
         </EmbeddedResource>
-        <None Remove="Resources\chatgpt.svg" />
-        <Resource Include="Resources\chatgpt.svg" />
         <Page Remove="Themes\DarkTheme.xaml" />
         <Page Remove="Themes\LightTheme.xaml" />
         <None Remove="Resources\7z2301-x64.exe" />
         <EmbeddedResource Include="Resources\7z2301-x64.exe" />
-        <None Remove="Resources\nitokin repack app icon.ico" />
-        <Resource Include="Resources\nitokin repack app icon.ico" />
         <None Remove="Resources\TIN NIKO (10).png" />
         <Resource Include="Resources\TIN NIKO (10).png" />
+        <None Remove="Resources\nitokin repack app icon11.ico" />
+        <Resource Include="Resources\nitokin repack app icon11.ico" />
+        <Page Update="Themes\DarkThemeFate.xaml">
+          <Generator>MSBuild:Compile</Generator>
+          <XamlRuntime>Wpf</XamlRuntime>
+          <SubType>Designer</SubType>
+        </Page>
+        <Page Update="Themes\LightThemeFate.xaml">
+          <Generator>MSBuild:Compile</Generator>
+          <XamlRuntime>Wpf</XamlRuntime>
+          <SubType>Designer</SubType>
+        </Page>
     </ItemGroup>
     
     <ItemGroup>

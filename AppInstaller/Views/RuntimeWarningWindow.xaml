@@ -1,0 +1,16 @@
+﻿<Window x:Class="AppInstaller.Views.RuntimeWarningWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Missing .NET Runtime"
+        Height="120" Width="400">
+    <StackPanel Margin="10">
+        <TextBlock TextWrapping="Wrap" Margin="0,0,0,10">
+            Required .NET Runtime 8.0.0 is not installed. Please download and install it from:
+        </TextBlock>
+        <TextBlock TextWrapping="Wrap" Foreground="Blue" Cursor="Hand" TextDecorations="Underline"
+                   MouseLeftButtonDown="DownloadLink_Click">
+            https://dotnet.microsoft.com/en-us/download/dotnet/8.0/runtime
+        </TextBlock>
+        <Button Content="Close" HorizontalAlignment="Right" Margin="0,10,0,0" Click="CloseButton_Click"/>
+    </StackPanel>
+</Window>

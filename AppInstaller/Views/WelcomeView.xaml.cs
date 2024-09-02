@@ -18,7 +18,7 @@ public partial class WelcomeView
         const int linesToScroll = 30;
     
         // Прокручиваем количество строк, умноженное на размер шага прокрутки
-        scrollViewer?.ScrollToVerticalOffset(scrollViewer.VerticalOffset - (e.Delta * linesToScroll / 120));
+        scrollViewer?.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta * linesToScroll / 120);
     
         // Отмечаем событие как обработанное, чтобы предотвратить стандартное поведение
         e.Handled = true;

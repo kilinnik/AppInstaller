@@ -34,7 +34,9 @@ public partial class MainWindow
             { "LightGrustyck", "DarkGrustyck" },
             { "DarkGrustyck", "LightGrustyck" },
             { "LightClave", "DarkClave" },
-            { "DarkClave", "LightClave" }
+            { "DarkClave", "LightClave" },
+            { "LightFate", "DarkFate" },
+            { "DarkFate", "LightFate" }
         };
 
     private bool IsPlaying { get; set; }

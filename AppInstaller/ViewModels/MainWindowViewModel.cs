@@ -100,7 +100,7 @@ public class MainWindowViewModel : ViewModelBase
         get => _buttonNextText;
         set => this.RaiseAndSetIfChanged(ref _buttonNextText, value);
     }
-    
+
     private string? _appTheme;
 
     public string? AppTheme
@@ -147,25 +147,39 @@ public class MainWindowViewModel : ViewModelBase
         var link = _mainWindowModel.GetAppPurchaseLink();
         SetLogo(link);
 
-        _views = new UserControl?[]
-        {
+        _views =
+        [
             new WelcomeView
             {
-                DataContext = new WelcomeViewModel(_appName, bigImage, _mainWindowModel.GetAppDescription())
+                DataContext = new WelcomeViewModel(
+                    _appName,
+                    bigImage,
+                    _mainWindowModel.GetAppDescription()
+                )
             },
             new SelectDirView
             {
-                DataContext = new SelectDirViewModel(this, headImage, _appName,
-                    _mainWindowModel.GetNeededMemory(), _components)
+                DataContext = new SelectDirViewModel(
+                    this,
+                    headImage,
+                    _appName,
+                    _mainWindowModel.GetNeededMemory(),
+                    _components
+                )
             },
             new ReadyView { DataContext = new ReadyViewModel(headImage) },
             new InstallingView
             {
-                DataContext = new InstallingViewModel(headImage, this, _mainWindowModel.GetMascotImage(),
-                    _mainWindowModel.GetRepackerName(), new InstallingModel(new TimerModel()))
+                DataContext = new InstallingViewModel(
+                    headImage,
+                    this,
+                    _mainWindowModel.GetMascotImage(),
+                    _mainWindowModel.GetRepackerName(),
+                    new InstallingModel(new TimerModel())
+                )
             },
             new FinishedView { DataContext = new FinishedViewModel(bigImage) }
-        };
+        ];
 
         CurrentTheme = "LightStandard";
         _currentViewIndex = 0;
@@ -205,10 +219,14 @@ public class MainWindowViewModel : ViewModelBase
     private static string GetResourceName(string host)
     {
         string[] domains =
-        {
-            "ea.com", "store.epicgames.com", "gog.com", "blizzard.com", "xbox.com", "playstation.com",
-            "store.rockstargames.com", "store.steampowered.com", "ubisoft.com", "nintendo.com"
-        };
+        [
+            "store.epicgames.com",
+            "gog.com",
+            "xbox.com",
+            "playstation.com",
+            "store.steampowered.com",
+            "nintendo.com"
+        ];
 
         foreach (var domain in domains)
         {
@@ -239,12 +257,16 @@ public class MainWindowViewModel : ViewModelBase
                     var availableSpace = drive.AvailableFreeSpace;
 
                     var memoryString = _mainWindowModel.GetNeededMemory();
-                    var cleanedMemoryString =
-                        new string(memoryString.Where(c => char.IsDigit(c) || c == ',' || c == '.').ToArray());
+                    var cleanedMemoryString = new string(
+                        memoryString.Where(c => char.IsDigit(c) || c == ',' || c == '.').ToArray()
+                    );
 
                     cleanedMemoryString = cleanedMemoryString.Replace(',', '.');
 
-                    var requiredSpaceInGb = double.Parse(cleanedMemoryString, CultureInfo.InvariantCulture);
+                    var requiredSpaceInGb = double.Parse(
+                        cleanedMemoryString,
+                        CultureInfo.InvariantCulture
+                    );
                     var requiredSpaceInBytes = (long)(requiredSpaceInGb * 1024 * 1024 * 1024);
 
                     if (availableSpace < requiredSpaceInBytes + 10L * 1024 * 1024 * 1024)
@@ -261,14 +283,19 @@ public class MainWindowViewModel : ViewModelBase
 
                 if (IconChecked)
                 {
-                    additionalComponentsBuilder.AppendLine().Append(" - " + Strings.CreateDesktopShortcut);
+                    additionalComponentsBuilder
+                        .AppendLine()
+                        .Append(" - " + Strings.CreateDesktopShortcut);
                 }
 
                 foreach (var component in selectDirViewModel?.Components)
                 {
                     if (component.IsChecked)
                     {
-                        additionalComponentsBuilder.AppendLine().Append(" - ").Append(component.Name);
+                        additionalComponentsBuilder
+                            .AppendLine()
+                            .Append(" - ")
+                            .Append(component.Name);
                     }
                 }
 
@@ -282,12 +309,20 @@ public class MainWindowViewModel : ViewModelBase
 
                 break;
             }
-            case 3 when _views[_currentViewIndex]?.DataContext is InstallingViewModel installingViewModel:
+            case 3
+                when _views[_currentViewIndex]?.DataContext
+                    is InstallingViewModel installingViewModel:
             {
                 var selectDirViewModel = _views[1]?.DataContext as SelectDirViewModel;
-                installingViewModel.InstallApp(AppDomain.CurrentDomain.BaseDirectory,
-                    SelectedPath, _appName, _mainWindowModel.GetAppVersion(), IconChecked,
-                    selectDirViewModel.Components, _mainWindowModel.GetExePaths());
+                installingViewModel.InstallApp(
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    SelectedPath,
+                    _appName,
+                    _mainWindowModel.GetAppVersion(),
+                    IconChecked,
+                    selectDirViewModel.Components,
+                    _mainWindowModel.GetExePaths()
+                );
                 break;
             }
         }
@@ -298,7 +333,8 @@ public class MainWindowViewModel : ViewModelBase
 
     private void NavigatePreviousView()
     {
-        if (_currentViewIndex <= 0) return;
+        if (_currentViewIndex <= 0)
+            return;
 
         _currentViewIndex--;
         CurrentView = _views[_currentViewIndex];
@@ -322,7 +358,8 @@ public class MainWindowViewModel : ViewModelBase
     private void ShowCloseMessageBox()
     {
         var result = new CloseMessageBox().ShowDialog();
-        if (result != true) return;
+        if (result != true)
+            return;
         ExitRequested?.Invoke();
         Application.Current.Shutdown();
     }
@@ -340,7 +377,8 @@ public class MainWindowViewModel : ViewModelBase
                 $"An error occurred in MainWindowViewModel.ShowMessageBox(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
-                errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
+                errorMessage +=
+                    $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
             }
 
             CustomMessageBox.Show(errorMessage);
@@ -349,24 +387,34 @@ public class MainWindowViewModel : ViewModelBase
 
     private static FlowDocument ParseXamlFormattedText(string formattedText)
     {
-        var result = formattedText.Replace("\n", "<LineBreak />").Replace("\r\n", "<LineBreak />")
-            .Replace("<b>", "<Bold>").Replace("</b>", "</Bold>")
-            .Replace("<u>", "<Underline>").Replace("</u>", "</Underline>")
-            .Replace("<i>", "<Italic>").Replace("</i>", "</Italic>");
+        var result = formattedText
+            .Replace("\n", "<LineBreak />")
+            .Replace("\r\n", "<LineBreak />")
+            .Replace("<b>", "<Bold>")
+            .Replace("</b>", "</Bold>")
+            .Replace("<u>", "<Underline>")
+            .Replace("</u>", "</Underline>")
+            .Replace("<i>", "<Italic>")
+            .Replace("</i>", "</Italic>");
         result =
-            $"<FlowDocument xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\">" +
-            $"<Paragraph FontSize=\"12\">{result}</Paragraph></FlowDocument>";
+            $"<FlowDocument xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\">"
+            + $"<Paragraph FontSize=\"12\">{result}</Paragraph></FlowDocument>";
 
         return (FlowDocument)XamlReader.Parse(result);
     }
 
     private static void OpenLink(string? url)
     {
-        if (url != null) Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        if (url != null)
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
     }
 
-    private static void OnErrorMessageOccurred(string message, string caption, MessageBoxButton buttons,
-        MessageBoxImage icon)
+    private static void OnErrorMessageOccurred(
+        string message,
+        string caption,
+        MessageBoxButton buttons,
+        MessageBoxImage icon
+    )
     {
         MessageBox.Show(message, caption, buttons, icon);
     }

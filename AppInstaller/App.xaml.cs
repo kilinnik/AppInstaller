@@ -19,7 +19,14 @@ public partial class App
     {
         try
         {
+            if (!CheckDotNetDesktopRuntime())
+            {
+                Shutdown();
+                return;
+            }
+
             base.OnStartup(e);
+
             var languageSelectionWindow = new LanguageSelectionWindow();
             if (languageSelectionWindow.ShowDialog() == true)
             {
@@ -76,6 +83,8 @@ public partial class App
                 || m.Source.OriginalString.Contains("Themes/DarkThemeGrustyck.xaml")
                 || m.Source.OriginalString.Contains("Themes/LightThemeClave.xaml")
                 || m.Source.OriginalString.Contains("Themes/DarkThemeClave.xaml")
+                || m.Source.OriginalString.Contains("Themes/LightThemeFate.xaml")
+                || m.Source.OriginalString.Contains("Themes/DarkThemeFate.xaml")
         );
 
         if (currentTheme == null)
@@ -111,6 +120,8 @@ public partial class App
                 || m.Source.OriginalString.Contains("Themes/DarkThemeGrustyck.xaml")
                 || m.Source.OriginalString.Contains("Themes/LightThemeClave.xaml")
                 || m.Source.OriginalString.Contains("Themes/DarkThemeClave.xaml")
+                || m.Source.OriginalString.Contains("Themes/LightThemeFate.xaml")
+                || m.Source.OriginalString.Contains("Themes/DarkThemeFate.xaml")
         );
 
         if (currentTheme == null)
@@ -183,4 +194,65 @@ public partial class App
 
         return configFilePath;
     }
+
+    private static bool CheckDotNetDesktopRuntime()
+    {
+        const string runtimeVersion = "8.0";
+        const string downloadLink = "https://dotnet.microsoft.com/en-us/download/dotnet/8.0/runtime";
+
+        try
+        {
+            var currentRuntime = System.Diagnostics.Process.Start(
+                new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "dotnet",
+                    Arguments = "--list-runtimes",
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            );
+
+            if (currentRuntime == null)
+            {
+                throw new InvalidOperationException("Unable to start dotnet process.");
+            }
+
+            var output = currentRuntime.StandardOutput.ReadToEnd();
+            currentRuntime.WaitForExit();
+
+            if (output.Contains($"Microsoft.WindowsDesktop.App {runtimeVersion}"))
+            {
+                return true;
+            }
+
+            MessageBox.Show(
+                $"Required .NET Desktop Runtime {runtimeVersion} is not installed. Please download and install it from:\n{downloadLink}",
+                "Missing .NET Desktop Runtime",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning
+            );
+
+            System.Diagnostics.Process.Start(
+                new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = downloadLink,
+                    UseShellExecute = true
+                }
+            );
+
+            return false;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                $"An error occurred while checking .NET Desktop Runtime: {ex.Message}\n{ex.StackTrace}",
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
+            );
+            return false;
+        }
+    }
+
 }

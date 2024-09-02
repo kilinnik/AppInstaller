@@ -17,40 +17,41 @@ using Microsoft.Win32;
 
 namespace AppInstaller.Models;
 
-public class InstallingModel
+public class InstallingModel(TimerModel timerModel)
 {
     public event Action<int>? ProgressChanged;
     public event Action<string, string, MessageBoxButton, MessageBoxImage>? ErrorMessageOccurred;
     public event Action<string, string, bool>? TimeChanged;
 
-    private readonly TimerModel _timerModel;
-    private string _sevenZipPath;
+    private string _sevenZipPath = @"C:\Program Files\7-Zip\7z.exe";
 
     private readonly CancellationTokenSource _cts = new();
 
-    public InstallingModel(TimerModel timerModel)
-    {
-        _timerModel = timerModel;
-        _sevenZipPath = @"C:\Program Files\7-Zip\7z.exe";
-    }
-
     private string FormatElapsedTime()
     {
-        var elapsedSeconds = _timerModel.ElapsedSeconds;
+        var elapsedSeconds = timerModel.ElapsedSeconds;
         var hours = elapsedSeconds / 3600;
         var minutes = (elapsedSeconds % 3600) / 60;
         var seconds = elapsedSeconds % 60;
         return $"{hours:D2}:{minutes:D2}:{seconds:D2}";
     }
 
-    public async Task InstallApp(string archiveFolderPath, string? installPath, string appName,
-        string appVersion, bool iconChecked, IEnumerable<Components> components, List<string> exePaths)
+    public async Task InstallApp(
+        string archiveFolderPath,
+        string? installPath,
+        string appName,
+        string appVersion,
+        bool iconChecked,
+        IEnumerable<Components> components,
+        List<string> exePaths
+    )
     {
         try
         {
-            _timerModel.Start();
+            timerModel.Start();
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            timer.Tick += (_, _) => TimeChanged($"{Strings.TimeElapsed} ", FormatElapsedTime(), true);
+            timer.Tick += (_, _) =>
+                TimeChanged($"{Strings.TimeElapsed} ", FormatElapsedTime(), true);
             timer.Start();
             if (installPath != null)
             {
@@ -59,12 +60,20 @@ public class InstallingModel
                     Directory.CreateDirectory(installPath);
                 }
 
-                foreach (var file in Directory.EnumerateFiles(installPath, "*", SearchOption.AllDirectories))
+                foreach (
+                    var file in Directory.EnumerateFiles(
+                        installPath,
+                        "*",
+                        SearchOption.AllDirectories
+                    )
+                )
                 {
                     File.Delete(file);
                 }
 
-                await Task.Run(() => DecompressApp(installPath, archiveFolderPath, appName, components));
+                await Task.Run(
+                    () => DecompressApp(installPath, archiveFolderPath, appName, components)
+                );
 
                 if (iconChecked)
                 {
@@ -81,8 +90,8 @@ public class InstallingModel
                 File.Delete(configFile);
             }
 
-            _timerModel.Stop();
-            _timerModel.Reset();
+            timerModel.Stop();
+            timerModel.Reset();
         }
         catch (Exception ex)
         {
@@ -90,12 +99,18 @@ public class InstallingModel
                 $"An error occurred in InstallingModel.InstallApp(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
-                errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
+                errorMessage +=
+                    $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
             }
 
-            ErrorMessageOccurred?.Invoke(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            _timerModel.Stop();
-            _timerModel.Reset();
+            ErrorMessageOccurred?.Invoke(
+                errorMessage,
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
+            );
+            timerModel.Stop();
+            timerModel.Reset();
         }
     }
 
@@ -106,12 +121,16 @@ public class InstallingModel
             Filter = $"{Strings.SevenZipExecutable} (7z.exe)|7z.exe",
             Title = Strings.TitleSelectExecutable,
         };
-        
+
         return openFileDialog.ShowDialog() == true ? openFileDialog.FileName : null;
     }
 
-    private async Task DecompressApp(string installPath, string archiveFolderPath, string appName,
-        IEnumerable<Components> components)
+    private async Task DecompressApp(
+        string installPath,
+        string archiveFolderPath,
+        string appName,
+        IEnumerable<Components> components
+    )
     {
         try
         {
@@ -120,10 +139,11 @@ public class InstallingModel
             {
                 await Install7ZipAsync();
             }
-            
+
             if (!File.Exists(_sevenZipPath))
             {
-                _sevenZipPath = Get7ZipPathFromUser() ?? throw new Exception(Strings.PathNotProvided);
+                _sevenZipPath =
+                    Get7ZipPathFromUser() ?? throw new Exception(Strings.PathNotProvided);
                 flag = false;
             }
 
@@ -135,7 +155,9 @@ public class InstallingModel
 
             foreach (var component in components.Where(c => c.IsChecked))
             {
-                var componentArchivePath = File.Exists($"{archiveFolderPath}\\{component.FolderName}.7z.001")
+                var componentArchivePath = File.Exists(
+                    $"{archiveFolderPath}\\{component.FolderName}.7z.001"
+                )
                     ? $"{archiveFolderPath}\\{component.FolderName}.7z.001"
                     : $"{archiveFolderPath}\\{component.FolderName}.7z";
 
@@ -150,14 +172,20 @@ public class InstallingModel
         catch (Exception ex)
         {
             var errorMessage =
-                @"Если установлен 7zip, то он обязательно должен находиться в папке C:\Program Files\7-Zip. " +
-                $"An error occurred in InstallingModel.DecompressApp(): {ex.Message}\n{ex.StackTrace}";
+                @"Если установлен 7zip, то он обязательно должен находиться в папке C:\Program Files\7-Zip. "
+                + $"An error occurred in InstallingModel.DecompressApp(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
-                errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
+                errorMessage +=
+                    $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
             }
 
-            ErrorMessageOccurred?.Invoke(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ErrorMessageOccurred?.Invoke(
+                errorMessage,
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
+            );
         }
     }
 
@@ -191,7 +219,12 @@ public class InstallingModel
         if (process.ExitCode != 0)
         {
             var errorMessage = $"7-Zip process exited with code {process.ExitCode}";
-            ErrorMessageOccurred?.Invoke(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ErrorMessageOccurred?.Invoke(
+                errorMessage,
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
+            );
         }
     }
 
@@ -203,10 +236,12 @@ public class InstallingModel
         while (await reader.ReadLineAsync() is { } line)
         {
             var match = Regex.Match(line, @"(\d+)%");
-            if (!match.Success) continue;
+            if (!match.Success)
+                continue;
             var progressPercentage = int.Parse(match.Groups[1].Value);
 
-            if (progressPercentage > 100) progressPercentage = 100;
+            if (progressPercentage > 100)
+                progressPercentage = 100;
             if (progressPercentage > nextUpdatePercent)
             {
                 ProgressChanged?.Invoke(progressPercentage);
@@ -214,8 +249,12 @@ public class InstallingModel
             }
 
             var elapsedSeconds = stopwatch.Elapsed.TotalSeconds;
-            var remainingTime = TimeSpan.FromSeconds(Math.Min(
-                elapsedSeconds * (100 - progressPercentage) / progressPercentage, TimeSpan.MaxValue.TotalSeconds));
+            var remainingTime = TimeSpan.FromSeconds(
+                Math.Min(
+                    elapsedSeconds * (100 - progressPercentage) / progressPercentage,
+                    TimeSpan.MaxValue.TotalSeconds
+                )
+            );
             var formattedRemainingTime = remainingTime.ToString(@"hh\:mm\:ss");
 
             TimeChanged($"{Strings.TimeRemaining} ", formattedRemainingTime, false);
@@ -246,11 +285,20 @@ public class InstallingModel
         var assembly = Assembly.GetExecutingAssembly();
         const string resourceName = "AppInstaller.Resources.7z2301-x64.exe";
         await using var stream = assembly.GetManifestResourceStream(resourceName);
-        if (stream == null) throw new Exception("Resource not found!");
+        if (stream == null)
+            throw new Exception("Resource not found!");
 
         var tempInstallerPath = Path.Combine(Path.GetTempPath(), "7z2301-x64.exe");
-        await using (var fileStream = new FileStream(tempInstallerPath, FileMode.Create, FileAccess.Write,
-                         FileShare.None, 4096, true))
+        await using (
+            var fileStream = new FileStream(
+                tempInstallerPath,
+                FileMode.Create,
+                FileAccess.Write,
+                FileShare.None,
+                4096,
+                true
+            )
+        )
         {
             await stream.CopyToAsync(fileStream, 4096, _cts.Token);
         }
@@ -295,12 +343,19 @@ public class InstallingModel
         }
     }
 
-    private static void AppRegistration(string appName, string appVersion, string targetExePath,
-        string uninstallBatPath)
+    private static void AppRegistration(
+        string appName,
+        string appVersion,
+        string targetExePath,
+        string uninstallBatPath
+    )
     {
-        using var uninstallKey =
-            Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", true);
-        if (uninstallKey == null) return;
+        using var uninstallKey = Registry.LocalMachine.OpenSubKey(
+            @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+            true
+        );
+        if (uninstallKey == null)
+            return;
         using var appKey = uninstallKey.CreateSubKey(appName);
         appKey.SetValue("DisplayName", appName);
         appKey.SetValue("DisplayIcon", targetExePath);
@@ -310,7 +365,11 @@ public class InstallingModel
         appKey.SetValue("UninstallString", $"\"{uninstallBatPath}\" /uninstall");
     }
 
-    private string CreateUninstallBat(IEnumerable<string> exePaths, string pathToApp, string appName)
+    private string CreateUninstallBat(
+        IEnumerable<string> exePaths,
+        string pathToApp,
+        string appName
+    )
     {
         var pathToBat = $@"{pathToApp}\uninstall.bat";
         try
@@ -320,9 +379,14 @@ public class InstallingModel
 
             // Вставляем строки для удаления ярлыков на основе exePaths
             var indexForInsertion = 2;
-            foreach (var exeNameWithoutExtension in exePaths.Select(Path.GetFileNameWithoutExtension))
+            foreach (
+                var exeNameWithoutExtension in exePaths.Select(Path.GetFileNameWithoutExtension)
+            )
             {
-                lines.Insert(indexForInsertion, $"del \"%USERPROFILE%\\Desktop\\{exeNameWithoutExtension}.lnk\"");
+                lines.Insert(
+                    indexForInsertion,
+                    $"del \"%USERPROFILE%\\Desktop\\{exeNameWithoutExtension}.lnk\""
+                );
                 indexForInsertion++;
             }
 
@@ -342,10 +406,16 @@ public class InstallingModel
                 $"An error occurred in InstallingModel.CreateUninstallBat(): {ex.Message}\n{ex.StackTrace}";
             if (ex.InnerException != null)
             {
-                errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
+                errorMessage +=
+                    $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
             }
 
-            ErrorMessageOccurred?.Invoke(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ErrorMessageOccurred?.Invoke(
+                errorMessage,
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
+            );
         }
 
         return pathToBat;
@@ -358,33 +428,47 @@ public class InstallingModel
 
     [ComImport]
     [Guid("00021401-0000-0000-C000-000000000046")]
-    private class ShellLink
-    {
-    }
+    private class ShellLink { }
 
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("000214F9-0000-0000-C000-000000000046")]
     private interface IShellLink
     {
-        void GetPath([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszFile, int cchMaxPath, out IntPtr pfd,
-            int fFlags);
+        void GetPath(
+            [Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszFile,
+            int cchMaxPath,
+            out IntPtr pfd,
+            int fFlags
+        );
 
         void GetIDList(out IntPtr ppidl);
         void SetIDList(IntPtr pidl);
-        void GetDescription([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszName, int cchMaxName);
+        void GetDescription(
+            [Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszName,
+            int cchMaxName
+        );
         void SetDescription([MarshalAs(UnmanagedType.LPWStr)] string pszName);
-        void GetWorkingDirectory([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszDir, int cchMaxPath);
+        void GetWorkingDirectory(
+            [Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszDir,
+            int cchMaxPath
+        );
         void SetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr)] string pszDir);
-        void GetArguments([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszArgs, int cchMaxPath);
+        void GetArguments(
+            [Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszArgs,
+            int cchMaxPath
+        );
         void SetArguments([MarshalAs(UnmanagedType.LPWStr)] string pszArgs);
         void GetHotkey(out short pwHotkey);
         void SetHotkey(short wHotkey);
         void GetShowCmd(out int piShowCmd);
         void SetShowCmd(int iShowCmd);
 
-        void GetIconLocation([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszIconPath, int cchIconPath,
-            out int piIcon);
+        void GetIconLocation(
+            [Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszIconPath,
+            int cchIconPath,
+            out int piIcon
+        );
 
         void SetIconLocation([MarshalAs(UnmanagedType.LPWStr)] string pszIconPath, int iIcon);
         void SetRelativePath([MarshalAs(UnmanagedType.LPWStr)] string pszPathRel, int dwReserved);

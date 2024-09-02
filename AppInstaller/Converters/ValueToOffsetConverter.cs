@@ -10,7 +10,7 @@ public class ProgressBarGradientConverter : IMultiValueConverter
 {
     public object? Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
-        if (values.Length != 2 || values[0] is not double || values[1] is not string)
+        if (values is not [double, string])
             return null;
 
         var progressValue = (double)values[0];
@@ -612,7 +612,7 @@ public class ProgressBarGradientConverter : IMultiValueConverter
                 {
                     case <= 33:
                         gradient.GradientStops.Add(
-                            new GradientStop((Color)ColorConverter.ConvertFromString("#4C0000"), 1) 
+                            new GradientStop((Color)ColorConverter.ConvertFromString("#4C0000"), 1)
                         );
                         break;
                     case <= 66:
@@ -623,7 +623,7 @@ public class ProgressBarGradientConverter : IMultiValueConverter
                             )
                         );
                         gradient.GradientStops.Add(
-                            new GradientStop((Color)ColorConverter.ConvertFromString("#550000"), 1) 
+                            new GradientStop((Color)ColorConverter.ConvertFromString("#550000"), 1)
                         );
                         break;
                     default:
@@ -645,6 +645,83 @@ public class ProgressBarGradientConverter : IMultiValueConverter
                         break;
                 }
 
+                break;
+            case "LightFate":
+                switch (progressValue)
+                {
+                    case <= 33:
+                        gradient.GradientStops.Add(
+                            new GradientStop((Color)ColorConverter.ConvertFromString("#4A4A74"), 1) // Темно-серый фиолетовый оттенок
+                        );
+                        break;
+                    case <= 66:
+                        gradient.GradientStops.Add(
+                            new GradientStop(
+                                (Color)ColorConverter.ConvertFromString("#4A4A74"),
+                                0.3333
+                            )
+                        );
+                        gradient.GradientStops.Add(
+                            new GradientStop((Color)ColorConverter.ConvertFromString("#69698C"), 1) // Средне-серый фиолетовый
+                        );
+                        break;
+                    default:
+                        gradient.GradientStops.Add(
+                            new GradientStop(
+                                (Color)ColorConverter.ConvertFromString("#4A4A74"),
+                                0.3333
+                            )
+                        );
+                        gradient.GradientStops.Add(
+                            new GradientStop(
+                                (Color)ColorConverter.ConvertFromString("#69698C"),
+                                0.6666
+                            )
+                        );
+                        gradient.GradientStops.Add(
+                            new GradientStop((Color)ColorConverter.ConvertFromString("#A9A9C8"), 1) // Светло-серый фиолетовый
+                        );
+                        break;
+                }
+                break;
+
+            case "DarkFate":
+                switch (progressValue)
+                {
+                    case <= 33:
+                        gradient.GradientStops.Add(
+                            new GradientStop((Color)ColorConverter.ConvertFromString("#1A1A1A"), 1) // Темный оттенок
+                        );
+                        break;
+                    case <= 66:
+                        gradient.GradientStops.Add(
+                            new GradientStop(
+                                (Color)ColorConverter.ConvertFromString("#1A1A1A"),
+                                0.3333
+                            )
+                        );
+                        gradient.GradientStops.Add(
+                            new GradientStop((Color)ColorConverter.ConvertFromString("#4B0082"), 1) // Фиолетовый
+                        );
+                        break;
+                    default:
+                        gradient.GradientStops.Add(
+                            new GradientStop(
+                                (Color)ColorConverter.ConvertFromString("#1A1A1A"),
+                                0.3333
+                            )
+                        );
+                        gradient.GradientStops.Add(
+                            new GradientStop(
+                                (Color)ColorConverter.ConvertFromString("#4B0082"),
+                                0.6666
+                            )
+                        );
+                        gradient.GradientStops.Add(
+                            new GradientStop((Color)ColorConverter.ConvertFromString("#000000"), 1)
+                        );
+                        break;
+                }
                 break;
         }
 
