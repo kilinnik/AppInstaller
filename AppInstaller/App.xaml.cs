@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using AppInstaller.ViewModels;
 using AppInstaller.Views;
+using Microsoft.Win32;
 
 namespace AppInstaller;
 
@@ -25,15 +26,17 @@ public partial class App
                 return;
             }
 
+            var theme = ApplySystemTheme();
+
             base.OnStartup(e);
 
             var languageSelectionWindow = new LanguageSelectionWindow();
             if (languageSelectionWindow.ShowDialog() == true)
             {
-                var selectedCulture = languageSelectionWindow.SelectedCulture;
+                var selectedCulture = languageSelectionWindow.SelectedCulture;  //"ru-RU"; //
                 if (selectedCulture != null)
                     Thread.CurrentThread.CurrentUICulture = new CultureInfo(selectedCulture);
-                var mainWindowViewModel = new MainWindowViewModel();
+                var mainWindowViewModel = new MainWindowViewModel(theme);
                 var mainWindow = new MainWindow { DataContext = mainWindowViewModel };
 
                 var filePath = GetConfigFilePath();
@@ -63,42 +66,6 @@ public partial class App
         }
     }
 
-    public void ChangeTheme(string theme)
-    {
-        var currentTheme = Resources.MergedDictionaries.FirstOrDefault(
-            m =>
-                m.Source.OriginalString.Contains("Themes/LightThemeStandard.xaml")
-                || m.Source.OriginalString.Contains("Themes/DarkThemeStandard.xaml")
-                || m.Source.OriginalString.Contains("Themes/LightThemeClassic.xaml")
-                || m.Source.OriginalString.Contains("Themes/DarkThemeClassic.xaml")
-                || m.Source.OriginalString.Contains("Themes/LightThemeLivingsamurai.xaml")
-                || m.Source.OriginalString.Contains("Themes/DarkThemeLivingsamurai.xaml")
-                || m.Source.OriginalString.Contains("Themes/LightThemeTemplarFulga.xaml")
-                || m.Source.OriginalString.Contains("Themes/DarkThemeTemplarFulga.xaml")
-                || m.Source.OriginalString.Contains("Themes/LightThemeQwerty.xaml")
-                || m.Source.OriginalString.Contains("Themes/DarkThemeQwerty.xaml")
-                || m.Source.OriginalString.Contains("Themes/LightThemeMrMeGaBaN.xaml")
-                || m.Source.OriginalString.Contains("Themes/DarkThemeMrMeGaBaN.xaml")
-                || m.Source.OriginalString.Contains("Themes/LightThemeGrustyck.xaml")
-                || m.Source.OriginalString.Contains("Themes/DarkThemeGrustyck.xaml")
-                || m.Source.OriginalString.Contains("Themes/LightThemeClave.xaml")
-                || m.Source.OriginalString.Contains("Themes/DarkThemeClave.xaml")
-                || m.Source.OriginalString.Contains("Themes/LightThemeFate.xaml")
-                || m.Source.OriginalString.Contains("Themes/DarkThemeFate.xaml")
-        );
-
-        if (currentTheme == null)
-            return;
-
-        var isLightTheme = currentTheme.Source.OriginalString.Contains("Light");
-        var newTheme = new Uri(
-            $"Themes/{(isLightTheme ? "Light" : "Dark")}Theme{theme}.xaml",
-            UriKind.Relative
-        );
-
-        Resources.MergedDictionaries.Remove(currentTheme);
-        Resources.MergedDictionaries.Add(new ResourceDictionary { Source = newTheme });
-    }
 
     public void ToggleTheme(string theme)
     {
@@ -108,16 +75,10 @@ public partial class App
                 || m.Source.OriginalString.Contains("Themes/DarkThemeStandard.xaml")
                 || m.Source.OriginalString.Contains("Themes/LightThemeClassic.xaml")
                 || m.Source.OriginalString.Contains("Themes/DarkThemeClassic.xaml")
-                || m.Source.OriginalString.Contains("Themes/LightThemeLivingsamurai.xaml")
-                || m.Source.OriginalString.Contains("Themes/DarkThemeLivingsamurai.xaml")
-                || m.Source.OriginalString.Contains("Themes/LightThemeTemplarFulga.xaml")
-                || m.Source.OriginalString.Contains("Themes/DarkThemeTemplarFulga.xaml")
                 || m.Source.OriginalString.Contains("Themes/LightThemeQwerty.xaml")
                 || m.Source.OriginalString.Contains("Themes/DarkThemeQwerty.xaml")
                 || m.Source.OriginalString.Contains("Themes/LightThemeMrMeGaBaN.xaml")
                 || m.Source.OriginalString.Contains("Themes/DarkThemeMrMeGaBaN.xaml")
-                || m.Source.OriginalString.Contains("Themes/LightThemeGrustyck.xaml")
-                || m.Source.OriginalString.Contains("Themes/DarkThemeGrustyck.xaml")
                 || m.Source.OriginalString.Contains("Themes/LightThemeClave.xaml")
                 || m.Source.OriginalString.Contains("Themes/DarkThemeClave.xaml")
                 || m.Source.OriginalString.Contains("Themes/LightThemeFate.xaml")
@@ -198,7 +159,8 @@ public partial class App
     private static bool CheckDotNetDesktopRuntime()
     {
         const string runtimeVersion = "8.0";
-        const string downloadLink = "https://dotnet.microsoft.com/en-us/download/dotnet/8.0/runtime";
+        const string downloadLink =
+            "https://dotnet.microsoft.com/en-us/download/dotnet/8.0/runtime";
 
         try
         {
@@ -255,4 +217,36 @@ public partial class App
         }
     }
 
+    private string ApplySystemTheme()
+    {
+        var isDarkMode = IsDarkTheme();
+        var themeUri = isDarkMode
+            ? new Uri("Themes/DarkThemeStandard.xaml", UriKind.Relative)
+            : new Uri("Themes/LightThemeStandard.xaml", UriKind.Relative);
+
+        var currentTheme = Resources.MergedDictionaries.FirstOrDefault(
+            m =>
+                m.Source?.OriginalString.Contains("Themes/LightThemeStandard.xaml") == true
+                || m.Source?.OriginalString.Contains("Themes/DarkThemeStandard.xaml") == true
+        );
+
+        if (currentTheme != null)
+        {
+            Resources.MergedDictionaries.Remove(currentTheme);
+        }
+
+        Resources.MergedDictionaries.Add(new ResourceDictionary { Source = themeUri });
+
+        return isDarkMode ? "DarkStandard" : "LightStandard";
+    }
+
+
+    private static bool IsDarkTheme()
+    {
+        const string key = "AppsUseLightTheme";
+        const string subKey = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
+        var registryValue = Registry.CurrentUser.OpenSubKey(subKey)?.GetValue(key);
+
+        return registryValue != null && (int)registryValue != 1;
+    }
 }

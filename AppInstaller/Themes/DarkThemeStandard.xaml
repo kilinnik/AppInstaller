@@ -1,59 +1,53 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <!-- Window Background Gradient -->
-    <LinearGradientBrush x:Key="WindowBackgroundGradient" StartPoint="0.5,0" EndPoint="0.5,1">
-        <GradientStop Color="#3A235A" Offset="0" />
-        <GradientStop Color="#5C3A8F" Offset="0.5424" />
-        <GradientStop Color="#4C3A8F" Offset="1" />
-    </LinearGradientBrush>
-
-    <LinearGradientBrush x:Key="LeftToRightGradient" StartPoint="0,0" EndPoint="1,0">
-        <GradientStop Color="#703B8A" Offset="0" />
-        <GradientStop Color="#3A1F57" Offset="1" />
-    </LinearGradientBrush>
-
-    <!-- Button Gradient -->
-    <LinearGradientBrush x:Key="ButtonGradient" StartPoint="0,0" EndPoint="1,0">
-        <GradientStop Color="#703B8A" Offset="0" />
-        <GradientStop Color="#3A1F57" Offset="1" />
-    </LinearGradientBrush>
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <!-- Определение цветов -->
+    <Color x:Key="MouseOverColor">#3D3C3F</Color> <!-- Darker shade for mouse over -->
+    <Color x:Key="SelectedBackgroundColor">#2D2B2E</Color> <!-- Selected background in dark theme -->
+    <Color x:Key="SelectedTextColor">#E6E1E6</Color> <!-- Selected text color in dark theme -->
+    <SolidColorBrush x:Key="MouseOverBrush" Color="{StaticResource MouseOverColor}" />
+    <SolidColorBrush x:Key="SelectedBackgroundBrush" Color="{StaticResource SelectedBackgroundColor}" />
+    <SolidColorBrush x:Key="SelectedTextBrush" Color="{StaticResource SelectedTextColor}" />
     
-    <LinearGradientBrush x:Key="BottomToTopGradient" StartPoint="0,1" EndPoint="0,0">
-        <GradientStop Color="#703B8A" Offset="0" />
-        <GradientStop Color="#3A1F57" Offset="1" />
-    </LinearGradientBrush>
+    <Color x:Key="WindowBackgroundColor">#1D1B1E</Color>
+    <Color x:Key="TextColor">#E6E1E6</Color>
+    <Color x:Key="ButtonBackgroundColor">#323033</Color>
+    <Color x:Key="ComboBoxBackgroundColor">#323033</Color>
+    <Color x:Key="BorderBrushColor">#2D2B2E</Color>
+    <Color x:Key="GradientStartColor">#1D1B1E</Color> 
+    <Color x:Key="GradientStopColor">#001D1B1E</Color> 
+    <Color x:Key="TgColor">#417EC4</Color>
+    <Color x:Key="NameColor">#70AFF8</Color>
+    <Color x:Key="DisabledTextColor">#7A7A7A</Color> <!-- Цвет текста для отключенных элементов -->
     
-    <LinearGradientBrush x:Key="DiagonalGradient" StartPoint="0,1" EndPoint="1,0">
-        <GradientStop Color="#703B8A" Offset="0" />
-        <GradientStop Color="#3A1F57" Offset="1" />
-    </LinearGradientBrush>
+    <SolidColorBrush x:Key="DisabledTextBrush" Color="{StaticResource DisabledTextColor}" />
     
-    <!-- Change Button Gradient -->
-    <LinearGradientBrush x:Key="ChangeButtonGradient" StartPoint="0,0" EndPoint="1,0">
-        <GradientStop Color="#4C3A8F" Offset="0" />
-        <GradientStop Color="#3A235A" Offset="1" />
-    </LinearGradientBrush>
-    
-    <LinearGradientBrush x:Key="TopToBottomGradient" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#703B8A" Offset="0" />
-        <GradientStop Color="#3A1F57" Offset="1" />
-    </LinearGradientBrush>
-    
-    <Style x:Key="ButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
-    </Style>
-    
-    <!-- Other Colors -->
-    <Color x:Key="TextColor">#E0E0E0</Color>
-    <Color x:Key="ShadowColor">#000000</Color>
-    <Color x:Key="CloseColor">#FF4D4D</Color>
-    <Color x:Key="TgColor">#229ED9</Color>
-    <Color x:Key="BoisColor">#A9A18C</Color>
-    <Color x:Key="CheckBoxColor">#3A1F57</Color>
-    
-    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
-    <SolidColorBrush x:Key="ShadowBrush" Color="{StaticResource ShadowColor}" />
-    <SolidColorBrush x:Key="CloseBrush" Color="{StaticResource CloseColor}" />
+    <!-- Определение кистей -->
+    <SolidColorBrush x:Key="NameBrush" Color="{StaticResource NameColor}" />
     <SolidColorBrush x:Key="TgBrush" Color="{StaticResource TgColor}" />
-    <SolidColorBrush x:Key="BoisBrush" Color="{StaticResource BoisColor}" />
-    <SolidColorBrush x:Key="CheckBoxBrush" Color="{StaticResource CheckBoxColor}" />
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{StaticResource WindowBackgroundColor}" />
+    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
+    <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="{StaticResource ButtonBackgroundColor}" />
+    <SolidColorBrush x:Key="ComboBoxBackgroundBrush" Color="{StaticResource ComboBoxBackgroundColor}" />
+    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderBrushColor}" />
+
+    <!-- Стили для кнопок -->
+    <Style x:Key="FlatButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+        <Setter Property="Background" Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="10"/>
+    </Style>
+
+    <!-- Стили для комбобокса -->
+    <Style x:Key="ComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignComboBox}">
+        <Setter Property="Background" Value="{StaticResource ComboBoxBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="materialDesign:TextFieldAssist.UnderlineBrush" Value="{StaticResource BorderBrush}"/>
+    </Style>
 </ResourceDictionary>

@@ -15,7 +15,13 @@ public class SelectDirViewModel : ViewModelBase
     // Ссылка на главную ViewModel
     private MainWindowViewModel MainWindowViewModel { get; }
 
-    private readonly string? _appName;
+    private string? _appName;
+
+    public string? AppName
+    {
+        get => _appName;
+        set => this.RaiseAndSetIfChanged(ref _appName, value);
+    }
 
     public ObservableCollection<Components> Components { get; } = [];
 
@@ -59,6 +65,14 @@ public class SelectDirViewModel : ViewModelBase
         get => _headImage;
         set => this.RaiseAndSetIfChanged(ref _headImage, value);
     }
+    
+    private ImageSource? _bigImage;
+
+    public ImageSource? BigImage
+    {
+        get => _bigImage;
+        set => this.RaiseAndSetIfChanged(ref _bigImage, value);
+    }
 
     // Команда для выбора директории установки
     public ReactiveCommand<Unit, Unit> ChooseDirectoryCommand { get; }
@@ -66,6 +80,7 @@ public class SelectDirViewModel : ViewModelBase
     public SelectDirViewModel(
         MainWindowViewModel mainWindowViewModel,
         ImageSource? headImage,
+        ImageSource? bigImage,
         string? appName,
         string neededMemory,
         IEnumerable<KeyValuePair<string, string>> components
@@ -73,6 +88,7 @@ public class SelectDirViewModel : ViewModelBase
     {
         MainWindowViewModel = mainWindowViewModel;
         HeadImage = headImage;
+        BigImage = bigImage;
         _appName = appName;
         SelectedPath = $@"C:\Program Files (x86)\{_appName}";
         NeededMemory = neededMemory;

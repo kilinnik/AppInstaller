@@ -6,74 +6,55 @@
              xmlns:res="clr-namespace:AppInstaller.Resources"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <!-- Задаем контекст данных (ViewModel) для этого UserControl -->
-    <Grid d:DataContext="{d:DesignInstance}" Margin="2">
-        <!-- Основная сетка с контейнерами для размещения элементов -->
+    <!-- Основной контейнер Grid для элементов интерфейса -->
+    <Grid d:DataContext="{d:DesignInstance}" Margin="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!-- Верхняя часть с контейнерами для приветственного сообщения и описания программы -->
-        <Grid>
-            <!-- Фоновый прямоугольник с градиентом -->
-            <Rectangle Width="482" Height="80" RadiusX="30" RadiusY="30">
-                <Rectangle.Fill>
-                    <DynamicResource ResourceKey="BottomToTopGradient" />
-                </Rectangle.Fill>
-            </Rectangle>
-            <!-- Контейнер для приветственного сообщения -->
-            <Grid Width="482" Height="80" ClipToBounds="True">
-                <!-- Определяем две строки внутри контейнера -->
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <!-- Текстовый блок с приветственным сообщением, тенью -->
-                <TextBlock Margin="2" FontSize="12" Foreground="{DynamicResource ShadowBrush}"
-                           HorizontalAlignment="Center">
-                    <Run Text="{x:Static res:Strings.WelcomeMessage}" />
-                    <Run Text="{Binding AppName}" />
-                    <TextBlock.RenderTransform>
-                        <TranslateTransform X="1" Y="1" />
-                    </TextBlock.RenderTransform>
-                </TextBlock>
-                <!-- Текстовый блок с приветственным сообщением, белым текстом -->
-                <TextBlock Grid.Row="0" Margin="2" FontSize="12" Foreground="{DynamicResource TextBrush}"
-                           HorizontalAlignment="Center">
-                    <Run Text="{x:Static res:Strings.WelcomeMessage}" />
-                    <Run Text="{Binding AppName}" />
-                </TextBlock>
-                <!-- Контейнер с прокручиваемым описанием программы -->
-                <ScrollViewer Grid.Row="1" MaxHeight="48" HorizontalAlignment="Center" VerticalAlignment="Center"
-                              HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
-                              PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-                    <!-- Внутренняя сетка для размещения текстового блока с описанием программы -->
-                    <Grid>
-                        <!-- Текстовый блок с описанием программы, тенью -->
-                        <TextBlock Width="430" TextWrapping="Wrap" HorizontalAlignment="Center"
-                                   Text="{Binding AppDescription}" VerticalAlignment="Center"
-                                   FontSize="12" Foreground="{DynamicResource ShadowBrush}">
-                            <TextBlock.RenderTransform>
-                                <TranslateTransform X="1" Y="1" />
-                            </TextBlock.RenderTransform>
-                        </TextBlock>
-                        <!-- Текстовый блок с описанием программы, белым текстом -->
-                        <TextBlock Width="430" TextWrapping="Wrap" HorizontalAlignment="Center"
-                                   Text="{Binding AppDescription}" VerticalAlignment="Center"
-                                   FontSize="12" Foreground="{DynamicResource TextBrush}">
-                        </TextBlock>
-                    </Grid>
-                </ScrollViewer>
-            </Grid>
-        </Grid>
-        <!-- Нижняя часть с контейнером для изображения программы -->
-        <Grid Grid.Row="1" Margin="5">
-            <!-- Прямоугольник для изображения программы с закругленными углами -->
-            <Rectangle Width="482" Height="308" RadiusX="30" RadiusY="30">
+
+        <Grid Grid.Row="0" Margin="0,0,0,0">
+            <Rectangle Width="529" Height="315">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="{Binding BigImage}" />
                 </Rectangle.Fill>
             </Rectangle>
+            
+            <Rectangle Height="315" Width="529">
+                <Rectangle.Fill>
+                    <!-- Градиентный эффект, создающий замыление снизу -->
+                    <LinearGradientBrush StartPoint="0.5,1" EndPoint="0.5,0.75">
+                        <!-- Полностью непрозрачный цвет -->
+                        <GradientStop Color="{DynamicResource GradientStartColor}" Offset="0" />
+                        <!-- Тот же цвет, но с прозрачностью -->
+                        <GradientStop Color="{DynamicResource GradientStopColor}" Offset="0.5" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid Width="529" Height="115" ClipToBounds="True" Margin="30,0,30,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Margin="0,0,0,0" Foreground="{DynamicResource TextBrush}">
+                    <Run Text="{x:Static res:Strings.WelcomeMessage}" FontSize="20" FontWeight="Medium" />
+                </TextBlock>
+                <TextBlock Grid.Row="1" Margin="0,8,0,3" Foreground="{DynamicResource TextBrush}">
+                    <Run Text="{Binding AppName}" FontSize="16" FontWeight="Regular" />
+                </TextBlock>
+                <ScrollViewer Grid.Row="2" MaxHeight="51" Padding="0" Margin="0"
+                              HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
+                              PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                    <TextBlock Width="469" Height="51" TextWrapping="Wrap" HorizontalAlignment="Left"
+                               Text="{Binding AppDescription}" FontSize="13" LineHeight="0.1"
+                               FontWeight="Regular" Foreground="{DynamicResource TextBrush}" Padding="0" Margin="0" />
+                </ScrollViewer>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

@@ -4,9 +4,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:res="clr-namespace:AppInstaller.Resources"
         WindowStyle="None" BorderThickness="1" AllowsTransparency="True"
-        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Height="400" Width="400" Background="{DynamicResource WindowBackgroundGradient}"
+        mc:Ignorable="d" WindowStartupLocation="CenterOwner"
+        Height="406" Width="469" Background="{DynamicResource WindowBackgroundBrush}"
         MouseLeftButtonDown="Window_MouseDown">
     <Window.Template>
         <ControlTemplate TargetType="{x:Type Window}">
@@ -16,30 +17,62 @@
             </Border>
         </ControlTemplate>
     </Window.Template>
+    <Window.Resources>
+        <!-- Стиль для ScrollBar внутри FlowDocumentScrollViewer -->
+        <Style TargetType="ScrollBar">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="Transparent">
+                            <Rectangle Width="6" Fill="{DynamicResource BorderBrush}" />
+                            <Track Name="PART_Track" IsDirectionReversed="False">
+                                <Track.Thumb>
+                                    <Thumb Background="{DynamicResource BorderBrush}" Width="6" />
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Width" Value="6" />
+            <Setter Property="MinHeight" Value="20" />
+            <Setter Property="Margin" Value="0,0,0,0" />
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <FlowDocumentScrollViewer Grid.Row="1" Margin="10,10,10,10" Name="MessageContent"
-                                  Foreground="{DynamicResource TextBrush}"/>
-        <Button Grid.Row="2" FontSize="10" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                Height="21" Click="OkButton_Click" Margin="10" materialDesign:ButtonAssist.CornerRadius="10"
-                Style="{DynamicResource MaterialDesignRaisedDarkButton}">
+        <Border Background="{DynamicResource ButtonBackgroundBrush}" Height="30" CornerRadius="10, 10, 0, 0" Margin="0,0,0,0">
             <Grid>
-                <TextBlock Text="ОК" FontStyle="Normal" FontSize="10"
-                           Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"
-                           HorizontalAlignment="Center">
-                    <TextBlock.Effect>
-                        <DropShadowEffect Color="{DynamicResource ShadowColor}" Opacity="1" BlurRadius="0"
-                                          Direction="315" ShadowDepth="1" />
-                    </TextBlock.Effect>
-                </TextBlock>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Текст заголовка -->
+                <TextBlock Grid.Column="0" Foreground="{DynamicResource TextBrush}" FontSize="14" Margin="15,0,0,0"
+                           Text="{x:Static res:Strings.RepackFeatures}" VerticalAlignment="Center" FontWeight="Regular" />
+
+                <!-- Кнопки для закрытия окна и сворачивания -->
+                <StackPanel Grid.Column="1" FlowDirection="RightToLeft" Orientation="Horizontal">
+                    <Button Width="20" Height="20" Background="Transparent" Foreground="{DynamicResource TextBrush}"
+                            BorderThickness="0" Padding="0" Margin="17,0,0,0"
+                            Click="OkButton_Click">
+                        <materialDesign:PackIcon Kind="Close" Width="20" Height="20" />
+                    </Button>
+                </StackPanel>
             </Grid>
-            <Button.Background>
-                <DynamicResource ResourceKey="ButtonGradient" />
-            </Button.Background>
-        </Button>
+        </Border>
+
+        <!-- Ограничение высоты для прокрутки текста -->
+        <Border Grid.Row="1" Margin="0,0,0,10" Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="10">
+            <FlowDocumentScrollViewer Name="MessageContent" FontSize="14"
+                                      Foreground="{DynamicResource TextBrush}" FontWeight="Regular"
+                                      VerticalScrollBarVisibility="Visible"
+                                      HorizontalScrollBarVisibility="Hidden" />
+        </Border>
     </Grid>
 </Window>

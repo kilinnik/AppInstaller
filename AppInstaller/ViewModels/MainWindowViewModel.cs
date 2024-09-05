@@ -25,8 +25,6 @@ public class MainWindowViewModel : ViewModelBase
 {
     private readonly MainWindowModel _mainWindowModel;
 
-    private int _currentViewIndex;
-
     private readonly UserControl?[] _views;
 
     private readonly string _appName;
@@ -51,14 +49,6 @@ public class MainWindowViewModel : ViewModelBase
     {
         get => _appPurchaseLinkLogo;
         set => this.RaiseAndSetIfChanged(ref _appPurchaseLinkLogo, value);
-    }
-
-    private string? _appTitleDisplay;
-
-    public string? AppTitleDisplay
-    {
-        get => _appTitleDisplay;
-        set => this.RaiseAndSetIfChanged(ref _appTitleDisplay, value);
     }
 
     private UserControl? _currentView;
@@ -121,11 +111,52 @@ public class MainWindowViewModel : ViewModelBase
             {
                 installingViewModel.CurrentTheme = value;
             }
+
+            UpdateThemeIcon(value);
         }
     }
 
+    private string _themeIconSource;
+
+    public string ThemeIconSource
+    {
+        get => _themeIconSource;
+        set => this.RaiseAndSetIfChanged(ref _themeIconSource, value);
+    }
+
+    private double _themeIconWidth;
+
+    public double ThemeIconWidth
+    {
+        get => _themeIconWidth;
+        set => this.RaiseAndSetIfChanged(ref _themeIconWidth, value);
+    }
+
+    private double _themeIconHeight;
+
+    public double ThemeIconHeight
+    {
+        get => _themeIconHeight;
+        set => this.RaiseAndSetIfChanged(ref _themeIconHeight, value);
+    }
+
+    private int _currentViewIndex;
+
+    public int CurrentViewIndex
+    {
+        get => _currentViewIndex;
+        set => this.RaiseAndSetIfChanged(ref _currentViewIndex, value);
+    }
+    
+    private bool _isDefaultLogo;
+    
+    public bool IsDefaultLogo
+    {
+        get => _isDefaultLogo;
+        set => this.RaiseAndSetIfChanged(ref _isDefaultLogo, value);
+    }
+
     public ReactiveCommand<Unit, Unit> ShowMessageBoxCommand { get; }
-    public ReactiveCommand<Unit, Unit> OpenSiteLinkCommand { get; }
     public ReactiveCommand<Unit, Unit> OpenTgLinkCommand { get; }
     public ReactiveCommand<Unit, Unit> OpenAppPurchaseLinkCommand { get; }
     public ReactiveCommand<Unit, Unit> NavigateToNextViewCommand { get; }
@@ -134,14 +165,13 @@ public class MainWindowViewModel : ViewModelBase
 
     public event Action ExitRequested;
 
-    public MainWindowViewModel()
+    public MainWindowViewModel(string initialTheme)
     {
         _mainWindowModel = new MainWindowModel();
         _mainWindowModel.ErrorMessageOccurred += OnErrorMessageOccurred;
         _components = _mainWindowModel.GetComponentNames();
         _appName = _mainWindowModel.GetAppName();
         AppTheme = _mainWindowModel.GetAppTheme();
-        AppTitleDisplay = $"R. G. NITOKIN - {_appName}";
         var bigImage = _mainWindowModel.GetBigImage();
         var headImage = _mainWindowModel.GetHeadImage();
         var link = _mainWindowModel.GetAppPurchaseLink();
@@ -162,6 +192,7 @@ public class MainWindowViewModel : ViewModelBase
                 DataContext = new SelectDirViewModel(
                     this,
                     headImage,
+                    bigImage,
                     _appName,
                     _mainWindowModel.GetNeededMemory(),
                     _components
@@ -175,37 +206,86 @@ public class MainWindowViewModel : ViewModelBase
                     this,
                     _mainWindowModel.GetMascotImage(),
                     _mainWindowModel.GetRepackerName(),
-                    new InstallingModel(new TimerModel())
+                    new InstallingModel(new TimerModel()),
+                    AppTheme
                 )
             },
-            new FinishedView { DataContext = new FinishedViewModel(bigImage) }
+            new FinishedView
+            {
+                DataContext = new FinishedViewModel(bigImage, _mainWindowModel.GetRepackerName(), AppTheme)
+            }
         ];
 
-        CurrentTheme = "LightStandard";
+        CurrentTheme = initialTheme;
         _currentViewIndex = 0;
         CurrentView = _views[_currentViewIndex];
         IconChecked = false;
         IsBackButtonVisible = false;
         IsNextButtonVisible = true;
-        IsCancelButtonVisible = true;
-        ButtonNextText = Strings.Next;
+        IsCancelButtonVisible = false;
+
+        SetButtonProperties();
 
         ShowMessageBoxCommand = ReactiveCommand.Create(ShowMessageBox);
-        OpenSiteLinkCommand = ReactiveCommand.Create(() => OpenLink("https://nitokinoff.org/"));
-        OpenTgLinkCommand = ReactiveCommand.Create(() => OpenLink("https://t.me/nito_kin"));
+        OpenTgLinkCommand = ReactiveCommand.Create(
+            () => OpenLink("https://t.me/+Ds3HUgrpVWU3MGNi")
+        );
         OpenAppPurchaseLinkCommand = ReactiveCommand.Create(() => OpenLink(link));
         NavigateToNextViewCommand = ReactiveCommand.Create(NavigateNextView);
         NavigateToPreviousViewCommand = ReactiveCommand.Create(NavigatePreviousView);
         CancelCommand = ReactiveCommand.Create(ShowCloseMessageBox);
     }
 
-    private static DrawingImage LoadSvgFromResource(string resourceName)
+    private void UpdateThemeIcon(string theme)
+    {
+        if (theme.Contains("Dark"))
+        {
+            ThemeIconSource = "/Resources/light.svg";
+            ThemeIconWidth = 20;
+            ThemeIconHeight = 20;
+        }
+        else
+        {
+            ThemeIconSource = "/Resources/dark.svg";
+            ThemeIconWidth = 18;
+            ThemeIconHeight = 18;
+        }
+    }
+
+    private static DrawingImage LoadSvgFromResource(string resourceName, bool isDefault = false)
     {
         var assembly = Assembly.GetExecutingAssembly();
         using var stream = assembly.GetManifestResourceStream(resourceName);
         var reader = new FileSvgReader(new WpfDrawingSettings());
         var drawing = reader.Read(stream);
+
+        if (!isDefault) return new DrawingImage(drawing);
+        
+        if (Application.Current.Resources["TextBrush"] is SolidColorBrush colorBrush)
+        {
+            ApplyColorToDrawing(drawing, colorBrush.Color);
+        }
+
         return new DrawingImage(drawing);
+    }
+    
+    private static void ApplyColorToDrawing(Drawing drawing, Color color)
+    {
+        switch (drawing)
+        {
+            case DrawingGroup drawingGroup:
+            {
+                foreach (var child in drawingGroup.Children)
+                {
+                    ApplyColorToDrawing(child, color);
+                }
+
+                break;
+            }
+            case GeometryDrawing geometryDrawing:
+                geometryDrawing.Brush = new SolidColorBrush(color);
+                break;
+        }
     }
 
     private void SetLogo(string link)
@@ -213,7 +293,10 @@ public class MainWindowViewModel : ViewModelBase
         var host = new Uri(link).Host;
         var resourceName = GetResourceName(host);
 
-        AppPurchaseLinkLogo = LoadSvgFromResource(resourceName);
+        var isDefault = resourceName == "AppInstaller.Resources.default.svg";
+        AppPurchaseLinkLogo = LoadSvgFromResource(resourceName, isDefault);
+        
+        IsDefaultLogo = isDefault;
     }
 
     private static string GetResourceName(string host)
@@ -241,11 +324,14 @@ public class MainWindowViewModel : ViewModelBase
 
     public void NavigateNextView()
     {
-        _currentViewIndex++;
+        CurrentViewIndex++;
 
         switch (_currentViewIndex)
         {
             case 5:
+                Process.Start(
+                    new ProcessStartInfo("https://nitokinoff.org/") { UseShellExecute = true }
+                );
                 Application.Current.Shutdown();
                 return;
             case 2 when _views[_currentViewIndex]?.DataContext is ReadyViewModel readyViewModel:
@@ -278,14 +364,12 @@ public class MainWindowViewModel : ViewModelBase
                 }
 
                 readyViewModel.SelectedPath = SelectedPath;
-                var additionalComponentsBuilder = new StringBuilder(Strings.AdditionalTasks);
+                var additionalComponentsBuilder = new StringBuilder();
                 var selectDirViewModel = _views[1]?.DataContext as SelectDirViewModel;
 
                 if (IconChecked)
                 {
-                    additionalComponentsBuilder
-                        .AppendLine()
-                        .Append(" - " + Strings.CreateDesktopShortcut);
+                    additionalComponentsBuilder.AppendLine(" •  " + Strings.CreateDesktopShortcut);
                 }
 
                 foreach (var component in selectDirViewModel?.Components)
@@ -325,6 +409,18 @@ public class MainWindowViewModel : ViewModelBase
                 );
                 break;
             }
+            case 4
+                when _views[_currentViewIndex]?.DataContext is FinishedViewModel finishedViewModel:
+            {
+                if (_views[3]?.DataContext is InstallingViewModel installingViewModel)
+                {
+                    var elapsedTime = installingViewModel.ElapsedTime;
+                    finishedViewModel.ElapsedTime =
+                        elapsedTime.Length >= 8 ? elapsedTime[^8..] : elapsedTime;
+                }
+
+                break;
+            }
         }
 
         CurrentView = _views[_currentViewIndex];
@@ -336,7 +432,7 @@ public class MainWindowViewModel : ViewModelBase
         if (_currentViewIndex <= 0)
             return;
 
-        _currentViewIndex--;
+        CurrentViewIndex--;
         CurrentView = _views[_currentViewIndex];
         SetButtonProperties();
     }
@@ -345,10 +441,11 @@ public class MainWindowViewModel : ViewModelBase
     {
         IsBackButtonVisible = _currentViewIndex is > 0 and < 3;
         IsNextButtonVisible = _currentViewIndex != 3;
-        IsCancelButtonVisible = _currentViewIndex != 4;
+        IsCancelButtonVisible = _currentViewIndex == 3;
 
         ButtonNextText = _currentViewIndex switch
         {
+            0 => Strings.Start,
             2 => Strings.Install,
             4 => Strings.Finish,
             _ => Strings.Next
@@ -357,15 +454,42 @@ public class MainWindowViewModel : ViewModelBase
 
     private void ShowCloseMessageBox()
     {
-        var result = new CloseMessageBox().ShowDialog();
+        // Показать затемнение
+        var mainWindow = Application.Current.MainWindow as MainWindow;
+        if (mainWindow != null)
+        {
+            mainWindow.Overlay.Visibility = Visibility.Visible;
+        }
+
+        var closeMessageBox = new CloseMessageBox
+        {
+            Owner = mainWindow,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner // Центрировать новое окно относительно MainWindow
+        };
+
+        var result = closeMessageBox.ShowDialog();
+
+        // Убрать затемнение
+        if (mainWindow != null)
+        {
+            mainWindow.Overlay.Visibility = Visibility.Collapsed;
+        }
+
         if (result != true)
             return;
+
         ExitRequested?.Invoke();
         Application.Current.Shutdown();
     }
 
     private void ShowMessageBox()
     {
+        var mainWindow = Application.Current.MainWindow as MainWindow;
+        if (mainWindow != null)
+        {
+            mainWindow.Overlay.Visibility = Visibility.Visible;
+        }
+
         try
         {
             var result = ParseXamlFormattedText(_mainWindowModel.GetRepackDescription());
@@ -383,6 +507,13 @@ public class MainWindowViewModel : ViewModelBase
 
             CustomMessageBox.Show(errorMessage);
         }
+        finally
+        {
+            if (mainWindow != null)
+            {
+                mainWindow.Overlay.Visibility = Visibility.Collapsed;
+            }
+        }
     }
 
     private static FlowDocument ParseXamlFormattedText(string formattedText)
@@ -398,7 +529,7 @@ public class MainWindowViewModel : ViewModelBase
             .Replace("</i>", "</Italic>");
         result =
             $"<FlowDocument xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\">"
-            + $"<Paragraph FontSize=\"12\">{result}</Paragraph></FlowDocument>";
+            + $"<Paragraph FontSize=\"14\" FontWeight=\"Regular\">{result}</Paragraph></FlowDocument>";
 
         return (FlowDocument)XamlReader.Parse(result);
     }

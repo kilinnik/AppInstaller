@@ -8,28 +8,22 @@
       <value>Features and Add-ons</value>
     </data>
     <data name="ChangeOutputDir" xml:space="preserve">
-      <value>Change</value>
-    </data>
-    <data name="InstallationOptionsSelection" xml:space="preserve">
-      <value>Installation Options Selection</value>
-    </data>
-    <data name="OccupiedByFilesSize" xml:space="preserve">
-      <value>Occupied by files size: </value>
+      <value>Browse...</value>
     </data>
     <data name="Back" xml:space="preserve">
-      <value>Back &gt;</value>
+      <value>Back</value>
     </data>
     <data name="Cancel" xml:space="preserve">
       <value>Cancel</value>
     </data>
     <data name="Next" xml:space="preserve">
-      <value>&lt; Next</value>
+      <value>Next</value>
     </data>
     <data name="Installation" xml:space="preserve">
       <value>Installation</value>
     </data>
     <data name="Yes" xml:space="preserve">
-      <value>Yes</value>
+      <value>Exit</value>
     </data>
     <data name="No" xml:space="preserve">
       <value>No</value>
@@ -38,19 +32,13 @@
       <value>Do you really want to get out?</value>
     </data>
     <data name="InstallationFolder" xml:space="preserve">
-      <value>Installation folder: </value>
+      <value>Installation path: </value>
     </data>
     <data name="AdditionalTasks" xml:space="preserve">
-      <value>Additional tasks:</value>
+      <value>Additionally:</value>
     </data>
     <data name="AppLink" xml:space="preserve">
       <value>Link to app in store</value>
-    </data>
-    <data name="PlayPause" xml:space="preserve">
-      <value>Play/Pause</value>
-    </data>
-    <data name="PlayFromTheBeginning" xml:space="preserve">
-      <value>Play from the beginning</value>
     </data>
     <data name="WelcomeMessage" xml:space="preserve">
       <value>Welcome to the installer of </value>
@@ -62,16 +50,13 @@
       <value>Time remaining:</value>
     </data>
     <data name="InstallationComplete" xml:space="preserve">
-      <value>Installation complete</value>
+      <value>Installation complete!</value>
     </data>
     <data name="Install" xml:space="preserve">
       <value>Install</value>
     </data>
     <data name="Finish" xml:space="preserve">
       <value>Finish</value>
-    </data>
-    <data name="NoInternetConnection" xml:space="preserve">
-      <value>No internet connection. Please check your connection and try again.</value>
     </data>
     <data name="DiskSpace" xml:space="preserve">
       <value>Insufficient disk space. Please choose another path for installation or free up disk space.</value>
@@ -88,8 +73,20 @@
     <data name="DarkLightTheme" xml:space="preserve">
       <value>Light/Dark</value>
     </data>
-    <data name="ChangeTheme" xml:space="preserve">
-      <value>Change theme</value>
+    <data name="Confirm" xml:space="preserve">
+      <value>Confirm</value>
+    </data>
+    <data name="InstallationProgress" xml:space="preserve">
+      <value>The installation is in progress...</value>
+    </data>
+    <data name="TookTime" xml:space="preserve">
+      <value>Took time: </value>
+    </data>
+    <data name="RepackFeatures" xml:space="preserve">
+      <value>Repack features</value>
+    </data>
+    <data name="Start" xml:space="preserve">
+      <value>Start</value>
     </data>
     <!-- ... другие строки ... -->
 </root>

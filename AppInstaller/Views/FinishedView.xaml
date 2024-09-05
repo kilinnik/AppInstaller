@@ -13,38 +13,55 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!-- Верхняя часть с контейнером для текста "Установка завершена" -->
-        <Grid>
-            <!-- Прямоугольник с градиентным фоном -->
-            <Rectangle Width="482" Height="80" RadiusX="30" RadiusY="30">
-                <Rectangle.Fill>
-                    <DynamicResource ResourceKey="BottomToTopGradient" />
-                </Rectangle.Fill>
-            </Rectangle>
-            <!-- Контейнер с текстом "Установка завершена" -->
-            <Grid Width="482" Height="80" ClipToBounds="True">
-                <!-- Текст "Установка завершена" с тенью -->
-                <TextBlock Margin="2" FontSize="12" Foreground="{DynamicResource ShadowBrush}"
-                           VerticalAlignment="Center"
-                           Text="{x:Static res:Strings.InstallationComplete}" HorizontalAlignment="Center">
-                    <TextBlock.RenderTransform>
-                        <TranslateTransform X="1" Y="1" />
-                    </TextBlock.RenderTransform>
-                </TextBlock>
-                <!-- Текст "Установка завершена" с белым текстом -->
-                <TextBlock Grid.Row="0" Margin="2" FontSize="12" Foreground="{DynamicResource TextBrush}"
-                           VerticalAlignment="Center"
-                           Text="{x:Static res:Strings.InstallationComplete}" HorizontalAlignment="Center">
-                </TextBlock>
-            </Grid>
-        </Grid>
         <!-- Нижняя часть с контейнером для изображения -->
-        <Grid Grid.Row="1" Margin="5">
-            <!-- Прямоугольник с закругленными углами и изображением -->
-            <Rectangle Width="482" Height="308" RadiusX="30" RadiusY="30">
+        <Grid Grid.Row="0" Margin="0,0,0,0">
+            <Rectangle Width="529" Height="315">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="{Binding BigImage}" />
                 </Rectangle.Fill>
             </Rectangle>
+
+            <Rectangle Height="315" Width="529">
+                <Rectangle.Fill>
+                    <!-- Градиентный эффект, создающий замыление снизу -->
+                    <LinearGradientBrush StartPoint="0.5,1" EndPoint="0.5,0.75">
+                        <!-- Полностью непрозрачный цвет -->
+                        <GradientStop Color="{DynamicResource GradientStartColor}" Offset="0" />
+                        <!-- Тот же цвет, но с прозрачностью -->
+                        <GradientStop Color="{DynamicResource GradientStopColor}" Offset="0.5" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
         </Grid>
+        <StackPanel Grid.Row="1" Margin="30,0,30,0">
+            <TextBlock Margin="0" FontSize="20" Foreground="{DynamicResource TextBrush}"
+                       VerticalAlignment="Center" FontWeight="Medium" Height="24"
+                       Text="{x:Static res:Strings.InstallationComplete}" HorizontalAlignment="Left" />
+            <TextBlock Margin="0,8,5,4" FontSize="14" Foreground="{DynamicResource TextBrush}"
+                       VerticalAlignment="Center" FontWeight="Regular" Height="17"
+                       Text="{x:Static res:Strings.TookTime}" HorizontalAlignment="Left">
+                <Run Text="{Binding ElapsedTime}" />
+            </TextBlock>
+
+            <!-- Добавление кликабельного текста для имени репакера без подчеркивания -->
+            <TextBlock VerticalAlignment="Center" FontWeight="Regular" Margin="0,4,5,4"
+                       FontSize="14" Width="400" Height="17" HorizontalAlignment="Left">
+                <Run Text="Repack by" Foreground="{DynamicResource TextBrush}" />
+                <Hyperlink Foreground="{DynamicResource NameBrush}" TextDecorations="{x:Null}"
+                           NavigateUri="{Binding Link}" RequestNavigate="Hyperlink_RequestNavigate">
+                    <Run Text="{Binding RepackerName}" />
+                </Hyperlink>
+            </TextBlock>
+
+            <!-- Добавление кликабельного текста для имени дизайнера без подчеркивания -->
+            <TextBlock VerticalAlignment="Center" FontWeight="Regular" Margin="0,4,5,0"
+                       FontSize="14" Width="400" Height="20" HorizontalAlignment="Left">
+                <Run Text="Design by" Foreground="{DynamicResource TextBrush}" />
+                <Hyperlink Foreground="{DynamicResource NameBrush}" TextDecorations="{x:Null}"
+                           NavigateUri="https://t.me/RomaBargainer" RequestNavigate="Hyperlink_RequestNavigate">
+                    <Run Text="Roma Bargainer" />
+                </Hyperlink>
+            </TextBlock>
+        </StackPanel>
     </Grid>
 </UserControl>

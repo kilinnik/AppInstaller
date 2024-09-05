@@ -13,54 +13,61 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!-- Верхняя часть с контейнером для изображения программы -->
-        <Grid Margin="5">
-            <!-- Прямоугольник для изображения программы с закругленными углами -->
-            <Rectangle Height="75" Width="482" RadiusX="30" RadiusY="30">
+        <Grid Margin="0">
+            <Rectangle Height="154" Width="529">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="{Binding HeadImage}" />
                 </Rectangle.Fill>
             </Rectangle>
-        </Grid>
-        <!-- Нижняя часть с контейнером для информации о выбранной папке и создании ярлыка -->
-        <Grid Grid.Row="1">
-            <!-- Фоновый прямоугольник с градиентом -->
-            <Rectangle Width="482" Height="310" RadiusX="30" RadiusY="30">
+
+            <!-- Контейнер для наложения градиентного эффекта снизу -->
+            <Rectangle Height="155" Width="529">
                 <Rectangle.Fill>
-                    <DynamicResource ResourceKey="TopToBottomGradient" />
+                    <!-- Градиентный эффект, создающий замыление снизу -->
+                    <LinearGradientBrush StartPoint="0.5,1" EndPoint="0.5,0.75">
+                        <!-- Полностью непрозрачный цвет -->
+                        <GradientStop Color="{DynamicResource GradientStartColor}" Offset="0" />
+                        <!-- Тот же цвет, но с прозрачностью -->
+                        <GradientStop Color="{DynamicResource GradientStopColor}" Offset="0.5" />
+                    </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <!-- Контейнер для отображения информации -->
-            <StackPanel>
-                <!-- Контейнер с текстом о выбранной папке -->
-                <Grid Margin="20,10,5,5">
-                    <!-- Текст о выбранной папке с тенью и белым текстом -->
-                    <TextBlock Margin="5" Height="Auto" TextWrapping="Wrap" Width="445"
-                               FontSize="12" Foreground="{DynamicResource ShadowBrush}" HorizontalAlignment="Left">
-                        <Run Text="{x:Static res:Strings.InstallationFolder}" />
-                        <Run Text="{Binding SelectedPath}" />
-                        <TextBlock.RenderTransform>
-                            <TranslateTransform X="1" Y="1" />
-                        </TextBlock.RenderTransform>
-                    </TextBlock>
-                    <TextBlock Margin="5" Height="Auto" TextWrapping="Wrap" Width="445"
-                               FontSize="12" Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Left">
-                        <Run Text="{x:Static res:Strings.InstallationFolder}" />
-                        <Run Text="{Binding SelectedPath}" />
-                    </TextBlock>
-                </Grid>
-                <!-- Контейнер с текстом о создании ярлыка -->
-                <Grid Margin="20,5,5,5">
-                    <!-- Текст о создании ярлыка с тенью и белым текстом -->
-                    <TextBlock Margin="5" TextWrapping="Wrap" Text="{Binding AdditionalComponents}" FontSize="12"
-                               Foreground="{DynamicResource ShadowBrush}" HorizontalAlignment="Left" Width="445">
-                        <TextBlock.RenderTransform>
-                            <TranslateTransform X="1" Y="1" />
-                        </TextBlock.RenderTransform>
-                    </TextBlock>
-                    <TextBlock Margin="5" TextWrapping="Wrap" Text="{Binding AdditionalComponents}" FontSize="12"
-                               Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Left" Width="445">
-                    </TextBlock>
-                </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" Width="482" Height="310" Margin="30,9,30,0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Заголовок "Установка" -->
+            <TextBlock Grid.Row="0" Text="{x:Static res:Strings.Confirm}" FontSize="20" FontWeight="Medium"
+                       Margin="0,0,0,20" Height="24" Foreground="{DynamicResource TextBrush}" />
+
+            <!-- Путь установки -->
+            <StackPanel Grid.Row="1" Margin="0">
+                <TextBlock Text="{x:Static res:Strings.InstallationFolder}" FontSize="16" FontWeight="Regular"
+                           Margin="0,0,0,5"
+                           Foreground="{DynamicResource TextBrush}" />
+                <WrapPanel>
+                    <Border CornerRadius="10" Height="30" Margin="0,6,10,0" Width="469"
+                            Background="{DynamicResource ButtonBackgroundBrush}" ClipToBounds="True">
+                        <TextBlock Margin="10,0" Text="{Binding SelectedPath}" FontWeight="Regular" FontSize="14"
+                                   Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis" />
+                    </Border>
+                </WrapPanel>
+            </StackPanel>
+
+            <!-- Дополнительно -->
+            <StackPanel Grid.Row="2" Margin="0,20,0,0">
+                <TextBlock Text="{x:Static res:Strings.Additional}" FontSize="16" FontWeight="Regular" Margin="4,0,0,5"
+                           Foreground="{DynamicResource TextBrush}" />
+                <TextBlock Margin="5" TextWrapping="Wrap" Text="{Binding AdditionalComponents}" FontSize="14"
+                           FontWeight="Regular"
+                           Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Left" Width="469" Height="80" />
             </StackPanel>
         </Grid>
     </Grid>

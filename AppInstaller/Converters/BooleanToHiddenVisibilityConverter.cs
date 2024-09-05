@@ -11,10 +11,10 @@ public class BooleanToHiddenVisibilityConverter : IValueConverter
     {
         if (value is bool boolValue)
         {
-            return boolValue ? Visibility.Visible : Visibility.Hidden;
+            return boolValue ? Visibility.Visible : Visibility.Collapsed; // Изменено с Hidden на Collapsed
         }
 
-        return Visibility.Hidden;
+        return Visibility.Collapsed; // Изменено с Hidden на Collapsed
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

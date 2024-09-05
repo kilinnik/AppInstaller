@@ -39,9 +39,8 @@
         <GradientStop Color="#A0A0A0" Offset="1" />
     </LinearGradientBrush>
     
-    <Style x:Key="ButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
-    </Style>
-    
+    <Style x:Key="ButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedLightButton}" />
+
     <!-- Other Colors -->
     <Color x:Key="TextColor">#000000</Color>
     <Color x:Key="ShadowColor">#A9A9A9</Color>

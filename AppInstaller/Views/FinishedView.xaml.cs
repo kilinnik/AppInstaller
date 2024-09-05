@@ -1,9 +1,19 @@
-namespace AppInstaller.Views;
+using System.Diagnostics;
+using System.Windows.Navigation;
 
-public partial class FinishedView
+namespace AppInstaller.Views
 {
-    public FinishedView()
+    public partial class FinishedView
     {
-        InitializeComponent();
+        public FinishedView()
+        {
+            InitializeComponent();
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
+            e.Handled = true;
+        }
     }
 }

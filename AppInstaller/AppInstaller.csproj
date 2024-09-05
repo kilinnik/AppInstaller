@@ -40,7 +40,6 @@
         <None Remove="Resources\store.epicgames.com.svg" />
         <EmbeddedResource Include="Resources\store.epicgames.com.svg" />
         <None Remove="Resources\default_track.txt" />
-        <EmbeddedResource Include="Resources\default_track.txt" />
         <EmbeddedResource Update="Resources\Strings.en-US.resx">
           <Generator>PublicResXFileCodeGenerator</Generator>
           <CustomToolNamespace>AppInstaller.Resources</CustomToolNamespace>
@@ -67,6 +66,12 @@
           <XamlRuntime>Wpf</XamlRuntime>
           <SubType>Designer</SubType>
         </Page>
+        <None Remove="Resources\light.svg" />
+        <Resource Include="Resources\light.svg">
+          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </Resource>
+        <None Remove="Resources\dark.svg" />
+        <Resource Include="Resources\dark.svg" />
     </ItemGroup>
     
     <ItemGroup>

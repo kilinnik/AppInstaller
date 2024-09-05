@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reactive;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -10,14 +12,15 @@ namespace AppInstaller.ViewModels;
 public class InstallingViewModel : ViewModelBase
 {
     private readonly InstallingModel _model;
-    
+
     private string _currentTheme;
+
     public string CurrentTheme
     {
         get => _currentTheme;
         set => this.RaiseAndSetIfChanged(ref _currentTheme, value);
     }
-    
+
     private MainWindowViewModel MainWindowViewModel { get; }
 
     private string _elapsedTime;
@@ -76,38 +79,77 @@ public class InstallingViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _mascotImage, value);
     }
 
-    public InstallingViewModel(ImageSource headImage, MainWindowViewModel mainWindowViewModel, ImageSource mascotImage,
-        string repackerName, InstallingModel model)
+    private string _link;
+
+    public string Link
+    {
+        get => _link;
+        set => this.RaiseAndSetIfChanged(ref _link, value);
+    }
+
+    public ReactiveCommand<Unit, Unit> OpenLinkCommand { get; }
+
+    public InstallingViewModel(
+        ImageSource headImage,
+        MainWindowViewModel mainWindowViewModel,
+        ImageSource mascotImage,
+        string repackerName,
+        InstallingModel model,
+        string link
+    )
     {
         CurrentTheme = "Light";
         _model = model;
         _model.ProgressChanged += OnProgressChanged;
         _model.ErrorMessageOccurred += OnErrorMessageOccurred;
         _model.TimeChanged += OnTimeChanged;
-        mainWindowViewModel.ExitRequested += () => model.Cancel();
+        mainWindowViewModel.ExitRequested += model.Cancel;
+        Link = link;
 
         HeadImage = headImage;
         MainWindowViewModel = mainWindowViewModel;
         ElapsedTime = $"{Resources.Strings.TimeElapsed} 00:00:00";
         RemainingTime = $"{Resources.Strings.TimeRemaining} 00:00:00";
         MascotImage = mascotImage;
-        RepackerName = "by " + repackerName;
+        RepackerName = repackerName;
+
+        OpenLinkCommand = ReactiveCommand.Create(() =>
+        {
+            Process.Start(new ProcessStartInfo(Link) { UseShellExecute = true });
+        });
     }
 
-    public async Task InstallApp(string archiveFolderPath, string? destinationFolderPath,
-        string appName, string appVersion, bool iconChecked, IEnumerable<Components> components, List<string> exePaths)
+    public async Task InstallApp(
+        string archiveFolderPath,
+        string? destinationFolderPath,
+        string appName,
+        string appVersion,
+        bool iconChecked,
+        IEnumerable<Components> components,
+        List<string> exePaths
+    )
     {
-        await _model.InstallApp(archiveFolderPath, destinationFolderPath, appName, appVersion, iconChecked,
-            components, exePaths);
+        //await Task.Delay(10000000);
+        await _model.InstallApp(
+            archiveFolderPath,
+            destinationFolderPath,
+            appName,
+            appVersion,
+            iconChecked,
+            components,
+            exePaths
+        );
         MainWindowViewModel.NavigateNextView();
     }
-    
+
     private void OnTimeChanged(string message, string time, bool flag)
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
-            if (flag) ElapsedTime = message + time;
-            else RemainingTime = message + time;
+            if (flag)
+                ElapsedTime = message + time;
+            else
+                RemainingTime = message + time;
         });
     }
 
@@ -120,8 +162,12 @@ public class InstallingViewModel : ViewModelBase
         });
     }
 
-    private static void OnErrorMessageOccurred(string message, string caption, MessageBoxButton buttons,
-        MessageBoxImage icon)
+    private static void OnErrorMessageOccurred(
+        string message,
+        string caption,
+        MessageBoxButton buttons,
+        MessageBoxImage icon
+    )
     {
         MessageBox.Show(message, caption, buttons, icon);
         Application.Current.Shutdown();

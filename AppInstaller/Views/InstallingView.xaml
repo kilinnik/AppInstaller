@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:converters="clr-namespace:AppInstaller"
              xmlns:converters1="clr-namespace:AppInstaller.Converters"
+             xmlns:res="clr-namespace:AppInstaller.Resources"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <!-- Ресурсы UserControl -->
@@ -13,24 +13,28 @@
         <converters1:ProgressBarGradientConverter x:Key="ProgressBarGradientConverter" />
         <!-- Стиль для ProgressBar с закругленными углами -->
         <Style x:Key="RoundedCornersProgressBar" TargetType="{x:Type ProgressBar}">
+            <Setter Property="Background" Value="{DynamicResource BorderBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="0" /> <!-- Убираем границу -->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ProgressBar}">
                         <Grid x:Name="TemplateRoot">
                             <!-- Прямоугольник для границы ProgressBar -->
                             <Rectangle Stroke="{TemplateBinding BorderBrush}"
-                                       StrokeThickness="{TemplateBinding BorderThickness}" RadiusX="3" RadiusY="3"
+                                       StrokeThickness="{TemplateBinding BorderThickness}" RadiusX="10" RadiusY="10"
                                        Fill="{TemplateBinding Background}" />
                             <!-- Прямоугольник для фона ProgressBar -->
-                            <Rectangle x:Name="PART_Track" RadiusX="3" RadiusY="3" />
+                            <Rectangle x:Name="PART_Track" RadiusX="10" RadiusY="10"
+                                       Fill="{DynamicResource ButtonBackgroundBrush}" />
                             <!-- Прямоугольник для заполнения ProgressBar градиентом -->
-                            <Rectangle x:Name="PART_Indicator" HorizontalAlignment="Left" RadiusX="3" RadiusY="3">
+                            <Rectangle x:Name="PART_Indicator" HorizontalAlignment="Left" RadiusX="10" RadiusY="10">
                                 <Rectangle.Fill>
                                     <MultiBinding Converter="{StaticResource ProgressBarGradientConverter}">
                                         <Binding Path="Value"
                                                  RelativeSource="{RelativeSource AncestorType={x:Type ProgressBar}}" />
                                         <Binding Path="DataContext.CurrentTheme"
-                                            RelativeSource="{RelativeSource AncestorType={x:Type ProgressBar}}" />
+                                                 RelativeSource="{RelativeSource AncestorType={x:Type ProgressBar}}" />
                                     </MultiBinding>
                                 </Rectangle.Fill>
                             </Rectangle>
@@ -39,6 +43,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
     </UserControl.Resources>
     <!-- Главный контейнер Grid -->
     <Grid d:DataContext="{d:DesignInstance }">
@@ -46,65 +51,108 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!-- Контейнер для изображения программы -->
-        <Grid Grid.Row="0" Margin="5">
-            <Rectangle Height="75" Width="482" RadiusX="30" RadiusY="30">
+        <Grid Margin="0">
+            <!-- Контейнер для изображения -->
+            <Rectangle Height="154" Width="529">
                 <Rectangle.Fill>
-                    <!-- Привязка к изображению программы из DataContext -->
                     <ImageBrush ImageSource="{Binding HeadImage}" />
+                </Rectangle.Fill>
+            </Rectangle>
+
+            <!-- Контейнер для наложения градиентного эффекта снизу -->
+            <Rectangle Height="155" Width="529">
+                <Rectangle.Fill>
+                    <!-- Градиентный эффект, создающий замыление снизу -->
+                    <LinearGradientBrush StartPoint="0.5,1" EndPoint="0.5,0.75">
+                        <!-- Полностью непрозрачный цвет -->
+                        <GradientStop Color="{DynamicResource GradientStartColor}" Offset="0" />
+                        <!-- Тот же цвет, но с прозрачностью -->
+                        <GradientStop Color="{DynamicResource GradientStopColor}" Offset="0.5" />
+                    </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>
         <!-- Контейнер для ProgressBar и информации о процессе установки -->
         <Grid Grid.Row="1">
-            <!-- фон -->
-            <Rectangle Width="482" Height="310" RadiusX="30" RadiusY="30">
-                <Rectangle.Fill>
-                    <DynamicResource ResourceKey="TopToBottomGradient" />
-                </Rectangle.Fill>
-            </Rectangle>
             <!-- StackPanel с текстовой информацией о процессе установки -->
-            <StackPanel>
-                <!-- Прогресс в процентах -->
-                <TextBlock FontWeight="Light" Margin="5,10,5,5" Foreground="{DynamicResource TextBrush}" FontSize="10"
-                           HorizontalAlignment="Center">
-                    <Run Text="{Binding PercentageProgress}" />%
-                </TextBlock>
-                <!-- ProgressBar с закругленными углами -->
-                <ProgressBar Height="5" Style="{DynamicResource RoundedCornersProgressBar}" Margin="10,5,10,10"
-                             Width="420" IsIndeterminate="False" Value="{Binding ProgressValue}" />
-                <!-- DockPanel для отображения времени прошедшего и оставшегося времени -->
-                <DockPanel Margin="5">
-                    <!-- Время прошедшее -->
-                    <TextBlock DockPanel.Dock="Left" Margin="33,5,5,5" Foreground="{DynamicResource TextBrush}"
-                               FontWeight="Light" FontSize="10" Text="{Binding ElapsedTime}" HorizontalAlignment="Left">
-                    </TextBlock>
 
-                    <!-- Время оставшееся -->
-                    <TextBlock DockPanel.Dock="Right" Margin="5,5,33,5" Width="120" HorizontalAlignment="Right"
-                               Foreground="{DynamicResource TextBrush}" FontWeight="Light"
-                               FontSize="10" Text="{Binding RemainingTime}" TextAlignment="Right">
-                    </TextBlock>
-                </DockPanel>
-                <!-- Grid с контентом о процессе установки -->
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <!-- Изображение маскота -->
-                    <Image Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" Height="210"
-                           Source="{Binding MascotImage}" Stretch="Uniform" Margin="5,20,1,0" />
-                    <!-- Имя репакера -->
-                    <TextBlock Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" FontStyle="Italic"
-                               Text="{Binding RepackerName}" Foreground="{DynamicResource TextBrush}">
-                    </TextBlock>
+            <StackPanel HorizontalAlignment="Left" Margin="30,9,0,0" Width="469">
+                <TextBlock Text="{x:Static res:Strings.InstallationProgress}" FontSize="20" FontWeight="Medium"
+                           Margin="0,0,0,5" Height="24" Foreground="{DynamicResource TextBrush}" />
+                <!-- Прогресс в процентах -->
+                <Grid Height="30" Width="469" Margin="0,5,0,10">
+                    <!-- Прогресс бар -->
+                    <ProgressBar Style="{DynamicResource RoundedCornersProgressBar}" IsIndeterminate="False"
+                                 Value="{Binding ProgressValue}" Height="30" Width="469" />
+                    <!-- Текст с процентами -->
+                    <TextBlock Text="{Binding PercentageProgress, StringFormat={}{0} %}" FontSize="14"
+                               FontWeight="Regular"
+                               Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
                 </Grid>
+                <WrapPanel FlowDirection="LeftToRight" Width="469">
+                    <StackPanel HorizontalAlignment="Left" Width="309">
+                        <TextBlock Margin="0,5,0,5" Foreground="{DynamicResource TextBrush}" Width="300" Height="17"
+                                   FontWeight="Regular" FontSize="14" Text="{Binding ElapsedTime}"
+                                   HorizontalAlignment="Left" />
+                        <!-- Время оставшееся -->
+                        <TextBlock Margin="0,5,0,5" HorizontalAlignment="Left" Width="300" Height="17"
+                                   Foreground="{DynamicResource TextBrush}" FontWeight="Regular" FontSize="14"
+                                   Text="{Binding RemainingTime}" />
+
+                        <TextBlock VerticalAlignment="Center" FontWeight="Regular" Margin="0,5,0,4"
+                                   FontSize="14" Width="300" Height="17" HorizontalAlignment="Left">
+                            <Run Text="Repack by" Foreground="{DynamicResource TextBrush}" />
+                            <Hyperlink Foreground="{DynamicResource NameBrush}" TextDecorations="{x:Null}"
+                                       NavigateUri="{Binding Link}" RequestNavigate="Hyperlink_RequestNavigate">
+                                <Run Text="{Binding RepackerName}" />
+                            </Hyperlink>
+                        </TextBlock>
+
+                        <TextBlock VerticalAlignment="Center" FontWeight="Regular" Margin="0,5,0,0"
+                                   FontSize="14" Width="300" Height="20" HorizontalAlignment="Left">
+                            <Run Text="Design by" Foreground="{DynamicResource TextBrush}" />
+                            <Hyperlink Foreground="{DynamicResource NameBrush}" TextDecorations="{x:Null}"
+                                       NavigateUri="https://t.me/RomaBargainer"
+                                       RequestNavigate="Hyperlink_RequestNavigate">
+                                <Run Text="Roma Bargainer" />
+                            </Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Right" Width="160" Height="148" Margin="0,6,0,0">
+                        <Border CornerRadius="10" Background="{DynamicResource ComboBoxBackgroundBrush}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0" Width="48" Height="48" HorizontalAlignment="Center" Margin="56,15,56,10" 
+                                        Background="{DynamicResource BorderBrush}" CornerRadius="24" ClipToBounds="True">
+                                    <Image HorizontalAlignment="Center" VerticalAlignment="Center" Height="48" Width="48"
+                                           Source="{Binding MascotImage}">
+                                        <!-- Устанавливаем клиппинг для обрезки изображения по кругу -->
+                                        <Image.Clip>
+                                            <EllipseGeometry Center="24,24" RadiusX="24" RadiusY="24" />
+                                        </Image.Clip>
+                                    </Image>
+                                </Border>
+                                <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                           FontSize="16"
+                                           Width="150" Height="20" Margin="0" FontWeight="Regular"
+                                           TextAlignment="Center"
+                                           Text="{Binding RepackerName}" Foreground="{DynamicResource TextBrush}" />
+
+                                <Button Grid.Row="2" BorderThickness="0" Width="99" Height="30" Margin="30,10,30,15"
+                                        Background="{DynamicResource TgBrush}" Style="{StaticResource FlatButtonStyle}" FontWeight="Regular"
+                                        Command="{Binding OpenLinkCommand}">
+                                    <TextBlock Text="telegram" Foreground="{DynamicResource TextBrush}"
+                                               FontSize="14" Padding="0" VerticalAlignment="Center" />
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </WrapPanel>
             </StackPanel>
         </Grid>
     </Grid>

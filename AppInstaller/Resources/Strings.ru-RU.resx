@@ -4,31 +4,25 @@
     <value>Создать ярлык на рабочем столе</value>
   </data>
   <data name="FeaturesAndAdd-ons" xml:space="preserve">
-    <value>Особенности и дополнения</value>
+    <value>Дополнительно:</value>
   </data>
   <data name="ChangeOutputDir" xml:space="preserve">
-    <value>Изменить</value>
-  </data>
-  <data name="InstallationOptionsSelection" xml:space="preserve">
-    <value>Выбор параметров установки</value>
-  </data>
-  <data name="OccupiedByFilesSize" xml:space="preserve">
-    <value>Занимаемый файлами размер: </value>
+    <value>Обзор...</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Назад &gt;</value>
+    <value>Назад</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>&lt; Вперёд</value>
+    <value>Далее</value>
   </data>
   <data name="Installation" xml:space="preserve">
     <value>Установка</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Да</value>
+    <value>Выйти</value>
   </data>
   <data name="No" xml:space="preserve">
     <value>Нет</value>
@@ -37,19 +31,13 @@
     <value>Вы действительно хотите выйти?</value>
   </data>
   <data name="InstallationFolder" xml:space="preserve">
-    <value>Папка установки: </value>
+    <value>Путь установки:</value>
   </data>
   <data name="AdditionalTasks" xml:space="preserve">
-    <value>Дополнительные задачи:</value>
+    <value>Дополнительно:</value>
   </data>
   <data name="AppLink" xml:space="preserve">
     <value>Ссылка на программу в магазине</value>
-  </data>
-  <data name="PlayPause" xml:space="preserve">
-    <value>Воспроизведение/Пауза</value>
-  </data>
-  <data name="PlayFromTheBeginning" xml:space="preserve">
-    <value>Воспроизвести с начала</value>
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
     <value>Приветствуем вас в установщике </value>
@@ -61,16 +49,13 @@
     <value>Времени осталось:</value>
   </data>
   <data name="InstallationComplete" xml:space="preserve">
-    <value>Установка завершена</value>
+    <value>Установка завершена!</value>
   </data>
   <data name="Finish" xml:space="preserve">
-    <value>Завершить</value>
+    <value>Закончить</value>
   </data>
   <data name="Install" xml:space="preserve">
     <value>Установить</value>
-  </data>
-  <data name="NoInternetConnection" xml:space="preserve">
-    <value>Отсутствует интернет-соединение. Пожалуйста, проверьте ваше соединение и попробуйте снова.</value>
   </data>
   <data name="DiskSpace" xml:space="preserve">
     <value>Недостаточно места на диске. Пожалуйста, выберите другой путь для установки или освободите место на диске.</value>
@@ -87,8 +72,20 @@
   <data name="DarkLightTheme" xml:space="preserve">
     <value>Светлая/Тёмная</value>
   </data>
-  <data name="ChangeTheme" xml:space="preserve">
-    <value>Изменить тему</value>
+  <data name="Confirm" xml:space="preserve">
+    <value>Подтверждение</value>
+  </data>
+  <data name="InstallationProgress" xml:space="preserve">
+    <value>Идёт процесс установки...</value>
+  </data>
+  <data name="TookTime" xml:space="preserve">
+    <value>Потребовалось времени: </value>
+  </data>
+  <data name="RepackFeatures" xml:space="preserve">
+    <value>Особенности репака</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Начать</value>
   </data>
   <!-- ... другие строки ... -->
 </root>

@@ -35,7 +35,7 @@ public class WelcomeViewModel : ViewModelBase
     
     public WelcomeViewModel(string? appName, ImageSource? bigImage, string appDescription)
     {
-        AppName = $"\"{appName}\"";
+        AppName = appName;
         AppDescription = appDescription;
         BigImage = bigImage;
     }
