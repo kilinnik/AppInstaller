@@ -13,47 +13,64 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="0,0,0,0">
-            <Rectangle Width="529" Height="315">
+        <Grid Grid.Row="0" Margin="0,-3,0,0">
+            <Rectangle Width="532" Height="307">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="{Binding BigImage}" />
+                    <ImageBrush ImageSource="{Binding BigImage}" Stretch="Fill" />
                 </Rectangle.Fill>
             </Rectangle>
-            
-            <Rectangle Height="315" Width="529">
+
+            <Rectangle Height="308" Width="532">
                 <Rectangle.Fill>
                     <!-- Градиентный эффект, создающий замыление снизу -->
-                    <LinearGradientBrush StartPoint="0.5,1" EndPoint="0.5,0.75">
+                    <LinearGradientBrush StartPoint="0.5,1" EndPoint="0.5,0.7">
                         <!-- Полностью непрозрачный цвет -->
-                        <GradientStop Color="{DynamicResource GradientStartColor}" Offset="0" />
+                        <GradientStop Color="{DynamicResource GradientStartColor}" Offset="0.1" />
                         <!-- Тот же цвет, но с прозрачностью -->
-                        <GradientStop Color="{DynamicResource GradientStopColor}" Offset="0.5" />
+                        <GradientStop Color="{DynamicResource GradientStopColor}" Offset="1" />
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>
 
         <Grid Grid.Row="1">
-            <Grid Width="529" Height="115" ClipToBounds="True" Margin="30,0,30,0">
+            <Grid Width="473" Height="123" ClipToBounds="True" Margin="30,0,30,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Margin="0,0,0,0" Foreground="{DynamicResource TextBrush}">
-                    <Run Text="{x:Static res:Strings.WelcomeMessage}" FontSize="20" FontWeight="Medium" />
+                <TextBlock Margin="0,9,0,0" Foreground="{DynamicResource TextBrush}">
+                    <Run Text="{x:Static res:Strings.WelcomeMessage}" FontSize="20" FontWeight="Medium"
+                         FontFamily="/Resources/#Inter" />
                 </TextBlock>
-                <TextBlock Grid.Row="1" Margin="0,8,0,3" Foreground="{DynamicResource TextBrush}">
-                    <Run Text="{Binding AppName}" FontSize="16" FontWeight="Regular" />
+                <TextBlock Grid.Row="1" Margin="0,12,0,0" Foreground="{DynamicResource TextBrush}">
+                    <Run Text="{Binding AppName}" FontSize="16" FontWeight="Regular" FontFamily="/Resources/#Inter" />
                 </TextBlock>
-                <ScrollViewer Grid.Row="2" MaxHeight="51" Padding="0" Margin="0"
-                              HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
-                              PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-                    <TextBlock Width="469" Height="51" TextWrapping="Wrap" HorizontalAlignment="Left"
-                               Text="{Binding AppDescription}" FontSize="13" LineHeight="0.1"
-                               FontWeight="Regular" Foreground="{DynamicResource TextBrush}" Padding="0" Margin="0" />
-                </ScrollViewer>
+                <Grid Grid.Row="2">
+                    <ScrollViewer x:Name="scrollViewer" MaxHeight="51" Padding="0" Margin="0,7,0,0" Width="473"
+                                  HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto"
+                                  ScrollChanged="ScrollViewer_ScrollChanged">
+                        <TextBlock Width="469" TextWrapping="Wrap" HorizontalAlignment="Left"
+                                   FontFamily="/Resources/#Inter"
+                                   Text="{Binding AppDescription}" FontSize="14" LineHeight="0.1"
+                                   FontWeight="Regular" Foreground="{DynamicResource TextBrush}" Padding="0,0,16,0"
+                                   Margin="0,0,0,0" />
+                    </ScrollViewer>
+                    <!-- Градиентный эффект снизу -->
+                    <Rectangle x:Name="gradientRectangle" Height="58" Width="458" Margin="0,0,15,0" Visibility="Visible"
+                               IsHitTestVisible="False">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush StartPoint="0.5,1" EndPoint="0.5,0.5">
+                                <GradientStop Color="{DynamicResource GradientStartColor}" Offset="0" />
+                                <GradientStop Color="{DynamicResource GradientStopColor}" Offset="0.5" />
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Grid>
+
+
             </Grid>
         </Grid>
     </Grid>

@@ -13,28 +13,28 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!-- Верхняя часть с контейнером для изображения программы -->
-        <Grid Margin="0">
-            <Rectangle Height="154" Width="529">
+        <Grid Margin="0,-3,0,0" Grid.Row="0">
+            <Rectangle Height="156" Width="532">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="{Binding HeadImage}" />
                 </Rectangle.Fill>
             </Rectangle>
 
             <!-- Контейнер для наложения градиентного эффекта снизу -->
-            <Rectangle Height="155" Width="529">
+            <Rectangle Height="157" Width="532">
                 <Rectangle.Fill>
                     <!-- Градиентный эффект, создающий замыление снизу -->
-                    <LinearGradientBrush StartPoint="0.5,1" EndPoint="0.5,0.75">
+                    <LinearGradientBrush StartPoint="0.5,1" EndPoint="0.5,0.7">
                         <!-- Полностью непрозрачный цвет -->
-                        <GradientStop Color="{DynamicResource GradientStartColor}" Offset="0" />
+                        <GradientStop Color="{DynamicResource GradientStartColor}" Offset="0.1" />
                         <!-- Тот же цвет, но с прозрачностью -->
-                        <GradientStop Color="{DynamicResource GradientStopColor}" Offset="0.5" />
+                        <GradientStop Color="{DynamicResource GradientStopColor}" Offset="1" />
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>
 
-        <Grid Grid.Row="1" Width="482" Height="310" Margin="30,9,30,0">
+        <Grid Grid.Row="1" Width="482" Height="308" Margin="30,9,30,0">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -42,31 +42,30 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- Заголовок "Установка" -->
-            <TextBlock Grid.Row="0" Text="{x:Static res:Strings.Confirm}" FontSize="20" FontWeight="Medium"
-                       Margin="0,0,0,20" Height="24" Foreground="{DynamicResource TextBrush}" />
+            <TextBlock Grid.Row="0" Text="{x:Static res:Strings.Confirm}" FontSize="20" FontWeight="Medium" FontFamily="/Resources/#Inter"
+                       Margin="1,0,0,21" Height="24" Foreground="{DynamicResource TextBrush}" />
 
             <!-- Путь установки -->
             <StackPanel Grid.Row="1" Margin="0">
                 <TextBlock Text="{x:Static res:Strings.InstallationFolder}" FontSize="16" FontWeight="Regular"
-                           Margin="0,0,0,5"
+                           Margin="2,0,0,5" FontFamily="/Resources/#Inter"
                            Foreground="{DynamicResource TextBrush}" />
                 <WrapPanel>
-                    <Border CornerRadius="10" Height="30" Margin="0,6,10,0" Width="469"
+                    <Border CornerRadius="10" Height="30" Margin="0,4,10,0" Width="469"
                             Background="{DynamicResource ButtonBackgroundBrush}" ClipToBounds="True">
                         <TextBlock Margin="10,0" Text="{Binding SelectedPath}" FontWeight="Regular" FontSize="14"
                                    Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"
-                                   TextTrimming="CharacterEllipsis" />
+                                   TextTrimming="CharacterEllipsis" FontFamily="/Resources/#Inter"/>
                     </Border>
                 </WrapPanel>
             </StackPanel>
 
             <!-- Дополнительно -->
             <StackPanel Grid.Row="2" Margin="0,20,0,0">
-                <TextBlock Text="{x:Static res:Strings.Additional}" FontSize="16" FontWeight="Regular" Margin="4,0,0,5"
-                           Foreground="{DynamicResource TextBrush}" />
+                <TextBlock Text="{x:Static res:Strings.Additional}" FontSize="16" FontWeight="Regular" Margin="2,0,0,5"
+                           Foreground="{DynamicResource TextBrush}" FontFamily="/Resources/#Inter"/>
                 <TextBlock Margin="5" TextWrapping="Wrap" Text="{Binding AdditionalComponents}" FontSize="14"
-                           FontWeight="Regular"
+                           FontWeight="Regular" FontFamily="/Resources/#Inter"
                            Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Left" Width="469" Height="80" />
             </StackPanel>
         </Grid>

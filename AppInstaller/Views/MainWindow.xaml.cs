@@ -60,7 +60,7 @@ public partial class MainWindow
         var themeType = viewModel.CurrentTheme.Replace("Light", "").Replace("Dark", "");
         app.ToggleTheme(themeType);
 
-        if (!viewModel.IsDefaultLogo || Application.Current.Resources["TextBrush"] is not SolidColorBrush textBrush ||
+        if (!viewModel.IsDefaultLogo || Application.Current.Resources["IconBrush"] is not SolidColorBrush textBrush ||
             AppPurchaseLinkImage == null) return;
         var newIconSource = viewModel.AppPurchaseLinkLogo;
         ApplyColorToImage(newIconSource, textBrush.Color);

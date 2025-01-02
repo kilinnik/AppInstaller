@@ -7,10 +7,11 @@
         xmlns:svg="http://sharpvectors.codeplex.com/svgc/"
         xmlns:res="clr-namespace:AppInstaller.Resources"
         xmlns:interactivity="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:winex="https://github.com/yariker/WindowExtras.Wpf"
         xmlns:converters="clr-namespace:AppInstaller.Converters"
-        WindowStyle="None" BorderThickness="1" AllowsTransparency="True"
+        WindowStyle="None" BorderThickness="0" AllowsTransparency="True"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Height="538" Width="529" Background="{DynamicResource WindowBackgroundBrush}"
+        Height="540" Width="531" Background="{DynamicResource WindowBackgroundBrush}"
         MouseLeftButtonDown="Window_MouseDown" d:DataContext="{d:DesignInstance }">
     <interactivity:Interaction.Triggers>
         <interactivity:EventTrigger EventName="Closing">
@@ -19,15 +20,74 @@
     </interactivity:Interaction.Triggers>
     <!-- Задаем фон окна с градиентом -->
     <!-- Устанавливаем кастомный шаблон для окна -->
+    <winex:WindowEx.WindowShadow>
+        <winex:WindowShadow CornerRadius="10" OffsetX="0" OffsetY="4" Opacity="0.25" Radius="10"
+                            ShadowBrush="#FF000000" />
+    </winex:WindowEx.WindowShadow>
     <Window.Template>
         <ControlTemplate TargetType="{x:Type Window}">
             <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="15">
+                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="10">
                 <ContentPresenter />
             </Border>
         </ControlTemplate>
     </Window.Template>
     <Window.Resources>
+        <Style TargetType="ScrollBar">
+            <Setter Property="Width" Value="6" />
+            <Setter Property="Margin" Value="0,0,0,0" />
+            <Setter Property="Height" Value="Auto" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid>
+                            <Track Name="PART_Track" IsDirectionReversed="True">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Background="{DynamicResource ScrollBackBrush}"
+                                                  Width="6" BorderThickness="0" Focusable="False" />
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Background="{DynamicResource ScrollBrush}" Width="6" />
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Width="6" Background="{DynamicResource ScrollBackBrush}"
+                                                  BorderThickness="0" Focusable="False" />
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Стиль для RepeatButton без эффекта фокуса и наведения -->
+        <Style TargetType="RepeatButton">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Background" Value="{DynamicResource ScrollBackBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Оставляем фон без изменений при наведении -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource ScrollBackBrush}" />
+                            </Trigger>
+                            <!-- Оставляем фон без изменений при фокусе -->
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource ScrollBackBrush}" />
+                            </Trigger>
+                            <!-- Оставляем фон без изменений при нажатии -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource ScrollBackBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <converters:ViewIndexToIconKindConverter x:Key="ViewIndexToIconKindConverter" />
         <!-- Добавляем ресурс для конвертера из bool в Visibility -->
         <converters:BooleanToHiddenVisibilityConverter x:Key="BoolToHiddenVisibilityConverter" />
@@ -55,7 +115,7 @@
         <Border x:Name="Overlay" Background="#4C000000" Visibility="Collapsed" Panel.ZIndex="1">
             <!-- Используем Clip, чтобы тень не выходила за закругленные края -->
             <Border.Clip>
-                <RectangleGeometry Rect="0,0,529,538" RadiusX="15" RadiusY="15"/>
+                <RectangleGeometry Rect="0,0,531,540" RadiusX="10" RadiusY="10" />
             </Border.Clip>
             <Grid Background="#4C000000">
                 <!-- Полупрозрачный черный слой внутри границ с закругленными краями -->
@@ -72,8 +132,8 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Background="{DynamicResource ButtonBackgroundBrush}" CornerRadius="15, 15, 0, 0"
-                    Margin="0,0,0,0">
+            <Border Grid.Row="0" Background="{DynamicResource ButtonBackgroundBrush}" CornerRadius="10, 10, 0, 0"
+                    Margin="0,0,0,0" Padding="0">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -82,50 +142,99 @@
 
                     <!-- Текст заголовка -->
                     <TextBlock Grid.Column="0" Foreground="{DynamicResource TextBrush}" FontSize="14" Margin="15,0,0,0"
-                               Text="R.G NITOKIN Installer" VerticalAlignment="Center" FontWeight="Regular" />
+                               Text="R.G NITOKIN Installer" VerticalAlignment="Center" FontWeight="Regular"
+                               FontFamily="/Resources/#Inter" />
 
                     <!-- Кнопки для закрытия окна и сворачивания -->
                     <StackPanel Grid.Column="1" FlowDirection="RightToLeft" Orientation="Horizontal">
-                        <Button Width="20" Height="20" Background="Transparent"
-                                Foreground="{DynamicResource TextBrush}"
-                                BorderThickness="0" Padding="0" Margin="17,0,0,0"
+                        <Button Width="42" Height="34"
+                                BorderThickness="0" Padding="0,-1,0,3" Margin="-0.2,-0.2,0,-2"
                                 Command="{Binding CancelCommand}">
-                            <materialDesign:PackIcon Kind="Close" Width="20" Height="20" />
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource ButtonExitStyle}">
+                                    <!-- Устанавливаем начальный фон для кнопки -->
+                                    <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <!-- Меняем фон и цвет текста при наведении -->
+                                            <Setter Property="Background" Value="{DynamicResource ExitBrush}" />
+                                            <Setter Property="Foreground" Value="{DynamicResource ExitTextBrush}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <materialDesign:PackIcon Kind="Close" Width="20" Height="20" HorizontalAlignment="Center"
+                                                     VerticalAlignment="Center" Margin="0,0,0,3" 
+                                                     Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
                         </Button>
-                        <Button Width="20" Height="20" Background="Transparent"
+                        <Button Width="42" Height="33" Background="Transparent"
                                 Foreground="{DynamicResource TextBrush}"
-                                BorderThickness="0" Padding="0" Margin="22,0,22,0"
+                                BorderThickness="0" Padding="0" Margin="0,0,0,0"
                                 Click="MinimizeButton_Click">
-                            <materialDesign:PackIcon Kind="Minus" Width="20" Height="20" />
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                                            BorderThickness="0">
+                                        <materialDesign:PackIcon Kind="Minus" Width="20" Height="20" Margin="0,0,0,3"
+                                                                 Padding="0"
+                                                                 HorizontalAlignment="Center"
+                                                                 VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <!-- Триггер изменения фона при наведении -->
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background"
+                                                    Value="{DynamicResource ShadowBrush}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
                         </Button>
-                        <Button Width="20" Height="20" Background="Transparent"
+
+                        <Button Width="42" Height="33" Background="Transparent"
                                 Foreground="{DynamicResource TextBrush}"
-                                BorderThickness="0" Padding="0" Margin="0"
+                                BorderThickness="0" Padding="0" Margin="0,0,0,0"
                                 Click="ToggleTheme" ToolTip="{x:Static res:Strings.DarkLightTheme}">
-                            <svg:SvgViewbox Source="{Binding ThemeIconSource}" Width="{Binding ThemeIconWidth}"
-                                            Height="{Binding ThemeIconHeight}" />
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                                            BorderThickness="0">
+                                        <svg:SvgViewbox Source="{Binding ThemeIconSource}"
+                                                        Width="{Binding ThemeIconWidth}" Margin="0,0,0,3"
+                                                        Height="{Binding ThemeIconHeight}" HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <!-- Триггер изменения фона при наведении -->
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background"
+                                                    Value="{DynamicResource ShadowBrush}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
                         </Button>
+
                     </StackPanel>
                 </Grid>
             </Border>
             <!-- Контейнер для отображения текущего View -->
             <Grid Grid.Row="1">
-                <ContentControl Height="430" Width="529" Content="{Binding CurrentView}" />
+                <ContentControl Height="431" Width="532" Content="{Binding CurrentView}" />
             </Grid>
             <!-- Контейнер для кнопок FAQ, ссылки на Telegram и ссылки на программу в магазине -->
             <StackPanel Grid.Row="3">
-                <WrapPanel Margin="30,21,2,33">
+                <WrapPanel Margin="30,21,0,33">
                     <Button Foreground="{DynamicResource TgBrush}" BorderThickness="0"
                             Command="{Binding ShowMessageBoxCommand}"
-                            Height="28" Width="28" Margin="0" ToolTip="FAQ by nitokin"
-                            materialDesign:ButtonAssist.CornerRadius="10" Padding="0"
+                            Height="28" Width="28" Margin="0" ToolTip="FAQ by nitokin" Padding="0"
                             Style="{StaticResource MaterialDesignRaisedDarkButton}" Background="Transparent">
-                        <materialDesign:PackIcon Kind="InformationSlabCircleOutline" Width="28" Height="28"
-                                                 Foreground="{DynamicResource TextBrush}" />
+                        <materialDesign:PackIcon Kind="InformationOutline" Width="28" Height="28"
+                                                 Foreground="{DynamicResource IconBrush}" />
                     </Button>
                     <Button BorderThickness="0" Command="{Binding OpenTgLinkCommand}"
-                            Height="24" Margin="20,0,20,0" ToolTip="Nitokin Telegram"
-                            materialDesign:ButtonAssist.CornerRadius="10" Padding="0"
+                            Height="24" Width="24" Margin="18,0,20,0" ToolTip="Nitokin Telegram" Padding="0"
                             Style="{StaticResource MaterialDesignRaisedDarkButton}" Background="Transparent">
                         <!-- Иконка для Telegram -->
                         <Image>
@@ -135,60 +244,84 @@
                         </Image>
                     </Button>
                     <Button BorderThickness="0" Command="{Binding OpenAppPurchaseLinkCommand}"
-                            Height="24" Margin="0" Padding="0"
-                            materialDesign:ButtonAssist.CornerRadius="10" ToolTip="{x:Static res:Strings.AppLink}"
+                            Height="24" Width="24"
+                            Margin="0" Padding="0" ToolTip="{x:Static res:Strings.AppLink}"
                             Style="{StaticResource MaterialDesignRaisedDarkButton}" Background="Transparent">
-                        <Image x:Name="AppPurchaseLinkImage" Width="24" Source="{Binding AppPurchaseLinkLogo}" />
+                        <Image x:Name="AppPurchaseLinkImage"
+                               Width="{Binding AppPurchaseLinkImageWidth}"
+                               Height="{Binding AppPurchaseLinkImageHeight}"
+                               Source="{Binding AppPurchaseLinkLogo}" />
                     </Button>
                 </WrapPanel>
             </StackPanel>
             <!-- Контейнер для кнопок "Начать/Вперед/Установить/Завершить", "Назад" -->
             <WrapPanel Margin="2,18,30,30" Grid.Row="3" FlowDirection="RightToLeft">
                 <Button BorderThickness="0" Command="{Binding CancelCommand}"
-                        Height="30" Margin="0" FontWeight="Regular"
+                        Height="30" Margin="0" FontWeight="Regular" FontFamily="/Resources/#Inter"
                         Background="{DynamicResource ButtonBackgroundBrush}"
-                        Style="{StaticResource FlatButtonStyle}" Width="116"
+                        Width="107" Style="{StaticResource FlatButtonStyle}"
                         Visibility="{Binding IsCancelButtonVisible, Converter={StaticResource BoolToHiddenVisibilityConverter}}">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                        <materialDesign:PackIcon Kind="Close" Width="20" Height="20" VerticalAlignment="Center"
-                                                 Margin="15,5,5,5" Foreground="{DynamicResource TextBrush}" />
-                        <TextBlock Margin="2" Text="{x:Static res:Strings.Cancel}" FontWeight="Regular" FontSize="14"
-                                   Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"
-                                   HorizontalAlignment="Center" Padding="3,2,20,4" />
-                    </StackPanel>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <!-- Присваиваем имя Border, чтобы его можно было использовать в триггерах -->
+                            <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="10"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
+                                            VerticalAlignment="Bottom">
+                                    <materialDesign:PackIcon Kind="Close" Width="20" Height="20"
+                                                             VerticalAlignment="Center" Padding="0"
+                                                             Margin="0,4,0,4" Foreground="{DynamicResource TextBrush}" />
+                                    <TextBlock Margin="0" Text="{x:Static res:Strings.Cancel}" FontWeight="Regular"
+                                               FontSize="14"
+                                               Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"
+                                               HorizontalAlignment="Center" Padding="6,4,0,5" />
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <!-- Триггер на наведение мыши -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource ExitBrush}"
+                                            TargetName="border" />
+                                    <Setter Property="Foreground" Value="{DynamicResource ExitTextBrush}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
                 </Button>
                 <Button BorderThickness="0" Command="{Binding NavigateToNextViewCommand}"
-                        Height="30" Margin="0" FontWeight="Regular"
+                        Height="30" Margin="0" FontWeight="Regular" FontFamily="/Resources/#Inter"
                         Background="{DynamicResource ButtonBackgroundBrush}"
-                        Style="{StaticResource FlatButtonStyle}" Width="{Binding ButtonWidth}"
+                        Style="{DynamicResource FlatButtonStyle}" Width="Auto"
                         Visibility="{Binding IsNextButtonVisible, Converter={StaticResource BoolToHiddenVisibilityConverter}}">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" /> <!-- Иконка -->
-                            <ColumnDefinition Width="*" /> <!-- Текст -->
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-        
-                        <!-- Иконка -->
                         <materialDesign:PackIcon Foreground="{DynamicResource TextBrush}"
                                                  Kind="{Binding CurrentViewIndex, Converter={StaticResource ViewIndexToIconKindConverter}}"
-                                                 Width="20" Height="20" VerticalAlignment="Center"
-                                                 Margin="15,0,5,3" Grid.Column="0" />
-                                 
-                        <!-- Текст -->
-                        <TextBlock Margin="2" Text="{Binding ButtonNextText}" FontWeight="Regular" FontSize="14"
-                                   Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" 
-                                   HorizontalAlignment="Left" Padding="3,2,20,4" Grid.Column="1" />
+                                                 Width="18" Height="18" VerticalAlignment="Center"
+                                                 HorizontalAlignment="Center"
+                                                 Margin="-2,4,8,4" Padding="0" Grid.Column="0" />
+                        <TextBlock Margin="0" Text="{Binding ButtonNextText}" FontWeight="Regular" FontSize="14"
+                                   Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" Width="Auto"
+                                   HorizontalAlignment="Center" Padding="0,4,0,4" Grid.Column="1" />
                     </Grid>
                 </Button>
                 <Button BorderThickness="0" Command="{Binding NavigateToPreviousViewCommand}"
-                        Height="30" Width="100" Margin="20,0,0,0" Background="{DynamicResource ButtonBackgroundBrush}"
-                        Style="{StaticResource FlatButtonStyle}" FontWeight="Regular"
+                        FontFamily="/Resources/#Inter"
+                        Height="30" Width="Auto" Margin="20,0,0,0" Background="{DynamicResource ButtonBackgroundBrush}"
+                        Style="{DynamicResource FlatButtonStyle}" FontWeight="Regular"
                         Visibility="{Binding IsBackButtonVisible, Converter={StaticResource BoolToHiddenVisibilityConverter}}">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"> 
-                        <TextBlock Text="{x:Static res:Strings.Back}" Foreground="{DynamicResource TextBrush}" 
-                                   FontSize="14" Padding="20,2,3,4" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        <materialDesign:PackIcon Kind="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center"
-                                                 Margin="5,5,15,5" Foreground="{DynamicResource TextBrush}" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="{x:Static res:Strings.Back}" Foreground="{DynamicResource TextBrush}"
+                                   Margin="0,4,0,4"
+                                   FontSize="14" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        <materialDesign:PackIcon Kind="ArrowLeft" Width="18" Height="18" VerticalAlignment="Center"
+                                                 HorizontalAlignment="Center"
+                                                 Margin="6,6,-2,4" Foreground="{DynamicResource TextBrush}"
+                                                 Padding="0,0,0,0" />
                     </StackPanel>
                 </Button>
             </WrapPanel>

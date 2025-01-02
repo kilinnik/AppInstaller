@@ -27,14 +27,14 @@ namespace AppInstaller.Views
                 LanguageComboBox.SelectedIndex = 0; // Русский
                 LanguageTextBlock.Text = "Выберите язык установки";
                 OkButtonTextBlock.Text = "OK";
-                CancelButtonTextBlock.Text = "Закрыть";
+                CancelButtonTextBlock.Text = "Выйти";
             }
             else if (currentCulture.StartsWith("en", StringComparison.OrdinalIgnoreCase))
             {
                 LanguageComboBox.SelectedIndex = 1; // English
                 LanguageTextBlock.Text = "Select installation language";
                 OkButtonTextBlock.Text = "OK";
-                CancelButtonTextBlock.Text = "Cancel";
+                CancelButtonTextBlock.Text = "Exit";
             }
             else
             {
@@ -42,7 +42,7 @@ namespace AppInstaller.Views
                 LanguageComboBox.SelectedIndex = 0; // Русский
                 LanguageTextBlock.Text = "Выберите язык установки";
                 OkButtonTextBlock.Text = "OK";
-                CancelButtonTextBlock.Text = "Закрыть";
+                CancelButtonTextBlock.Text = "Выйти";
             }
         }
 

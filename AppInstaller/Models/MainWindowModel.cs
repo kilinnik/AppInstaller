@@ -54,7 +54,8 @@ public class MainWindowModel
                 errorMessage += $"\nInner Exception: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
             }
 
-            ErrorMessageOccurred(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ErrorMessageOccurred
+                (errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             throw;
         }
 
@@ -76,20 +77,25 @@ public class MainWindowModel
     }
 
     public string GetNeededMemory() => GetValueFromConfig("AppSize", "RepackDescription");
+
     public string GetRepackDescription()
     {
         var suffix = GetCurrentCultureSuffix();
-        return GetValueFromConfig($"RepackDescription{suffix}", suffix == "En" ? "AppPurchaseLink" : "RepackDescriptionEn");
+        return GetValueFromConfig($"RepackDescription{suffix}",
+            suffix == "En" ? "AppPurchaseLink" : "RepackDescriptionEn");
     }
+
     public string GetAppPurchaseLink() => GetValueFromConfig("AppPurchaseLink", "RepackerName");
     public string GetRepackerName() => GetValueFromConfig("RepackerName", "AppVersion");
     public string GetAppVersion() => GetValueFromConfig("AppVersion", "AppName");
     public string GetAppName() => GetValueFromConfig("AppName", "AppDescription");
+
     public string GetAppDescription()
     {
         var suffix = GetCurrentCultureSuffix();
         return GetValueFromConfig($"AppDescription{suffix}", suffix == "En" ? "AppTheme" : "AppDescriptionEn");
     }
+
     public string GetAppTheme() => GetValueFromConfig("AppTheme", "RepackIcon");
 
     private string GetValueFromConfig(string startTag, string endTag)
@@ -153,7 +159,7 @@ public class MainWindowModel
         var pos = text.IndexOf(search, StringComparison.Ordinal);
         return pos < 0 ? text : string.Concat(text.AsSpan(0, pos), replace, text.AsSpan(pos + search.Length));
     }
-    
+
     public List<string> GetExePaths()
     {
         try
@@ -188,17 +194,17 @@ public class MainWindowModel
             throw;
         }
     }
-    
+
     private static string GetConfigFilePath()
     {
         var files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "config_*.txt");
         var configFilePath = files.FirstOrDefault();
-    
+
         if (configFilePath == null)
         {
             throw new FileNotFoundException("Config file not found.");
         }
-    
+
         return configFilePath;
     }
 }

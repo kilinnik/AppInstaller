@@ -33,7 +33,9 @@ public partial class App
             var languageSelectionWindow = new LanguageSelectionWindow();
             if (languageSelectionWindow.ShowDialog() == true)
             {
-                var selectedCulture = languageSelectionWindow.SelectedCulture;  //"ru-RU"; //
+                var selectedCulture =
+                    languageSelectionWindow.SelectedCulture; //"ru-RU"; //languageSelectionWindow.SelectedCulture
+
                 if (selectedCulture != null)
                     Thread.CurrentThread.CurrentUICulture = new CultureInfo(selectedCulture);
                 var mainWindowViewModel = new MainWindowViewModel(theme);

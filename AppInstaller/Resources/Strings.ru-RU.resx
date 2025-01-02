@@ -43,10 +43,10 @@
     <value>Приветствуем вас в установщике </value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Времени прошло:</value>
+    <value>Прошло:</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Времени осталось:</value>
+    <value>Осталось:</value>
   </data>
   <data name="InstallationComplete" xml:space="preserve">
     <value>Установка завершена!</value>

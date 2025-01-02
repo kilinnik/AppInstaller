@@ -1,5 +1,5 @@
+using System;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace AppInstaller.Views;
 
@@ -9,18 +9,13 @@ public partial class WelcomeView
     {
         InitializeComponent();
     }
-    
-    private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+
+    private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
     {
-        var scrollViewer = sender as ScrollViewer;
-    
-        // Здесь вы можете установить количество строк для прокрутки, например, 2 строки
-        const int linesToScroll = 30;
-    
-        // Прокручиваем количество строк, умноженное на размер шага прокрутки
-        scrollViewer?.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta * linesToScroll / 120);
-    
-        // Отмечаем событие как обработанное, чтобы предотвратить стандартное поведение
-        e.Handled = true;
+        const double epsilon = 0.1;
+
+        gradientRectangle.Visibility = Math.Abs(scrollViewer.VerticalOffset - scrollViewer.ScrollableHeight) < epsilon
+            ? System.Windows.Visibility.Collapsed
+            : System.Windows.Visibility.Visible;
     }
 }

@@ -12,13 +12,22 @@
     <Color x:Key="WindowBackgroundColor">#1D1B1E</Color>
     <Color x:Key="TextColor">#E6E1E6</Color>
     <Color x:Key="ButtonBackgroundColor">#323033</Color>
-    <Color x:Key="ComboBoxBackgroundColor">#323033</Color>
-    <Color x:Key="BorderBrushColor">#2D2B2E</Color>
+    <Color x:Key="ComboBoxBackgroundColor">#343236</Color>
+    <Color x:Key="BorderColor">#343236</Color>
     <Color x:Key="GradientStartColor">#1D1B1E</Color> 
     <Color x:Key="GradientStopColor">#001D1B1E</Color> 
     <Color x:Key="TgColor">#417EC4</Color>
     <Color x:Key="NameColor">#70AFF8</Color>
     <Color x:Key="DisabledTextColor">#7A7A7A</Color> <!-- Цвет текста для отключенных элементов -->
+    <Color x:Key="ExitColor">#E01F2F</Color> 
+    <Color x:Key="ExitTextColor">#FFFFFF</Color>
+    <Color x:Key="ShadowColor">#3d3b3e</Color> 
+    <Color x:Key="TgHoverColor">#267FE7</Color>
+    <Color x:Key="TgHoverTextColor">#FFFFFF</Color>
+    <Color x:Key="IconColor">#BDB9BD</Color>
+    <Color x:Key="ScrollBackColor">#343236</Color>
+    <Color x:Key="ScrollColor">#4D4B4D</Color>
+    <Color x:Key="LineColor">#4D4B4D</Color>
     
     <SolidColorBrush x:Key="DisabledTextBrush" Color="{StaticResource DisabledTextColor}" />
     
@@ -29,17 +38,89 @@
     <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
     <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="{StaticResource ButtonBackgroundColor}" />
     <SolidColorBrush x:Key="ComboBoxBackgroundBrush" Color="{StaticResource ComboBoxBackgroundColor}" />
-    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderBrushColor}" />
+    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}" />
+    <SolidColorBrush x:Key="ExitBrush" Color="{StaticResource ExitColor}" />
+    <SolidColorBrush x:Key="ExitTextBrush" Color="{StaticResource ExitTextColor}" />
+    <SolidColorBrush x:Key="ShadowBrush" Color="{StaticResource ShadowColor}" />
+    <SolidColorBrush x:Key="TgHoverBrush" Color="{StaticResource TgHoverColor}" />
+    <SolidColorBrush x:Key="TgHoverTextBrush" Color="{StaticResource TgHoverTextColor}" />
+    <SolidColorBrush x:Key="IconBrush" Color="{StaticResource IconColor}" />
+    <SolidColorBrush x:Key="ScrollBackBrush" Color="{StaticResource ScrollBackColor}" />
+    <SolidColorBrush x:Key="ScrollBrush" Color="{StaticResource ScrollColor}" />
+    <SolidColorBrush x:Key="LineBrush" Color="{StaticResource LineColor}" />
 
     <!-- Стили для кнопок -->
     <Style x:Key="FlatButtonStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
         <Setter Property="Background" Value="{StaticResource ButtonBackgroundBrush}" />
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
-        <Setter Property="Padding" Value="10,5" />
-        <Setter Property="FontSize" Value="14" />
         <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="10"/>
     </Style>
-
+    
+    <Style x:Key="FlatButtonTgStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+        <Setter Property="Background" Value="{StaticResource TgBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="10" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding materialDesign:ButtonAssist.CornerRadius}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!-- Триггер на наведение мыши -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource TgHoverBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource TgHoverTextBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="FlatButtonExitStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+        <Setter Property="Background" Value="{StaticResource ButtonBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="10"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding materialDesign:ButtonAssist.CornerRadius}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource ExitBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource ExitTextBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style x:Key="ButtonExitStyle" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="10,0,0,0">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource ExitBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource ExitTextBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
     <!-- Стили для комбобокса -->
     <Style x:Key="ComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignComboBox}">
         <Setter Property="Background" Value="{StaticResource ComboBoxBackgroundBrush}" />
@@ -50,4 +131,5 @@
         <Setter Property="Height" Value="30" />
         <Setter Property="materialDesign:TextFieldAssist.UnderlineBrush" Value="{StaticResource BorderBrush}"/>
     </Style>
+    
 </ResourceDictionary>

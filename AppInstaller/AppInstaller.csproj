@@ -18,6 +18,7 @@
       <PackageReference Include="NAudio" Version="2.2.1" />
       <PackageReference Include="ReactiveUI.WPF" Version="20.1.1" />
       <PackageReference Include="SharpVectors.Wpf" Version="1.8.4.2" />
+      <PackageReference Include="WindowExtras.Wpf" Version="1.0.29" />
       <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     </ItemGroup>
 
@@ -27,6 +28,7 @@
         <None Remove="7z.dll" />
         <None Remove="App.config" />
         <EmbeddedResource Include="Resources\store.steampowered.com.svg" />
+        <EmbeddedResource Include="Resources\Check.svg" />
         <Resource Include="Resources\tglogo.svg" />
         <None Remove="Resources\default.svg" />
         <EmbeddedResource Include="Resources\default.svg" />
@@ -72,6 +74,9 @@
         </Resource>
         <None Remove="Resources\dark.svg" />
         <Resource Include="Resources\dark.svg" />
+        <None Remove="Resources\Inter-VariableFont_opsz,wght.ttf" />
+        <Resource Include="Resources\Inter-VariableFont_opsz,wght.ttf" />
+        <EmbeddedResource Include="Resources\NotCheck.svg" />
     </ItemGroup>
     
     <ItemGroup>

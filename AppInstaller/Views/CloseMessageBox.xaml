@@ -4,15 +4,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:winex="https://github.com/yariker/WindowExtras.Wpf"
         xmlns:res="clr-namespace:AppInstaller.Resources"
         WindowStyle="None" BorderThickness="1" AllowsTransparency="True"
         mc:Ignorable="d" WindowStartupLocation="CenterOwner"
-        Height="119" Width="326" Background="{DynamicResource WindowBackgroundBrush}"
+        Height="121" Width="328" Background="{DynamicResource WindowBackgroundBrush}"
         MouseLeftButtonDown="Window_MouseDown">
+    <winex:WindowEx.WindowShadow>
+        <winex:WindowShadow CornerRadius="10" OffsetX="0" OffsetY="4" Opacity="0.25" Radius="10"
+                            ShadowBrush="#FF000000" />
+    </winex:WindowEx.WindowShadow>
     <Window.Template>
         <ControlTemplate TargetType="{x:Type Window}">
             <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="15">
+                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="10">
                 <ContentPresenter />
             </Border>
         </ControlTemplate>
@@ -24,34 +29,52 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Foreground="{DynamicResource TextBrush}" HorizontalAlignment="Center" FontSize="16"
-                   FontWeight="Regular"
-                   Text="{x:Static res:Strings.ExitMessage}" Margin="30,20,30,30" Width="266" Height="19" />
+                   FontWeight="Regular" TextAlignment="Center" VerticalAlignment="Center"
+                   FontFamily="/Resources/#Inter"
+                   Text="{x:Static res:Strings.ExitMessage}" Margin="30,20,30,30" Width="Auto" Height="19" />
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                    Margin="0,0,0,20">
-            <Button BorderThickness="0" Click="CancelButton_Click"
-                    Height="30" Width="105" Margin="0,0,20,20" Background="{DynamicResource ButtonBackgroundBrush}"
-                    Style="{StaticResource FlatButtonStyle}" FontWeight="Regular">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <materialDesign:PackIcon Kind="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center"
-                                             Margin="15,5,5,5" />
-                    <TextBlock Text="{x:Static res:Strings.Back}" Foreground="{DynamicResource TextBrush}"
-                               FontSize="14" Padding="3,2,20,1" VerticalAlignment="Center" />
+                    Margin="0,0,13,20">
+            <Button BorderThickness="0" Click="OkButton_Click" Width="Auto"
+                    Height="30" Margin="0,0,20,20" FontWeight="Regular" FontFamily="/Resources/#Inter">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource FlatButtonExitStyle}">
+                        <!-- Устанавливаем начальный фон для кнопки -->
+                        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+                        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
 
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <!-- Меняем фон и цвет текста при наведении -->
+                                <Setter Property="Background" Value="{DynamicResource ExitBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource ExitTextBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <!-- Иконка -->
+                    <materialDesign:PackIcon
+                        Kind="Close" HorizontalAlignment="Center" Width="20" Height="20" VerticalAlignment="Bottom"
+                        Margin="14,4,8,4" Padding="0,4,0,4" 
+                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" />
+
+                    <!-- Текст -->
+                    <TextBlock Margin="0" Text="{x:Static res:Strings.Yes}" FontWeight="Regular" FontSize="14"
+                               Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                               VerticalAlignment="Center" Width="Auto" HorizontalAlignment="Center" Padding="0,6,16,6" />
                 </StackPanel>
             </Button>
-            <Button BorderThickness="0" Click="OkButton_Click"
-                    Height="30" Margin="0,0,20,20" FontWeight="Regular"
-                    Background="{DynamicResource ButtonBackgroundBrush}"
-                    Style="{StaticResource FlatButtonStyle}" Width="105">
+            
+            <Button BorderThickness="0" Click="CancelButton_Click"
+                    Height="30" Width="Auto" Margin="0,0,20,20" Background="{DynamicResource ButtonBackgroundBrush}"
+                    Style="{DynamicResource FlatButtonStyle}" FontWeight="Regular" FontFamily="/Resources/#Inter">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                    <TextBlock Margin="0" Text="{x:Static res:Strings.Yes}" FontWeight="Regular" FontSize="14"
-                               Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"
-                               HorizontalAlignment="Center" Padding="20,2,3,1" />
-                    <materialDesign:PackIcon
-                        Kind="Check"
-                        Width="20" Height="20" VerticalAlignment="Stretch"
-                        Margin="5,0,15,5"
-                        Padding="0" />
+                    <materialDesign:PackIcon Kind="ArrowLeft" Width="18" Height="18" VerticalAlignment="Center"
+                                             Margin="-3,4,6,4" Padding="0,4,0,4" />
+                    <TextBlock Text="{x:Static res:Strings.Back}" Foreground="{DynamicResource TextBrush}" Margin="0"
+                               FontSize="14" Padding="0,6,0,6" VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Width="Auto" />
                 </StackPanel>
             </Button>
         </StackPanel>

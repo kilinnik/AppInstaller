@@ -3,33 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:res="clr-namespace:AppInstaller.Resources"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <!-- Шаблон кастомного CheckBox с закругленными углами -->
-        <ControlTemplate x:Key="SquareCheckBoxTemplate" TargetType="{x:Type CheckBox}">
+        <ControlTemplate x:Key="RoundCheckBoxTemplate" TargetType="{x:Type CheckBox}">
             <BulletDecorator Background="Transparent">
                 <BulletDecorator.Bullet>
-                    <Grid Width="15" Height="15">
-                        <!-- Изменение на квадратный прямоугольник и изменение цвета обводки на TextBrush -->
-                        <Rectangle Fill="Transparent" Stroke="{DynamicResource TextBrush}" 
-                                   StrokeThickness="1.5" Width="15" Height="15" />
-                        <!-- Иконка галочки -->
-                        <materialDesign:PackIcon Kind="Check" Width="15" Height="15" Visibility="Collapsed" x:Name="CheckMark"
-                                                 Foreground="{DynamicResource TextBrush}" />
+                    <Grid Width="16" Height="16">
+                        <Image x:Name="CheckImage" Width="16" Height="16" />
                     </Grid>
                 </BulletDecorator.Bullet>
-                <!-- Добавляем отступ между чекбоксом и текстом -->
-                <ContentPresenter VerticalAlignment="Center" Margin="9,0,0,0" />
+                <ContentPresenter VerticalAlignment="Center" Margin="10,0,0,0" />
             </BulletDecorator>
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
-                </Trigger>
-            </ControlTemplate.Triggers>
         </ControlTemplate>
+
     </UserControl.Resources>
     <Grid d:DataContext="{d:DesignInstance }">
         <!-- Основная сетка с контейнерами для размещения элементов -->
@@ -38,28 +27,28 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!-- Верхняя часть с контейнерами для изображения программы и выбора папки установки -->
-        <Grid Margin="0">
+        <Grid Margin="0,-3,0,0" Grid.Row="0">
             <!-- Контейнер для изображения -->
-            <Rectangle Height="154" Width="529">
+            <Rectangle Height="156" Width="532" Margin="0,0,0,0">
                 <Rectangle.Fill>
                     <ImageBrush ImageSource="{Binding HeadImage}" />
                 </Rectangle.Fill>
             </Rectangle>
 
             <!-- Контейнер для наложения градиентного эффекта снизу -->
-            <Rectangle Height="155" Width="529">
+            <Rectangle Height="157" Width="532">
                 <Rectangle.Fill>
                     <!-- Градиентный эффект, создающий замыление снизу -->
-                    <LinearGradientBrush StartPoint="0.5,1" EndPoint="0.5,0.75">
+                    <LinearGradientBrush StartPoint="0.5,1" EndPoint="0.5,0.7">
                         <!-- Полностью непрозрачный цвет -->
-                        <GradientStop Color="{DynamicResource GradientStartColor}" Offset="0" />
+                        <GradientStop Color="{DynamicResource GradientStartColor}" Offset="0.1" />
                         <!-- Тот же цвет, но с прозрачностью -->
-                        <GradientStop Color="{DynamicResource GradientStopColor}" Offset="0.5" />
+                        <GradientStop Color="{DynamicResource GradientStopColor}" Offset="1" />
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>
-        <Grid Grid.Row="1" Width="482" Height="310" Margin="30,9,30,0">
+        <Grid Grid.Row="1" Width="482" Height="308" Margin="30,9,30,0">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -70,7 +59,8 @@
 
             <!-- Заголовок "Установка" -->
             <TextBlock Grid.Row="0" Text="{x:Static res:Strings.Installation}" FontSize="20" FontWeight="Medium"
-                       Margin="0,0,0,5" Height="24" Foreground="{DynamicResource TextBrush}" />
+                       Margin="0,0,0,5" Height="24" Foreground="{DynamicResource TextBrush}"
+                       FontFamily="/Resources/#Inter" />
 
             <!-- Информация о программе -->
             <Grid Grid.Row="1" Margin="0">
@@ -81,7 +71,8 @@
                 </Grid.RowDefinitions>
 
                 <!-- Верхняя линия -->
-                <Rectangle Grid.Row="0" Margin="0,0,0,10" Height="1" Fill="{DynamicResource ButtonBackgroundBrush}" HorizontalAlignment="Stretch" />
+                <Rectangle Grid.Row="0" Margin="0,0,0,10" Height="1" Fill="{DynamicResource LineBrush}"
+                           HorizontalAlignment="Stretch" />
 
                 <!-- Содержимое -->
                 <Grid Grid.Row="1">
@@ -95,43 +86,52 @@
                             <ImageBrush ImageSource="{Binding BigImage}" Stretch="UniformToFill" />
                         </Rectangle.Fill>
                     </Rectangle>
-                    <TextBlock Grid.Column="1" Text="{Binding AppName}" VerticalAlignment="Center" Margin="16,0,0,0"
+                    <TextBlock Grid.Column="1" Text="{Binding AppName}" FontFamily="/Resources/#Inter"
+                               VerticalAlignment="Center" Margin="16,0,0,0"
                                FontSize="16" FontWeight="Regular" Foreground="{DynamicResource TextBrush}" />
-                    <TextBlock Grid.Column="2" Text="{Binding NeededMemory}" VerticalAlignment="Center" FontSize="14"
+                    <TextBlock Grid.Column="2" Text="{Binding NeededMemory}" FontFamily="/Resources/#Inter"
+                               VerticalAlignment="Center" FontSize="14"
                                Foreground="{DynamicResource TextBrush}" FontWeight="Regular" Margin="0,0,15,0" />
                 </Grid>
 
                 <!-- Нижняя линия -->
-                <Rectangle Grid.Row="2" Height="1" Margin="0,10,0,10" Fill="{DynamicResource ButtonBackgroundBrush}" HorizontalAlignment="Stretch" />
+                <Rectangle Grid.Row="2" Height="1" Margin="0,9,0,10" Fill="{DynamicResource LineBrush}"
+                           HorizontalAlignment="Stretch" />
             </Grid>
 
             <!-- Путь установки -->
             <StackPanel Grid.Row="2" Margin="0">
-                <TextBlock Text="{x:Static res:Strings.InstallationFolder}" FontSize="16" FontWeight="Regular" Margin="4,0,0,5"
+                <TextBlock Text="{x:Static res:Strings.InstallationFolder}" FontFamily="/Resources/#Inter"
+                           FontSize="16" FontWeight="Regular" Margin="2,0,0,10"
                            Foreground="{DynamicResource TextBrush}" />
                 <DockPanel>
-                    <Border CornerRadius="10" Width="354" Height="30"
+                    <Border CornerRadius="10" Width="361" Height="30" Margin="0,0,8,8" 
                             Background="{DynamicResource ButtonBackgroundBrush}">
-                        <TextBlock Margin="10,6,10,7" Text="{Binding SelectedPath}" FontWeight="Regular" FontSize="14"
-                                   Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" />
+                        <TextBlock Margin="10,6,0,7" Text="{Binding SelectedPath}" FontWeight="Regular" FontSize="14"
+                                   Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"
+                                   FontFamily="/Resources/#Inter" />
                     </Border>
                     <Button Content="{x:Static res:Strings.ChangeOutputDir}" Command="{Binding ChooseDirectoryCommand}"
-                            Width="95" Height="30" Margin="0,0,0,0" FontWeight="Regular"
-                            Style="{StaticResource FlatButtonStyle}"
+                            Width="87" Height="30" Margin="0,0,0,8" FontWeight="Regular" Padding="0"
+                            Style="{DynamicResource FlatButtonStyle}" FontFamily="/Resources/#Inter"
                             Background="{DynamicResource ButtonBackgroundBrush}"
                             Foreground="{DynamicResource TextBrush}" />
                 </DockPanel>
             </StackPanel>
 
             <!-- Дополнительно -->
-            <StackPanel Grid.Row="3" Margin="0,20,0,0">
-                <TextBlock Text="{x:Static res:Strings.Additional}" FontSize="16" FontWeight="Regular" Margin="4,0,0,5"
-                           Foreground="{DynamicResource TextBrush}" />
-                <CheckBox Content="{x:Static res:Strings.CreateDesktopShortcut}"  Margin="4,0,0,0"
+            <StackPanel Grid.Row="3" Margin="0,12,0,0">
+                <TextBlock Text="{x:Static res:Strings.Additional}" FontSize="16" FontWeight="Regular" Margin="3,0,0,0"
+                           Foreground="{DynamicResource TextBrush}" FontFamily="/Resources/#Inter" />
+                <CheckBox x:Name="CreateDesktopShortcutCheckBox"
+                          Content="{x:Static res:Strings.CreateDesktopShortcut}" 
+                          Margin="4,10,0,0"
                           IsChecked="{Binding IconChecked}"
                           FontSize="14" FontWeight="Regular" 
-                          Template="{StaticResource SquareCheckBoxTemplate}"
-                          Foreground="{DynamicResource TextBrush}" />
+                          FontFamily="/Resources/#Inter"
+                          Template="{StaticResource RoundCheckBoxTemplate}"
+                          Foreground="{DynamicResource TextBrush}"
+                          Loaded="CreateDesktopShortcutCheckBox_Loaded"/>
             </StackPanel>
         </Grid>
     </Grid>

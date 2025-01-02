@@ -23,6 +23,8 @@ namespace AppInstaller.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
+    public event Action<string>? ThemeChanged;
+
     private readonly MainWindowModel _mainWindowModel;
 
     private readonly UserControl?[] _views;
@@ -30,6 +32,22 @@ public class MainWindowViewModel : ViewModelBase
     private readonly string _appName;
 
     private readonly IEnumerable<KeyValuePair<string, string>> _components;
+
+    private double _appPurchaseLinkImageWidth;
+
+    public double AppPurchaseLinkImageWidth
+    {
+        get => _appPurchaseLinkImageWidth;
+        set => this.RaiseAndSetIfChanged(ref _appPurchaseLinkImageWidth, value);
+    }
+
+    private double _appPurchaseLinkImageHeight;
+
+    public double AppPurchaseLinkImageHeight
+    {
+        get => _appPurchaseLinkImageHeight;
+        set => this.RaiseAndSetIfChanged(ref _appPurchaseLinkImageHeight, value);
+    }
 
     public string SelectedPath
     {
@@ -47,7 +65,15 @@ public class MainWindowViewModel : ViewModelBase
 
     public DrawingImage AppPurchaseLinkLogo
     {
-        get => _appPurchaseLinkLogo;
+        get
+        {
+            if (_views[1] is SelectDirView selectDirView)
+            {
+                selectDirView.ApplyThemeColorToCheckBoxSvg();
+            }
+
+            return _appPurchaseLinkLogo;
+        }
         set => this.RaiseAndSetIfChanged(ref _appPurchaseLinkLogo, value);
     }
 
@@ -147,9 +173,9 @@ public class MainWindowViewModel : ViewModelBase
         get => _currentViewIndex;
         set => this.RaiseAndSetIfChanged(ref _currentViewIndex, value);
     }
-    
+
     private bool _isDefaultLogo;
-    
+
     public bool IsDefaultLogo
     {
         get => _isDefaultLogo;
@@ -241,14 +267,14 @@ public class MainWindowViewModel : ViewModelBase
         if (theme.Contains("Dark"))
         {
             ThemeIconSource = "/Resources/light.svg";
-            ThemeIconWidth = 20;
-            ThemeIconHeight = 20;
+            ThemeIconWidth = 17;
+            ThemeIconHeight = 17;
         }
         else
         {
             ThemeIconSource = "/Resources/dark.svg";
-            ThemeIconWidth = 18;
-            ThemeIconHeight = 18;
+            ThemeIconWidth = 15;
+            ThemeIconHeight = 15;
         }
     }
 
@@ -260,15 +286,16 @@ public class MainWindowViewModel : ViewModelBase
         var drawing = reader.Read(stream);
 
         if (!isDefault) return new DrawingImage(drawing);
-        
-        if (Application.Current.Resources["TextBrush"] is SolidColorBrush colorBrush)
+
+        // Получаем динамический ресурс для цвета и применяем его
+        if (Application.Current.Resources["IconBrush"] is SolidColorBrush iconBrush)
         {
-            ApplyColorToDrawing(drawing, colorBrush.Color);
+            ApplyColorToDrawing(drawing, iconBrush.Color);
         }
 
         return new DrawingImage(drawing);
     }
-    
+
     private static void ApplyColorToDrawing(Drawing drawing, Color color)
     {
         switch (drawing)
@@ -295,8 +322,23 @@ public class MainWindowViewModel : ViewModelBase
 
         var isDefault = resourceName == "AppInstaller.Resources.default.svg";
         AppPurchaseLinkLogo = LoadSvgFromResource(resourceName, isDefault);
-        
+
+        // Устанавливаем флаг, что лого дефолтное
         IsDefaultLogo = isDefault;
+
+        // Устанавливаем размеры изображения в зависимости от того, дефолтное ли это лого
+        if (IsDefaultLogo)
+        {
+            // Размеры для дефолтного логотипа
+            AppPurchaseLinkImageWidth = 22;
+            AppPurchaseLinkImageHeight = 22;
+        }
+        else
+        {
+            // Размеры для кастомного логотипа
+            AppPurchaseLinkImageWidth = 24;
+            AppPurchaseLinkImageHeight = 24;
+        }
     }
 
     private static string GetResourceName(string host)
@@ -529,7 +571,7 @@ public class MainWindowViewModel : ViewModelBase
             .Replace("</i>", "</Italic>");
         result =
             $"<FlowDocument xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\">"
-            + $"<Paragraph FontSize=\"14\" FontWeight=\"Regular\">{result}</Paragraph></FlowDocument>";
+            + $"<Paragraph FontSize=\"14\" FontWeight=\"Regular\" FontFamily=\"/Resources/#Inter\">{result}</Paragraph></FlowDocument>";
 
         return (FlowDocument)XamlReader.Parse(result);
     }

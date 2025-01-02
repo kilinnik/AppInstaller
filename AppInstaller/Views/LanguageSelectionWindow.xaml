@@ -5,12 +5,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:converters="clr-namespace:AppInstaller.Converters"
+        xmlns:winex="https://github.com/yariker/WindowExtras.Wpf"
         WindowStyle="None" BorderThickness="1" AllowsTransparency="True"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Height="157" Width="285"
+        Height="159" Width="287"
         Background="{DynamicResource WindowBackgroundBrush}"
         MouseLeftButtonDown="Window_MouseDown">
-
+    <winex:WindowEx.WindowShadow>
+        <winex:WindowShadow CornerRadius="10" OffsetX="0" OffsetY="4" Opacity="0.25" Radius="10"
+                            ShadowBrush="#FF000000" />
+    </winex:WindowEx.WindowShadow>
     <Window.Template>
         <ControlTemplate TargetType="{x:Type Window}">
             <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
@@ -63,8 +67,7 @@
                                               ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                               Margin="3,3,23,3"
                                               VerticalAlignment="Center"
-                                              HorizontalAlignment="Left">
-                            </ContentPresenter>
+                                              HorizontalAlignment="Left" />
 
                             <!-- ToggleButton для открытия выпадающего списка -->
                             <ToggleButton Grid.Column="1"
@@ -72,12 +75,11 @@
                                           Template="{StaticResource ComboBoxToggleButton}"
                                           Focusable="false"
                                           IsChecked="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-                                          ClickMode="Press">
-                            </ToggleButton>
+                                          ClickMode="Press" />
 
                             <!-- TextBox для редактируемого ComboBox (скрыт по умолчанию) -->
                             <TextBox Name="PART_EditableTextBox"
-                                     Style="{x:Null}"
+                                     Style="{x:Null}" FontFamily="/Resources/#Inter"
                                      Template="{StaticResource ComboBoxTextBox}"
                                      HorizontalAlignment="Left"
                                      VerticalAlignment="Center"
@@ -88,8 +90,8 @@
                                      IsReadOnly="{TemplateBinding IsReadOnly}" />
 
                             <!-- Линия под выбранным элементом -->
-                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1"
-                                    Grid.ColumnSpan="2"
+                            <Border BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,0,1"
+                                    Grid.ColumnSpan="2" Width="225"
                                     VerticalAlignment="Bottom" Margin="3,0,3,0" />
 
                             <!-- Popup для выпадающего списка -->
@@ -105,8 +107,10 @@
                                       MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                     <Border x:Name="DropDownBorder"
                                             Background="{DynamicResource ComboBoxBackgroundBrush}"
-                                            BorderThickness="1">
-                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                            BorderBrush="Transparent"
+                                            BorderThickness="0"
+                                            Padding="0"> <!-- Убираем отступы -->
+                                        <ScrollViewer Margin="0,0,0,0" SnapsToDevicePixels="True">
                                             <StackPanel IsItemsHost="True"
                                                         KeyboardNavigation.DirectionalNavigation="Contained" />
                                         </ScrollViewer>
@@ -124,68 +128,121 @@
             <Setter Property="BorderThickness" Value="1" />
         </Style>
 
+
         <!-- Стиль для ComboBoxItem -->
         <Style x:Key="CustomComboBoxItemStyle" TargetType="ComboBoxItem">
             <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundBrush}" />
             <Setter Property="Height" Value="30" />
             <Setter Property="Width" Value="225" />
             <Setter Property="Margin" Value="0" />
-            <Setter Property="Padding" Value="5,0" />
+            <Setter Property="Padding" Value="10,7, 0, 6" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
-            <Style.Triggers>
-                <!-- Изменение цвета при наведении мыши -->
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource MouseOverBrush}" />
-                    <Setter Property="Foreground" Value="{DynamicResource SelectedTextBrush}" />
-                </Trigger>
-                <!-- Изменение цвета при выборе -->
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource SelectedBackgroundBrush}" />
-                    <Setter Property="Foreground" Value="{DynamicResource SelectedTextBrush}" />
-                </Trigger>
-                <!-- Обработка состояния, когда элемент не выбран и не под фокусом -->
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Foreground" Value="{DynamicResource DisabledTextBrush}" />
-                </Trigger>
-            </Style.Triggers>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border Name="Border"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Изменение фона и текста при наведении -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background"
+                                        Value="{DynamicResource MouseOverBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource SelectedTextBrush}" />
+                            </Trigger>
+
+                            <!-- Изменение фона и текста при выборе -->
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background"
+                                        Value="{DynamicResource SelectedBackgroundBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource SelectedTextBrush}" />
+                            </Trigger>
+
+                            <!-- Цвет текста при отключении элемента -->
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="{DynamicResource DisabledTextBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
     <Grid Margin="0">
         <StackPanel>
-            <TextBlock x:Name="LanguageTextBlock" Foreground="{DynamicResource TextBrush}" FontSize="17"
-                       Margin="30,20,49,0"
-                       Text="Выберите язык установки"
-                       HorizontalAlignment="Center" />
+            <TextBlock x:Name="LanguageTextBlock" Foreground="{DynamicResource TextBrush}" FontSize="16"
+                       Margin="30,20,30,0"
+                       Text="Выберите язык установки" FontFamily="/Resources/#Inter"
+                       HorizontalAlignment="Left" />
             <ComboBox Name="LanguageComboBox" SelectedIndex="0" FontSize="14" FontWeight="Regular"
                       Style="{StaticResource CustomComboBoxStyle}"
-                      Padding="1,0,0,0"
+                      Padding="1,0,0,0" FontFamily="/Resources/#Inter"
                       Width="225" Margin="30,15,30,0">
-                <ComboBoxItem Style="{StaticResource CustomComboBoxItemStyle}" Content="Русский" Tag="ru-RU" />
-                <ComboBoxItem Style="{StaticResource CustomComboBoxItemStyle}" Content="English" Tag="en-US" />
+                <ComboBoxItem FontFamily="/Resources/#Inter" Style="{StaticResource CustomComboBoxItemStyle}"
+                              Content="Русский" Tag="ru-RU" />
+                <ComboBoxItem FontFamily="/Resources/#Inter" Style="{StaticResource CustomComboBoxItemStyle}"
+                              Content="English" Tag="en-US" />
             </ComboBox>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0">
-                <Button Margin="30,20,0,20" Width="122" Height="30" Click="CancelButton_Click" FontWeight="Regular"
-                        Style="{StaticResource FlatButtonStyle}" Background="{DynamicResource ButtonBackgroundBrush}">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock x:Name="CancelButtonTextBlock" Text="Закрыть"
-                                   Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"
-                                   Padding="10,1,10,1" />
-                        <materialDesign:PackIcon Kind="Close" Foreground="{DynamicResource TextBrush}" Width="20"
-                                                 Height="20" />
-                    </StackPanel>
-                </Button>
-                <Button Margin="20,20,30,20" Width="83" Height="30" Click="OnOkClicked" FontWeight="Regular"
-                        Style="{StaticResource FlatButtonStyle}" Background="{DynamicResource ButtonBackgroundBrush}">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock x:Name="OkButtonTextBlock" Text="OK" Foreground="{DynamicResource TextBrush}"
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0">
+                <Button Margin="0,20,0,20" Width="98" Height="30" Click="CancelButton_Click" FontWeight="Regular">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource FlatButtonExitStyle}">
+                            <!-- Устанавливаем начальный фон для кнопки -->
+                            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <!-- Меняем фон и цвет текста при наведении -->
+                                    <Setter Property="Background" Value="{DynamicResource ExitBrush}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource ExitTextBrush}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <WrapPanel VerticalAlignment="Center" HorizontalAlignment="Left">
+                        <materialDesign:PackIcon Kind="Close"
+                                                 HorizontalAlignment="Left"
+                                                 VerticalAlignment="Center"
+                                                 Width="20" Height="20" Padding="-2,6,0,6"
+                                                 Margin="-2,0,8,0" />
+                        <TextBlock x:Name="CancelButtonTextBlock"
+                                   Text="Закрыть" FontFamily="/Resources/#Inter"
+                                   Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                    VerticalAlignment="Center"
-                                   Padding="10,1,10,1" />
-                        <materialDesign:PackIcon Kind="Check" Foreground="{DynamicResource TextBrush}" Width="20"
-                                                 Height="20" />
-                    </StackPanel>
+                                   Padding="0,4,0,4"
+                                   Margin="0,0,3,0" />
+                    </WrapPanel>
                 </Button>
+                <Button Margin="20,20,30,20" Width="76" Height="30" Click="OnOkClicked" FontWeight="Regular"
+                        Style="{StaticResource FlatButtonStyle}" Background="{DynamicResource ButtonBackgroundBrush}">
+                    <Grid>
+                        <!-- Два столбца: текст и иконка -->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Текст слева -->
+                        <TextBlock x:Name="OkButtonTextBlock" Text="OK" Foreground="{DynamicResource TextBrush}"
+                                   VerticalAlignment="Center" FontFamily="/Resources/#Inter"
+                                   Grid.Column="0" Margin="0,0,6,0" />
+
+                        <!-- Иконка справа -->
+                        <materialDesign:PackIcon Kind="Check" Foreground="{DynamicResource TextBrush}" Width="20"
+                                                 Height="20"
+                                                 Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+                </Button>
+
             </StackPanel>
         </StackPanel>
     </Grid>
